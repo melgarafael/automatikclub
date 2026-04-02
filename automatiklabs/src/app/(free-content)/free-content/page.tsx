@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getAllPublishedContent } from '@/features/free-content/services/content-service';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Conteudos Gratuitos',
   description:
