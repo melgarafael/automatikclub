@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutomatikClub — Design System Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN SYSTEM REFERENCE — "Cockpit Indiehacker"
+   Definitive visual reference for all tokens and components
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --bg: #0B0D12;
+  --bg-raised: #13161D;
+  --bg-inset: #0E1016;
+  --bg-hover: #1A1E28;
+  --bg-active: #222838;
+
+  --border: #1E2330;
+  --border-hard: #2A3040;
+  --border-focus: #4A9EFF;
+
+  --blue: #4A9EFF;
+  --cyan: #5CE0D8;
+  --green: #3DDC84;
+  --amber: #F0A030;
+  --red: #EF5350;
+  --violet: #9B72FF;
+
+  --blue-dim: rgba(74,158,255,0.10);
+  --cyan-dim: rgba(92,224,216,0.10);
+  --violet-dim: rgba(155,114,255,0.10);
+
+  --text-1: #C9D1D9;
+  --text-2: #8B949E;
+  --text-3: #484F58;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 2px;
+  --border-w: 2px;
+  --shadow: 2px 2px 0 rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ LAYOUT ═══ */
+
+.ref-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+/* ═══ SIDEBAR NAV ═══ */
+
+.ref-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--bg-inset);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px 0;
+  z-index: 50;
+}
+
+.ref-sidebar-logo {
+  padding: 0 16px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.ref-sidebar-logo h1 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ref-sidebar-logo h1 span {
+  color: var(--blue);
+}
+
+.ref-sidebar-logo .version {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.ref-nav-group {
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.ref-nav-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  padding: 8px 8px 4px;
+}
+
+.ref-nav-label::before {
+  content: '// ';
+  color: var(--blue);
+}
+
+.ref-nav a {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  transition: all 80ms;
+}
+
+.ref-nav a:hover {
+  color: var(--text-1);
+  background: var(--bg-hover);
+}
+
+.ref-nav a.active {
+  color: var(--blue);
+  background: var(--blue-dim);
+}
+
+/* ═══ MAIN CONTENT ═══ */
+
+.ref-main {
+  margin-left: 220px;
+  padding: 32px 40px 80px;
+  max-width: 960px;
+}
+
+.ref-section {
+  margin-bottom: 56px;
+}
+
+.ref-section-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ref-section-header::before {
+  content: '// ';
+  color: var(--blue);
+}
+
+.ref-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* ═══ COLOR SWATCHES ═══ */
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.color-swatch {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.color-swatch-block {
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+}
+
+.color-swatch-info {
+  padding: 8px 10px;
+  background: var(--bg-raised);
+}
+
+.color-swatch-var {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-2);
+  margin-bottom: 2px;
+}
+
+.color-swatch-hex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-1);
+}
+
+/* ═══ TYPOGRAPHY ═══ */
+
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.type-meta {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.type-token {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--blue);
+  margin-bottom: 2px;
+}
+
+.type-specs {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.type-sample {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ═══ SPACING ═══ */
+
+.spacing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.spacing-label {
+  width: 80px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.spacing-block {
+  height: 20px;
+  background: var(--blue-dim);
+  border: 1px solid rgba(74,158,255,0.25);
+  border-radius: var(--radius);
+}
+
+.spacing-px {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-left: 8px;
+}
+
+/* ═══ SHAPE ═══ */
+
+.shape-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.shape-card {
+  background: var(--bg-raised);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.shape-card .shape-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 12px;
+}
+
+.shape-card .shape-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--cyan);
+  margin-top: 4px;
+}
+
+.shape-demo-radius {
+  width: 64px;
+  height: 64px;
+  background: var(--blue-dim);
+  border: 2px solid var(--blue);
+  border-radius: 2px;
+  margin: 0 auto;
+}
+
+.shape-demo-border1 {
+  width: 100%;
+  height: 0;
+  border-top: 1px solid var(--border);
+  margin: 8px auto 0;
+}
+
+.shape-demo-border2 {
+  width: 100%;
+  height: 0;
+  border-top: 2px solid var(--border-hard);
+  margin: 8px auto 0;
+}
+
+.shape-demo-shadow {
+  width: 64px;
+  height: 48px;
+  background: var(--bg-raised);
+  border: 2px solid var(--border);
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+}
+
+/* ═══ COMPONENT SHOWCASE ═══ */
+
+.showcase-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.showcase-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+/* Avatars */
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  background: var(--bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--text-2);
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.avatar.accent { background: var(--blue-dim); color: var(--blue); border-color: transparent; }
+.avatar.ai { background: var(--violet-dim); color: var(--violet); border-color: rgba(155,114,255,0.25); }
+.avatar.hot { background: linear-gradient(135deg, var(--blue), var(--cyan)); color: #000; border-color: transparent; }
+.avatar.sm { width: 24px; height: 24px; font-size: 9px; }
+
+/* Role badges */
+.role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  display: inline-block;
+}
+
+.role.admin { background: rgba(240,160,48,0.12); color: var(--amber); }
+.role.contrib { background: var(--cyan-dim); color: var(--cyan); }
+.role.ai-tag { background: var(--violet-dim); color: var(--violet); border: 1px solid rgba(155,114,255,0.2); }
+.role.mod { background: rgba(61,220,132,0.12); color: var(--green); }
+.role.pro { background: var(--blue-dim); color: var(--blue); }
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  background: var(--blue);
+  color: #000;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: box-shadow 80ms;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 0 4px var(--blue-dim);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--text-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 80ms;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-1);
+}
+
+/* Posts */
+.post-demo {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  padding-left: 16px;
+}
+
+.post-demo::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20px;
+  bottom: 20px;
+  width: 3px;
+  background: transparent;
+  border-radius: 1px;
+}
+
+.post-demo.featured::before { background: var(--blue); }
+.post-demo.ai-post::before { background: var(--violet); }
+
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.post-meta { flex: 1; min-width: 0; }
+
+.post-author {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post-ts {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.post-ts::before {
+  content: '\2192 ';
+  color: var(--text-3);
+}
+
+.post-body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.post-body strong { color: var(--text-1); font-weight: 600; }
+
+.post-body code, code.inline {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  border-radius: var(--radius);
+  color: var(--cyan);
+}
+
+.post-actions {
+  display: flex;
+  gap: 0;
+  margin-top: 12px;
+}
+
+.action-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+  padding: 4px 12px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 80ms;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn:hover { color: var(--text-2); background: var(--bg-hover); }
+.action-btn.active { color: var(--blue); }
+
+/* Code block */
+.codeblock {
+  background: var(--bg-inset);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.codeblock-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.codeblock-bar .lang { color: var(--blue); }
+.codeblock-bar .copy {
+  margin-left: auto;
+  cursor: pointer;
+  color: var(--text-3);
+  transition: color 80ms;
+}
+.codeblock-bar .copy:hover { color: var(--text-1); }
+
+.codeblock pre {
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-2);
+  overflow-x: auto;
+}
+
+.codeblock .kw { color: var(--blue); }
+.codeblock .str { color: var(--cyan); }
+.codeblock .fn { color: var(--amber); }
+.codeblock .cm { color: var(--text-3); }
+.codeblock .num { color: var(--green); }
+
+/* Search */
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-inset);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+  cursor: text;
+  width: 280px;
+  transition: border-color 80ms;
+}
+
+.search-input:hover { border-color: var(--border-hard); }
+.search-input .prompt { color: var(--blue); font-weight: 600; }
+.search-input .kbd {
+  margin-left: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  border-radius: var(--radius);
+  font-size: 10px;
+}
+
+/* Tabs */
+.tab-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-item {
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 80ms;
+}
+
+.tab-item:hover { color: var(--text-2); }
+.tab-item.active { color: var(--text-1); border-bottom-color: var(--blue); }
+
+.tab-item .tab-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* Progress */
+.progress-section {
+  background: var(--bg-inset);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.progress-ascii {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.progress-ascii .on { color: var(--blue); }
+.progress-ascii .off { color: var(--text-3); }
+.progress-ascii .pct { color: var(--cyan); margin-left: 8px; letter-spacing: 0; }
+
+/* Leaderboard */
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.lb-rank {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  width: 24px;
+  text-align: right;
+  color: var(--text-3);
+}
+
+.lb-rank.g { color: var(--amber); }
+.lb-rank.s { color: #AAA; }
+.lb-rank.b { color: #B87333; }
+
+.lb-name { font-size: 13px; font-weight: 500; flex: 1; }
+.lb-name.you { color: var(--blue); }
+.lb-xp { font-family: var(--font-mono); font-size: 12px; color: var(--cyan); }
+
+/* Badge grid */
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.badge-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 80ms;
+  gap: 2px;
+}
+
+.badge-cell:hover { background: var(--bg-hover); border-color: var(--border-hard); }
+.badge-cell.earned { border-color: rgba(74,158,255,0.3); background: var(--blue-dim); }
+.badge-cell.locked { opacity: 0.3; filter: grayscale(1); }
+
+.badge-cell .badge-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Streak */
+.streak-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+
+.streak-num {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+
+.streak-info { font-size: 12px; color: var(--text-3); }
+
+.streak-bonus {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+}
+
+/* Tags */
+.tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-2);
+  display: inline-block;
+}
+
+/* Marketplace card */
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.m-card {
+  background: var(--bg-raised);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 100ms;
+}
+
+.m-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.m-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.m-type.tpl { color: var(--cyan); }
+.m-type.gh { color: var(--blue); }
+.m-type.sk { color: var(--amber); }
+
+.m-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.m-desc {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.m-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.m-rating { color: var(--amber); }
+.m-stat { color: var(--text-3); }
+
+/* Panel heading */
+.panel-heading {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.panel-heading::before {
+  content: '// ';
+  color: var(--blue);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.breadcrumb a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: var(--text-3); margin: 0 4px; }
+
+/* Status bar */
+.statusbar-demo {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  gap: 16px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sb-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.sb-dot.on { background: var(--green); }
+.sb-spacer { flex: 1; }
+
+/* Video frame */
+.video-frame {
+  aspect-ratio: 16/9;
+  background: var(--bg-inset);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 480px;
+}
+
+.video-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%231E2330' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 52px;
+  opacity: 0.5;
+}
+
+.play-circle {
+  width: 56px;
+  height: 56px;
+  border: var(--border-w) solid var(--blue);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue-dim);
+  cursor: pointer;
+  z-index: 1;
+  transition: all 100ms;
+}
+
+.play-circle:hover {
+  background: rgba(74,158,255,0.2);
+  box-shadow: 0 0 0 4px var(--blue-dim);
+}
+
+.play-circle::after {
+  content: '';
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 14px;
+  border-color: transparent transparent transparent var(--blue);
+  margin-left: 2px;
+}
+
+.vid-duration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-1);
+  background: rgba(0,0,0,0.75);
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  z-index: 1;
+}
+
+/* XP toast */
+.xp-inline {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.xp-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-raised);
+  border: 1px solid rgba(92,224,216,0.25);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan);
+}
+
+/* Online indicators */
+.online-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.online-dot.ai-dot { background: var(--violet); }
+
+.online-name { font-size: 13px; color: var(--text-2); }
+.online-name.ai-name { color: var(--violet); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Subsection */
+.ref-sub {
+  margin-bottom: 24px;
+}
+
+.ref-sub-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 10px;
+}
+
+/* Annotation */
+.ref-annotation {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 6px;
+}
+
+/* Token table */
+.token-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.token-table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.token-table td {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.token-table .tok {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--blue);
+}
+
+.token-table .val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+/* Hero */
+.ref-hero {
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ref-hero h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.ref-hero h1 span { color: var(--blue); }
+
+.ref-hero p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.ref-hero .ref-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.ref-hero .ref-meta span { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<div class="ref-shell">
+
+  <!-- SIDEBAR -->
+  <nav class="ref-sidebar">
+    <div class="ref-sidebar-logo">
+      <h1><span>&#9889;</span> AutomatikClub</h1>
+      <div class="version">// design system v2.0.0</div>
+    </div>
+
+    <div class="ref-nav-group">
+      <div class="ref-nav-label">tokens</div>
+      <div class="ref-nav">
+        <a href="#colors">Colors</a>
+        <a href="#typography">Typography</a>
+        <a href="#spacing">Spacing</a>
+        <a href="#shape">Shape</a>
+      </div>
+    </div>
+
+    <div class="ref-nav-group">
+      <div class="ref-nav-label">primitives</div>
+      <div class="ref-nav">
+        <a href="#avatars">Avatars</a>
+        <a href="#role-badges">Role Badges</a>
+        <a href="#buttons">Buttons</a>
+        <a href="#tags">Tags</a>
+        <a href="#online-indicators">Online Indicators</a>
+      </div>
+    </div>
+
+    <div class="ref-nav-group">
+      <div class="ref-nav-label">components</div>
+      <div class="ref-nav">
+        <a href="#posts">Posts</a>
+        <a href="#code-blocks">Code Blocks</a>
+        <a href="#search-bar">Search Bar</a>
+        <a href="#tabs">Tabs</a>
+        <a href="#progress">Progress</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#badges-grid">Badges Grid</a>
+        <a href="#streak">Streak Display</a>
+        <a href="#marketplace">Marketplace Card</a>
+      </div>
+    </div>
+
+    <div class="ref-nav-group">
+      <div class="ref-nav-label">patterns</div>
+      <div class="ref-nav">
+        <a href="#panel-headers">Panel Headers</a>
+        <a href="#breadcrumbs">Breadcrumbs</a>
+        <a href="#status-bar">Status Bar</a>
+        <a href="#video-player">Video Player</a>
+        <a href="#xp-toast">XP Toast</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="ref-main">
+
+    <!-- HERO -->
+    <div class="ref-hero">
+      <h1><span>//</span> Design System Reference</h1>
+      <p>Comprehensive visual documentation for the <strong>Cockpit Indiehacker</strong> design system. Every token, primitive, and component in one scrollable reference.</p>
+      <div class="ref-meta">
+        <div>version: <span>2.0.0</span></div>
+        <div>style: <span>clinical brutalism + cockpit + claude code</span></div>
+        <div>status: <span>approved</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 1. COLORS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="colors">
+      <div class="ref-section-header">COLORS</div>
+      <p class="ref-desc">Complete color palette. Dark-first, no light mode. All colors referenced via CSS custom properties.</p>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Core Backgrounds</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#0B0D12;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--bg</div>
+              <div class="color-swatch-hex">#0B0D12</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#13161D;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--bg-raised</div>
+              <div class="color-swatch-hex">#13161D</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#0E1016;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--bg-inset</div>
+              <div class="color-swatch-hex">#0E1016</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#1A1E28;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--bg-hover</div>
+              <div class="color-swatch-hex">#1A1E28</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#222838;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--bg-active</div>
+              <div class="color-swatch-hex">#222838</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Borders</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#1E2330;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--border</div>
+              <div class="color-swatch-hex">#1E2330</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#2A3040;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--border-hard</div>
+              <div class="color-swatch-hex">#2A3040</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#4A9EFF;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--border-focus</div>
+              <div class="color-swatch-hex">#4A9EFF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Brand &amp; Semantic</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#4A9EFF;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--blue</div>
+              <div class="color-swatch-hex">#4A9EFF</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#5CE0D8;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--cyan</div>
+              <div class="color-swatch-hex">#5CE0D8</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#3DDC84;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--green</div>
+              <div class="color-swatch-hex">#3DDC84</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#F0A030;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--amber</div>
+              <div class="color-swatch-hex">#F0A030</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#EF5350;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--red</div>
+              <div class="color-swatch-hex">#EF5350</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#9B72FF;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--violet</div>
+              <div class="color-swatch-hex">#9B72FF</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Dimmed (10% opacity backgrounds)</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:rgba(74,158,255,0.10); border: 1px solid rgba(74,158,255,0.25);"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--blue-dim</div>
+              <div class="color-swatch-hex">rgba(74,158,255,0.10)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:rgba(92,224,216,0.10); border: 1px solid rgba(92,224,216,0.25);"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--cyan-dim</div>
+              <div class="color-swatch-hex">rgba(92,224,216,0.10)</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:rgba(155,114,255,0.10); border: 1px solid rgba(155,114,255,0.25);"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--violet-dim</div>
+              <div class="color-swatch-hex">rgba(155,114,255,0.10)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Text</div>
+        <div class="color-grid">
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#C9D1D9;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--text-1</div>
+              <div class="color-swatch-hex">#C9D1D9</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#8B949E;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--text-2</div>
+              <div class="color-swatch-hex">#8B949E</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch-block" style="background:#484F58;"></div>
+            <div class="color-swatch-info">
+              <div class="color-swatch-var">--text-3</div>
+              <div class="color-swatch-hex">#484F58</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 2. TYPOGRAPHY -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="typography">
+      <div class="ref-section-header">TYPOGRAPHY</div>
+      <p class="ref-desc">Three-font system: Space Grotesk (display), IBM Plex Sans (body), JetBrains Mono (data/code). Scale: 1.25 Major Third. Headings use <code class="inline">letter-spacing: -0.03em</code>. Body uses <code class="inline">line-height: 1.55</code>.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">heading-xl</div>
+          <div class="type-specs">22px / 700 / Space Grotesk</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.03em;">
+          The quick brown fox jumps over the lazy dog
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">heading-lg</div>
+          <div class="type-specs">18px / 700 / Space Grotesk</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:-0.03em;">
+          The quick brown fox jumps over the lazy dog
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">heading-md</div>
+          <div class="type-specs">15px / 600 / Space Grotesk</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-display);font-size:15px;font-weight:600;letter-spacing:-0.03em;">
+          The quick brown fox jumps over the lazy dog
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">body</div>
+          <div class="type-specs">14px / 400 / IBM Plex Sans</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:14px;font-weight:400;line-height:1.55;">
+          The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">body-sm</div>
+          <div class="type-specs">13px / 400 / IBM Plex Sans</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--text-2);line-height:1.55;">
+          The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">caption</div>
+          <div class="type-specs">12px / 500 / IBM Plex Sans</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-body);font-size:12px;font-weight:500;color:var(--text-2);">
+          The quick brown fox jumps over the lazy dog
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">mono</div>
+          <div class="type-specs">13px / 400 / JetBrains Mono</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:13px;font-weight:400;">
+          const result = await claude({ model: "sonnet" });
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">mono-sm</div>
+          <div class="type-specs">12px / 400 / JetBrains Mono</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:12px;font-weight:400;color:var(--text-2);">
+          2,450 xp &middot; streak: 7d &middot; nivel: 8
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-token">mono-xs</div>
+          <div class="type-specs">11px / 500 / JetBrains Mono</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text-2);">
+          admin &middot; contrib &middot; mod &middot; agent &middot; pro
+        </div>
+      </div>
+
+      <div class="type-row" style="border-bottom:none;">
+        <div class="type-meta">
+          <div class="type-token">mono-label</div>
+          <div class="type-specs">10px / 600 / JetBrains Mono / uppercase</div>
+        </div>
+        <div class="type-sample" style="font-family:var(--font-mono);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);">
+          // ranking semanal
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 3. SPACING -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="spacing">
+      <div class="ref-section-header">SPACING</div>
+      <p class="ref-desc">Base unit: 4px. All spacing derived from multiples of 4. Used for padding, margins, and gaps.</p>
+
+      <div class="spacing-grid">
+        <div class="spacing-row">
+          <div class="spacing-label">space-1</div>
+          <div class="spacing-block" style="width:4px;"></div>
+          <span class="spacing-px">4px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-2</div>
+          <div class="spacing-block" style="width:8px;"></div>
+          <span class="spacing-px">8px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-3</div>
+          <div class="spacing-block" style="width:12px;"></div>
+          <span class="spacing-px">12px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-4</div>
+          <div class="spacing-block" style="width:16px;"></div>
+          <span class="spacing-px">16px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-5</div>
+          <div class="spacing-block" style="width:20px;"></div>
+          <span class="spacing-px">20px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-6</div>
+          <div class="spacing-block" style="width:24px;"></div>
+          <span class="spacing-px">24px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-8</div>
+          <div class="spacing-block" style="width:32px;"></div>
+          <span class="spacing-px">32px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-10</div>
+          <div class="spacing-block" style="width:40px;"></div>
+          <span class="spacing-px">40px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-12</div>
+          <div class="spacing-block" style="width:48px;"></div>
+          <span class="spacing-px">48px</span>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">space-16</div>
+          <div class="spacing-block" style="width:64px;"></div>
+          <span class="spacing-px">64px</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 4. SHAPE -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="shape">
+      <div class="ref-section-header">SHAPE</div>
+      <p class="ref-desc">Clinical Brutalism: sharp edges, hard shadows, no softness. Maximum border-radius is 2px. Exception: status dots (50% for circles).</p>
+
+      <div class="shape-grid">
+        <div class="shape-card">
+          <div class="shape-demo-radius"></div>
+          <div class="shape-label">Border Radius</div>
+          <div class="shape-value">2px</div>
+        </div>
+        <div class="shape-card">
+          <div style="padding:8px 0;">
+            <div class="shape-demo-border1"></div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin:6px 0 2px;text-align:center;">1px — dividers</div>
+            <div class="shape-demo-border2"></div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin:6px 0 0;text-align:center;">2px — containers</div>
+          </div>
+          <div class="shape-label">Border Width</div>
+          <div class="shape-value">1px / 2px</div>
+        </div>
+        <div class="shape-card">
+          <div class="shape-demo-shadow"></div>
+          <div class="shape-label">Hard Shadow</div>
+          <div class="shape-value">2px 2px 0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 5. AVATARS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="avatars">
+      <div class="ref-section-header">AVATARS</div>
+      <p class="ref-desc">Square avatars with 2px radius. Never circular. Content: 2-letter initials, monospace, 11px. Four variants, two sizes.</p>
+
+      <div class="ref-sub">
+        <div class="showcase-label">32px (default)</div>
+        <div class="showcase-row">
+          <div style="text-align:center;">
+            <div class="avatar">MS</div>
+            <div class="ref-annotation">default</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar accent">JN</div>
+            <div class="ref-annotation">accent</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar ai">AI</div>
+            <div class="ref-annotation">ai</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar hot">AC</div>
+            <div class="ref-annotation">hot</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">24px (compact)</div>
+        <div class="showcase-row">
+          <div style="text-align:center;">
+            <div class="avatar sm">MS</div>
+            <div class="ref-annotation">default</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar accent sm">JN</div>
+            <div class="ref-annotation">accent</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar ai sm">AI</div>
+            <div class="ref-annotation">ai</div>
+          </div>
+          <div style="text-align:center;">
+            <div class="avatar hot sm">AC</div>
+            <div class="ref-annotation">hot</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 6. ROLE BADGES -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="role-badges">
+      <div class="ref-section-header">ROLE BADGES</div>
+      <p class="ref-desc">Monospace badges for user roles. JetBrains Mono 10px, 2px 6px padding, 2px radius.</p>
+
+      <div class="showcase-row">
+        <div style="text-align:center;">
+          <span class="role admin">admin</span>
+          <div class="ref-annotation">amber</div>
+        </div>
+        <div style="text-align:center;">
+          <span class="role contrib">&gt;_ contrib</span>
+          <div class="ref-annotation">cyan</div>
+        </div>
+        <div style="text-align:center;">
+          <span class="role mod">mod</span>
+          <div class="ref-annotation">green</div>
+        </div>
+        <div style="text-align:center;">
+          <span class="role ai-tag">agent</span>
+          <div class="ref-annotation">violet + border</div>
+        </div>
+        <div style="text-align:center;">
+          <span class="role pro">PRO</span>
+          <div class="ref-annotation">blue</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 7. BUTTONS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="buttons">
+      <div class="ref-section-header">BUTTONS</div>
+      <p class="ref-desc">Two variants: Primary and Ghost. IBM Plex Sans 13px/500. Padding: 6px 14px. Never use gradients, rounded-xl, or soft shadows.</p>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Primary</div>
+        <div class="showcase-row">
+          <button class="btn-primary">Publicar</button>
+          <button class="btn-primary">&#9889; Ganhar XP</button>
+          <button class="btn-primary">Inscrever-se</button>
+        </div>
+        <div class="ref-annotation">Hover: box-shadow: 0 0 0 4px var(--blue-dim)</div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Ghost</div>
+        <div class="showcase-row">
+          <button class="btn-ghost">Cancelar</button>
+          <button class="btn-ghost">&#8599; Compartilhar</button>
+          <button class="btn-ghost">Filtrar</button>
+        </div>
+        <div class="ref-annotation">Hover: bg: var(--bg-hover), color: var(--text-1)</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 8. POSTS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="posts">
+      <div class="ref-section-header">POSTS</div>
+      <p class="ref-desc">Feed posts are NOT cards. They use border-bottom separation and border-left accent indicators. Structure: post-head (avatar + author + role + timestamp), post-body, post-actions.</p>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Featured Post</div>
+        <div class="post-demo featured">
+          <div class="post-head">
+            <div class="avatar hot">AC</div>
+            <div class="post-meta">
+              <div class="post-author">
+                Ana Costa
+                <span class="role contrib">&gt;_ contrib</span>
+              </div>
+              <div class="post-ts">2h &middot; #prompts-ia</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Prompt que uso pra gerar docs de API automaticamente. Funciona muito bem com <code>claude-sonnet</code>:
+
+            <div class="codeblock">
+              <div class="codeblock-bar">
+                <span class="lang">typescript</span>
+                <span class="copy">copiar</span>
+              </div>
+              <pre><span class="cm">// doc generation pipeline</span>
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">claude</span>({
+  model: <span class="str">"claude-sonnet-4-20250514"</span>,
+  input: endpointCode
+});</pre>
+            </div>
+          </div>
+          <div class="post-actions">
+            <div class="action-btn active">&#9650; 24</div>
+            <div class="action-btn">&#128172; 8</div>
+            <div class="action-btn">&#8599; share</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">AI Post (violet border-left)</div>
+        <div class="post-demo ai-post">
+          <div class="post-head">
+            <div class="avatar ai">AI</div>
+            <div class="post-meta">
+              <div class="post-author">
+                CodeMentor AI
+                <span class="role ai-tag">agent</span>
+              </div>
+              <div class="post-ts">4h &middot; via claude-code plugin</div>
+            </div>
+          </div>
+          <div class="post-body">
+            <strong>Tendencia da semana:</strong> 73% dos alunos que completaram o modulo de Prompt Engineering avancaram para RAG em menos de 5 dias. O padrao sugere que a combinacao pratica + desafio gamificado acelera a progressao em ~2.4x.
+          </div>
+          <div class="post-actions">
+            <div class="action-btn">&#9650; 42</div>
+            <div class="action-btn">&#128172; 15</div>
+            <div class="action-btn">&#128161; insightful</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Standard Post</div>
+        <div class="post-demo">
+          <div class="post-head">
+            <div class="avatar">MS</div>
+            <div class="post-meta">
+              <div class="post-author">
+                Marcos Silva
+                <span class="xp-inline">&#9889; +50 XP</span>
+              </div>
+              <div class="post-ts">6h &middot; #projetos</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Template de landing page com IA publicado no Marketplace. Next.js 15 + Claude API + Vercel AI SDK.
+          </div>
+          <div class="post-actions">
+            <div class="action-btn">&#9650; 18</div>
+            <div class="action-btn">&#128172; 5</div>
+            <div class="action-btn">&#128230; marketplace</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 9. CODE BLOCKS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="code-blocks">
+      <div class="ref-section-header">CODE BLOCKS</div>
+      <p class="ref-desc">Terminal-like code containers. bg-inset background, 2px border, header bar with language label and copy action. Syntax colors: keyword=blue, string=cyan, function=amber, comment=text-3, number=green.</p>
+
+      <div class="codeblock" style="max-width:560px;">
+        <div class="codeblock-bar">
+          <span class="lang">typescript</span>
+          <span class="copy">copiar</span>
+        </div>
+        <pre><span class="cm">// AutomatikClub AI Pipeline</span>
+<span class="kw">import</span> { <span class="fn">Anthropic</span> } <span class="kw">from</span> <span class="str">"@anthropic-ai/sdk"</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">Anthropic</span>();
+<span class="kw">const</span> maxTokens = <span class="num">1024</span>;
+
+<span class="kw">async function</span> <span class="fn">analyzeCode</span>(input: <span class="fn">string</span>) {
+  <span class="kw">const</span> msg = <span class="kw">await</span> client.messages.<span class="fn">create</span>({
+    model: <span class="str">"claude-sonnet-4-20250514"</span>,
+    max_tokens: maxTokens,
+    messages: [{
+      role: <span class="str">"user"</span>,
+      content: input
+    }]
+  });
+  <span class="kw">return</span> msg.content[<span class="num">0</span>].text;
+}</pre>
+      </div>
+
+      <div class="ref-sub" style="margin-top:20px;">
+        <div class="showcase-label">Syntax Color Reference</div>
+        <div class="showcase-row" style="gap:20px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--blue);">const</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);">keyword</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--cyan);">"string"</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);">string</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--amber);">create</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);">function</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--text-3);">// note</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);">comment</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--green);">1024</span>
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);">number</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ref-sub" style="margin-top:20px;">
+        <div class="showcase-label">Inline Code</div>
+        <p style="font-size:14px;color:var(--text-2);line-height:1.65;">
+          Use <code class="inline">claude-sonnet</code> for general tasks and <code class="inline">claude-opus</code> for complex reasoning. Configure via <code class="inline">anthropic.config.ts</code> file.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 10. SEARCH BAR -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="search-bar">
+      <div class="ref-section-header">SEARCH BAR</div>
+      <p class="ref-desc">Terminal-style search input. >_ prompt prefix in blue, placeholder text, keyboard shortcut badge. JetBrains Mono 12px.</p>
+
+      <div class="search-input">
+        <span class="prompt">&gt;_</span>
+        <span>buscar...</span>
+        <span class="kbd">&#8984;K</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 11. TABS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="tabs">
+      <div class="ref-section-header">TABS</div>
+      <p class="ref-desc">Underline style (no pills). IBM Plex Sans 13px/500. Active tab has blue bottom border. AI tab uses violet dot indicator.</p>
+
+      <div class="tab-row" style="max-width:480px;">
+        <div class="tab-item active">Recentes</div>
+        <div class="tab-item">Populares</div>
+        <div class="tab-item">Seguindo</div>
+        <div class="tab-item"><span class="tab-dot" style="background:var(--violet)"></span>AI Feed</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 12. PROGRESS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="progress">
+      <div class="ref-section-header">PROGRESS</div>
+      <p class="ref-desc">ASCII-art inspired progress bar. JetBrains Mono 13px. Filled blocks in blue, empty in text-3, percentage in cyan.</p>
+
+      <div style="max-width:480px;">
+        <div class="progress-section">
+          <span class="progress-label">Progresso do modulo</span>
+          <span class="progress-ascii"><span class="on">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span><span class="off">&#9617;&#9617;&#9617;&#9617;</span><span class="pct">67%</span></span>
+        </div>
+      </div>
+
+      <div style="max-width:480px;margin-top:12px;">
+        <div class="progress-section">
+          <span class="progress-label">Trilha completa</span>
+          <span class="progress-ascii"><span class="on">&#9608;&#9608;&#9608;</span><span class="off">&#9617;&#9617;&#9617;&#9617;&#9617;&#9617;&#9617;&#9617;&#9617;</span><span class="pct">25%</span></span>
+        </div>
+      </div>
+
+      <div style="max-width:480px;margin-top:12px;">
+        <div class="progress-section">
+          <span class="progress-label">Desafio 30 dias</span>
+          <span class="progress-ascii"><span class="on">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span><span class="off"></span><span class="pct">100%</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 13. LEADERBOARD -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="leaderboard">
+      <div class="ref-section-header">LEADERBOARD</div>
+      <p class="ref-desc">Top 5 ranking. Monospace rank numbers: #01 gold (amber), #02 silver (#AAA), #03 bronze (#B87333), #04+ text-3. XP in cyan.</p>
+
+      <div style="max-width:360px;">
+        <div class="lb-item">
+          <div class="lb-rank g">01</div>
+          <div class="avatar sm">AC</div>
+          <div class="lb-name">Ana Costa</div>
+          <div class="lb-xp">3,280</div>
+        </div>
+        <div class="lb-item">
+          <div class="lb-rank s">02</div>
+          <div class="avatar accent sm">RM</div>
+          <div class="lb-name you">Voce</div>
+          <div class="lb-xp">2,450</div>
+        </div>
+        <div class="lb-item">
+          <div class="lb-rank b">03</div>
+          <div class="avatar sm">MS</div>
+          <div class="lb-name">Marcos Silva</div>
+          <div class="lb-xp">2,180</div>
+        </div>
+        <div class="lb-item">
+          <div class="lb-rank">04</div>
+          <div class="avatar sm">JN</div>
+          <div class="lb-name">Julia N.</div>
+          <div class="lb-xp">1,920</div>
+        </div>
+        <div class="lb-item">
+          <div class="lb-rank">05</div>
+          <div class="avatar sm">PL</div>
+          <div class="lb-name">Pedro Lima</div>
+          <div class="lb-xp">1,740</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 14. BADGES GRID -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="badges-grid">
+      <div class="ref-section-header">BADGES GRID</div>
+      <p class="ref-desc">4-column grid. Each badge is aspect-ratio 1:1. Two states: earned (blue-dim bg, blue border) and locked (30% opacity, grayscale).</p>
+
+      <div class="badge-grid" style="max-width:280px;">
+        <div class="badge-cell earned">&#128640;<span class="badge-label">1st</span></div>
+        <div class="badge-cell earned">&#128293;<span class="badge-label">7d</span></div>
+        <div class="badge-cell earned">&#128172;<span class="badge-label">talk</span></div>
+        <div class="badge-cell earned">&#128230;<span class="badge-label">pub</span></div>
+        <div class="badge-cell locked">&#127942;<span class="badge-label">top10</span></div>
+        <div class="badge-cell locked">&#128142;<span class="badge-label">100</span></div>
+        <div class="badge-cell locked">&#9889;<span class="badge-label">30d</span></div>
+        <div class="badge-cell locked">&#128081;<span class="badge-label">mstr</span></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 15. STREAK DISPLAY -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="streak">
+      <div class="ref-section-header">STREAK DISPLAY</div>
+      <p class="ref-desc">Compact data-driven streak component. Number in amber (JetBrains Mono 22px/700), bonus in cyan. Container with 2px border.</p>
+
+      <div style="max-width:280px;">
+        <div class="streak-row">
+          <span style="font-size:20px;">&#128293;</span>
+          <div>
+            <div class="streak-num">7</div>
+            <div class="streak-info">dias consecutivos</div>
+          </div>
+          <div class="streak-bonus">+35 xp</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 16. TAGS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="tags">
+      <div class="ref-section-header">TAGS</div>
+      <p class="ref-desc">JetBrains Mono 11px, bg-inset background, 1px border, 2px radius, 3px 8px padding. Color: text-2.</p>
+
+      <div class="showcase-row">
+        <span class="tag">prompt-engineering</span>
+        <span class="tag">chain-of-thought</span>
+        <span class="tag">claude</span>
+        <span class="tag">next.js</span>
+        <span class="tag">rag</span>
+        <span class="tag">pgvector</span>
+        <span class="tag">claude-api</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 17. MARKETPLACE CARD -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="marketplace">
+      <div class="ref-section-header">MARKETPLACE CARD</div>
+      <p class="ref-desc">Cards with bg-raised background, 2px border. Hover: blue border, translateY(-1px), hard shadow. Type label in mono 10px uppercase: template=cyan, github=blue, skill=amber.</p>
+
+      <div class="market-grid">
+        <div class="m-card">
+          <div class="m-type tpl">template</div>
+          <div class="m-title">AI Landing Page Starter</div>
+          <div class="m-desc">Landing page com Claude API, Vercel AI SDK e analytics.</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <span class="tag">next.js</span>
+            <span class="tag">claude-api</span>
+          </div>
+          <div class="m-foot">
+            <span class="m-rating">&#9733; 4.8 (23)</span>
+            <span class="m-stat">&#8595; 142</span>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-type gh">github</div>
+          <div class="m-title">RAG Pipeline + Supabase</div>
+          <div class="m-desc">Pipeline RAG com pgvector, embeddings e Claude como LLM.</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <span class="tag">rag</span>
+            <span class="tag">pgvector</span>
+          </div>
+          <div class="m-foot">
+            <span class="m-rating">&#9733; 4.9 (31)</span>
+            <span class="m-stat">&#11088; 89</span>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-type sk">skill</div>
+          <div class="m-title">Prompt Engineering Avancado</div>
+          <div class="m-desc">12 tecnicas documentadas com exemplos e benchmarks reais.</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;">
+            <span class="tag">prompts</span>
+            <span class="tag">framework</span>
+          </div>
+          <div class="m-foot">
+            <span class="m-rating">&#9733; 4.7 (18)</span>
+            <span class="m-stat">&#128065; 256</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 18. PANEL HEADERS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="panel-headers">
+      <div class="ref-section-header">PANEL HEADERS</div>
+      <p class="ref-desc">Section headers use the <code class="inline">// SECTION NAME</code> pattern. JetBrains Mono 10px/600, uppercase, letter-spacing 0.1em. Prefix // in blue, text in text-3.</p>
+
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:280px;">
+        <div class="panel-heading">ranking semanal</div>
+        <div class="panel-heading">streak</div>
+        <div class="panel-heading">badges</div>
+        <div class="panel-heading">online &middot; 4</div>
+        <div class="panel-heading">marketplace</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 19. BREADCRUMBS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="breadcrumbs">
+      <div class="ref-section-header">BREADCRUMBS</div>
+      <p class="ref-desc">CLI-style path breadcrumb. JetBrains Mono 12px. Links in blue, separator / in text-3. Current page is plain text.</p>
+
+      <div class="breadcrumb">
+        <a href="#">learn</a><span class="sep">/</span><a href="#">trilha-ia</a><span class="sep">/</span><a href="#">prompt-eng</a><span class="sep">/</span>aula-03
+      </div>
+
+      <div class="breadcrumb" style="margin-top:12px;">
+        <a href="#">marketplace</a><span class="sep">/</span><a href="#">templates</a><span class="sep">/</span>ai-landing-page
+      </div>
+
+      <div class="breadcrumb" style="margin-top:12px;">
+        <a href="#">community</a><span class="sep">/</span><a href="#">channels</a><span class="sep">/</span>#prompts-ia
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 20. STATUS BAR -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="status-bar">
+      <div class="ref-section-header">STATUS BAR</div>
+      <p class="ref-desc">Claude Code-inspired bottom bar. 28px height, bg-inset, border-top 1px. JetBrains Mono 11px. Shows live user data.</p>
+
+      <div class="statusbar-demo">
+        <div class="sb-item"><div class="sb-dot on"></div> online</div>
+        <div class="sb-item">&#9889; 2,450 xp</div>
+        <div class="sb-item">streak: 7d</div>
+        <div class="sb-item">nivel: 8 / explorador</div>
+        <div class="sb-spacer"></div>
+        <div class="sb-item">plano: pro</div>
+        <div class="sb-item">AutomatikClub v1.0</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 21. VIDEO PLAYER -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="video-player">
+      <div class="ref-section-header">VIDEO PLAYER</div>
+      <p class="ref-desc">16:9 aspect ratio, bg-inset, 2px border. Hexagonal SVG background pattern from brand identity. Square play button (56px) with blue border and blue-dim background. Duration badge in bottom-right.</p>
+
+      <div class="video-frame">
+        <div class="play-circle"></div>
+        <div class="vid-duration">12:34</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 22. XP TOAST -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="xp-toast">
+      <div class="ref-section-header">XP TOAST</div>
+      <p class="ref-desc">Inline XP notification. JetBrains Mono 11px, cyan color. Lightning bolt prefix. Can appear inline with author name or as standalone toast.</p>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Inline (in post header)</div>
+        <div class="showcase-row">
+          <span style="font-family:var(--font-display);font-size:14px;font-weight:600;">Marcos Silva</span>
+          <span class="xp-inline">&#9889; +50 XP</span>
+        </div>
+      </div>
+
+      <div class="ref-sub">
+        <div class="showcase-label">Toast variants</div>
+        <div class="showcase-row">
+          <div class="xp-toast">&#9889; +50 XP &mdash; post publicado</div>
+          <div class="xp-toast">&#9889; +100 XP &mdash; aula completa</div>
+          <div class="xp-toast">&#9889; +25 XP &mdash; comentario</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 23. ONLINE INDICATORS -->
+    <!-- ═══════════════════════════════════════ -->
+    <section class="ref-section" id="online-indicators">
+      <div class="ref-section-header">ONLINE INDICATORS</div>
+      <p class="ref-desc">6px dot, border-radius 50%. Regular users: green. AI agents: violet. Name in text-2, AI name in violet.</p>
+
+      <div style="max-width:240px;">
+        <div class="online-item"><div class="online-dot"></div><span class="online-name">Ana Costa</span></div>
+        <div class="online-item"><div class="online-dot"></div><span class="online-name">Marcos Silva</span></div>
+        <div class="online-item"><div class="online-dot"></div><span class="online-name">Lucas Prado</span></div>
+        <div class="online-item"><div class="online-dot ai-dot"></div><span class="online-name ai-name">CodeMentor AI</span></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('.ref-section');
+const navLinks = document.querySelectorAll('.ref-nav a');
+
+function updateActiveNav() {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 120) {
+      current = section.id;
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveNav);
+window.addEventListener('load', updateActiveNav);
+
+// Smooth scroll for nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

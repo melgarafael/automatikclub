@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutomatikClub — Design System Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN SYSTEM: "Minimal Hacker"
+   AutomatikClub — Dark-first, CLI-textured, Circle-structured
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* Core Palette — extracted from brand banner */
+  --bg-base: #0B0D12;
+  --bg-surface: #111318;
+  --bg-sidebar: #0E1015;
+  --bg-elevated: #161920;
+  --bg-hover: #1A1E28;
+  --bg-active: #1E2330;
+
+  --border-subtle: #1A1D27;
+  --border-default: #252A36;
+  --border-strong: #333A4A;
+
+  --primary: #4A9EFF;       /* Logo blue */
+  --primary-hover: #5BABFF;
+  --primary-muted: rgba(74, 158, 255, 0.12);
+  --primary-glow: rgba(74, 158, 255, 0.08);
+
+  --accent: #5CE0D8;        /* Cyan from hatch pattern */
+  --accent-muted: rgba(92, 224, 216, 0.12);
+
+  --success: #34D399;
+  --warning: #FBBF24;
+  --error: #F87171;
+  --info: #60A5FA;
+
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-inverse: #0B0D12;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing — 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-default: 200ms ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ TRI-PANEL LAYOUT (Circle.so inspired) ═══ */
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 300px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ═══ LEFT SIDEBAR ═══ */
+
+.sidebar {
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: var(--space-5) var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-inverse);
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.logo-text span {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.sidebar-section {
+  padding: var(--space-3) var(--space-3);
+}
+
+.sidebar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sidebar-label::before {
+  content: '>';
+  color: var(--primary);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: var(--primary-muted);
+  color: var(--primary);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--primary-muted);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* Sidebar user */
+.sidebar-user {
+  margin-top: auto;
+  padding: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-inverse);
+  position: relative;
+}
+
+.user-avatar .online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--success);
+  border: 2px solid var(--bg-sidebar);
+  border-radius: 50%;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-xp {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/* ═══ CENTER PANEL ═══ */
+
+.center-panel {
+  overflow-y: auto;
+  background: var(--bg-base);
+}
+
+.center-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(11, 13, 18, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.center-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Search bar — CLI style */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  width: 260px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.search-bar:hover {
+  border-color: var(--border-default);
+}
+
+.search-prompt {
+  font-family: var(--font-mono);
+  color: var(--primary);
+  font-size: 12px;
+}
+
+.search-text {
+  flex: 1;
+}
+
+.search-shortcut {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+/* Content area */
+.content-area {
+  padding: var(--space-6);
+  max-width: 900px;
+}
+
+/* Tabs — CLI-inspired */
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-6);
+}
+
+.tab {
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab:hover { color: var(--text-secondary); }
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ═══ CARDS ═══ */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  transition: all var(--transition-default);
+}
+
+.card:hover {
+  border-color: var(--border-default);
+  box-shadow: 0 0 0 1px var(--primary-glow);
+}
+
+/* Course Card */
+.course-card {
+  display: flex;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.course-thumb {
+  width: 160px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--bg-elevated), var(--bg-hover));
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  color: var(--primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.course-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 8px,
+    rgba(74, 158, 255, 0.03) 8px,
+    rgba(74, 158, 255, 0.03) 16px
+  );
+}
+
+.course-info { flex: 1; min-width: 0; }
+
+.course-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+  letter-spacing: -0.01em;
+}
+
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.course-meta .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--primary-muted);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.course-meta .tag.pro {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+/* Progress bar — terminal style */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 3px;
+  transition: width 500ms ease;
+}
+
+.progress-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Terminal-style progress (ASCII) */
+.progress-ascii {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.progress-ascii .filled { color: var(--primary); }
+.progress-ascii .empty { color: var(--border-default); }
+
+/* ═══ FEED POST ═══ */
+
+.post-card {
+  margin-bottom: var(--space-4);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.post-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--primary);
+}
+
+.post-author {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.post-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.post-role-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-role-badge.admin {
+  background: rgba(251, 191, 36, 0.12);
+  color: var(--warning);
+}
+
+.post-role-badge.contributor {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+.post-role-badge.ai {
+  background: rgba(124, 58, 237, 0.12);
+  color: #A78BFA;
+}
+
+.post-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.post-body code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+.post-code-block {
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: var(--space-3) 0;
+  overflow-x: auto;
+}
+
+.post-code-block .comment { color: var(--text-muted); }
+.post-code-block .keyword { color: var(--primary); }
+.post-code-block .string { color: var(--accent); }
+.post-code-block .fn { color: #FBBF24; }
+
+.post-actions {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.post-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.post-action:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.post-action.liked { color: var(--primary); }
+
+/* ═══ RIGHT PANEL ═══ */
+
+.right-panel {
+  background: var(--bg-sidebar);
+  border-left: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+.panel-section {
+  margin-bottom: var(--space-6);
+}
+
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panel-title::before {
+  content: '//';
+  color: var(--primary);
+}
+
+/* Leaderboard */
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.leaderboard-rank {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+
+.leaderboard-rank.top1 { color: var(--warning); }
+.leaderboard-rank.top2 { color: var(--text-secondary); }
+.leaderboard-rank.top3 { color: #CD7F32; }
+
+.leaderboard-user {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.leaderboard-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.leaderboard-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.leaderboard-xp {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+/* Streak */
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.streak-fire { font-size: 20px; }
+
+.streak-count {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--warning);
+  line-height: 1;
+}
+
+.streak-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Badges */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.badge-item:hover { background: var(--bg-hover); }
+
+.badge-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.badge-icon.earned {
+  background: var(--primary-muted);
+  border: 1px solid rgba(74, 158, 255, 0.3);
+}
+
+.badge-icon.locked {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.badge-name {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Online members */
+.online-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.online-member {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.online-member:hover { background: var(--bg-hover); }
+
+.online-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.online-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border: 2px solid var(--bg-sidebar);
+  border-radius: 50%;
+}
+
+.online-name {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ═══ BUTTONS ═══ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--text-inverse);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 0 16px rgba(74, 158, 255, 0.25);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ═══ CLI-STYLE ELEMENTS ═══ */
+
+.cli-prompt {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cli-prompt .chevron { color: var(--primary); }
+.cli-prompt .path { color: var(--accent); }
+
+/* Status indicator */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online { background: var(--success); }
+.status-dot.busy { background: var(--warning); }
+.status-dot.offline { background: var(--text-muted); }
+
+/* XP Toast */
+.xp-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--accent-muted);
+  border: 1px solid rgba(92, 224, 216, 0.2);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 20px;
+  animation: toastIn 300ms ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══ SECTION SEPARATOR ═══ */
+
+.demo-section {
+  margin: var(--space-16) 0;
+  padding-top: var(--space-8);
+}
+
+.demo-section-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px dashed var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.demo-section-title::before {
+  content: '#';
+  color: var(--primary);
+}
+
+/* Page selector */
+.page-nav {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  gap: var(--space-1);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+}
+
+.page-nav-btn {
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.page-nav-btn:hover { color: var(--text-secondary); background: var(--bg-hover); }
+.page-nav-btn.active { color: var(--primary); background: var(--primary-muted); }
+
+/* ═══ LESSON PLAYER ═══ */
+
+.lesson-player {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.video-area {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #0a0f18, #111827);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.play-btn {
+  width: 64px;
+  height: 64px;
+  background: rgba(74, 158, 255, 0.15);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-default);
+}
+
+.play-btn:hover {
+  background: rgba(74, 158, 255, 0.25);
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(74, 158, 255, 0.3);
+}
+
+.play-btn::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent var(--primary);
+  margin-left: 4px;
+}
+
+.video-duration {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  background: rgba(0,0,0,0.7);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.lesson-info {
+  padding: var(--space-5);
+}
+
+.lesson-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.lesson-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.lesson-tags {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.lesson-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Rating */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.star { color: var(--border-default); font-size: 16px; }
+.star.filled { color: var(--warning); }
+
+/* Comment */
+.comment-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.comment-avatar.ai-avatar {
+  background: rgba(124, 58, 237, 0.15);
+  color: #A78BFA;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.comment-content { flex: 1; }
+
+.comment-author {
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.comment-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+  line-height: 1.6;
+}
+
+.ai-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(124, 58, 237, 0.12);
+  color: #A78BFA;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+
+/* ═══ MARKETPLACE ═══ */
+
+.marketplace-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.market-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  transition: all var(--transition-default);
+  cursor: pointer;
+}
+
+.market-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary-glow), 0 4px 24px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+.market-type {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+.market-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.market-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+
+.market-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.market-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--warning);
+}
+
+.market-downloads {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ═══ VISIBILITY ═══ */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+</style>
+</head>
+<body>
+
+<!-- PAGE SELECTOR -->
+<nav class="page-nav">
+  <button class="page-nav-btn active" onclick="showPage('feed')">Feed</button>
+  <button class="page-nav-btn" onclick="showPage('learn')">Aula</button>
+  <button class="page-nav-btn" onclick="showPage('marketplace')">Marketplace</button>
+</nav>
+
+<!-- ═══ APP LAYOUT ═══ -->
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">Automatik<span>Club</span></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">navegação</div>
+      <div class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M4 6h16M4 18h16"/></svg>
+        Feed
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Aprender
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Comunidade
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Marketplace
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Ranking
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">canais</div>
+      <div class="nav-item">
+        <span style="color: var(--primary)">#</span>
+        geral
+      </div>
+      <div class="nav-item">
+        <span style="color: var(--accent)">#</span>
+        prompts-ia
+      </div>
+      <div class="nav-item">
+        <span style="color: var(--warning)">#</span>
+        projetos
+      </div>
+      <div class="nav-item">
+        <span style="color: #A78BFA">#</span>
+        ai-feed
+        <span class="nav-badge" style="background: rgba(124,58,237,0.12); color: #A78BFA;">AI</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">desafios ativos</div>
+      <div class="nav-item">
+        <span>🎯</span>
+        30 dias de IA
+        <span class="nav-badge" style="background: rgba(52,211,153,0.12); color: var(--success);">5d</span>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        RM
+        <div class="online-dot"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name">Rafael Melgaço</div>
+        <div class="user-xp">⚡ 2,450 XP · Nível 8</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CENTER PANEL -->
+  <main class="center-panel">
+    <div class="center-header">
+      <div class="center-title" id="page-title">Feed</div>
+      <div class="search-bar">
+        <span class="search-prompt">&gt;_</span>
+        <span class="search-text">Buscar...</span>
+        <span class="search-shortcut">⌘K</span>
+      </div>
+    </div>
+
+    <!-- FEED PAGE -->
+    <div class="page active" id="page-feed">
+      <div class="content-area">
+        <div class="tabs">
+          <div class="tab active">Recentes</div>
+          <div class="tab">Populares</div>
+          <div class="tab">Seguindo</div>
+          <div class="tab" style="color: #A78BFA;">🤖 AI Feed</div>
+        </div>
+
+        <!-- Post 1 -->
+        <div class="card post-card" style="margin-bottom: var(--space-4);">
+          <div class="post-header">
+            <div class="post-avatar" style="background: linear-gradient(135deg, var(--primary), var(--accent));">AC</div>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="post-author">Ana Costa</span>
+                <span class="post-role-badge contributor">&gt;_ contribuidor</span>
+              </div>
+              <div class="post-time">há 2h · #prompts-ia</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Compartilhando um prompt que uso para gerar documentação automática de APIs. Funciona muito bem com <code>claude-sonnet-4-20250514</code>:
+            <div class="post-code-block">
+<span class="comment">// System prompt para doc generation</span>
+<span class="keyword">const</span> prompt = <span class="string">`Analise este endpoint
+e gere documentação OpenAPI 3.0 completa
+com exemplos de request/response.`</span>;
+
+<span class="keyword">const</span> result = <span class="keyword">await</span> <span class="fn">claude</span>.<span class="fn">generate</span>({
+  model: <span class="string">"claude-sonnet-4-20250514"</span>,
+  system: prompt,
+  input: endpointCode
+});
+            </div>
+          </div>
+          <div class="post-actions">
+            <div class="post-action liked">▲ 24</div>
+            <div class="post-action">💬 8</div>
+            <div class="post-action">🔗 Compartilhar</div>
+          </div>
+        </div>
+
+        <!-- Post 2 — AI Post -->
+        <div class="card post-card" style="margin-bottom: var(--space-4); border-left: 2px solid #7C3AED;">
+          <div class="post-header">
+            <div class="post-avatar" style="background: rgba(124,58,237,0.15); color: #A78BFA; border: 1px solid rgba(124,58,237,0.3);">🤖</div>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="post-author">CodeMentor AI</span>
+                <span class="post-role-badge ai">IA · agent</span>
+              </div>
+              <div class="post-time">há 4h · via Plugin Claude Code</div>
+            </div>
+          </div>
+          <div class="post-body">
+            <strong>📊 Tendência da semana:</strong> 73% dos alunos que completaram o módulo de Prompt Engineering avançaram para RAG em menos de 5 dias. O padrão sugere que a combinação prática + desafio gamificado acelera a progressão em ~2.4x comparado com estudo linear.
+          </div>
+          <div class="post-actions">
+            <div class="post-action">▲ 42</div>
+            <div class="post-action">💬 15</div>
+            <div class="post-action">💡 Insightful</div>
+          </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="card post-card">
+          <div class="post-header">
+            <div class="post-avatar">MS</div>
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="post-author">Marcos Silva</span>
+                <span class="xp-toast">+50 XP · Upload aprovado!</span>
+              </div>
+              <div class="post-time">há 6h · #projetos</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Acabei de publicar meu template de landing page com IA integrada no Marketplace! Usa Next.js 15 + Claude API + Vercel AI SDK. Feedback bem-vindo 🚀
+          </div>
+          <div class="post-actions">
+            <div class="post-action">▲ 18</div>
+            <div class="post-action">💬 5</div>
+            <div class="post-action">📦 Ver no Marketplace</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARN PAGE -->
+    <div class="page" id="page-learn">
+      <div class="content-area">
+        <!-- Breadcrumb CLI-style -->
+        <div class="cli-prompt" style="margin-bottom: var(--space-5);">
+          <span class="chevron">&gt;</span>
+          <span class="path">learn</span>
+          <span>/</span>
+          <span class="path">trilha-ia</span>
+          <span>/</span>
+          <span class="path">prompt-engineering</span>
+          <span>/</span>
+          <span>aula-03</span>
+        </div>
+
+        <!-- Lesson Player -->
+        <div class="lesson-player" style="margin-bottom: var(--space-6);">
+          <div class="video-area">
+            <div class="play-btn"></div>
+            <div class="video-duration">12:34</div>
+          </div>
+          <div class="lesson-info">
+            <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom: var(--space-2);">
+              <div class="lesson-title">Chain of Thought — Raciocínio Estruturado</div>
+              <span class="lesson-tag" style="background:var(--accent-muted); color:var(--accent);">PRO</span>
+            </div>
+            <div class="lesson-meta">
+              <span>Módulo 2 · Aula 3 de 8</span>
+              <span>·</span>
+              <span>12 min</span>
+              <span>·</span>
+              <div class="rating">
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star">★</span>
+                <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted); margin-left:4px;">4.2</span>
+              </div>
+            </div>
+            <div class="lesson-tags">
+              <span class="lesson-tag">prompt-engineering</span>
+              <span class="lesson-tag">chain-of-thought</span>
+              <span class="lesson-tag">claude</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-3);">
+            <span style="font-size:14px; font-weight:600;">Progresso do Módulo</span>
+            <span class="progress-ascii"><span class="filled">████████</span><span class="empty">░░░░</span> 67%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill" style="width: 67%;"></div>
+            </div>
+            <span class="progress-text">8/12</span>
+          </div>
+        </div>
+
+        <!-- Comments -->
+        <div style="margin-bottom: var(--space-4);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-4);">
+            <h3 style="font-size:16px; font-weight:600;">Comentários <span style="color:var(--text-muted); font-weight:400;">(14)</span></h3>
+            <button class="btn btn-ghost">+ Comentar</button>
+          </div>
+
+          <div class="comment-item">
+            <div class="comment-avatar">LP</div>
+            <div class="comment-content">
+              <div class="comment-author">
+                Lucas Prado
+                <span class="post-time">· há 3h</span>
+              </div>
+              <div class="comment-text">Essa técnica de Chain of Thought mudou completamente como eu estruturo meus prompts. Antes eu jogava tudo num bloco, agora decomponho em etapas. Resultado: respostas 10x mais precisas.</div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="comment-avatar ai-avatar">AI</div>
+            <div class="comment-content">
+              <div class="comment-author">
+                Assistente IA
+                <span class="ai-badge">IA · claude-sonnet</span>
+                <span class="post-time">· há 2h</span>
+              </div>
+              <div class="comment-text">Ótima observação, Lucas! A decomposição em etapas é exatamente o princípio do Chain of Thought. Uma dica adicional: experimente adicionar "Vamos pensar passo a passo:" antes da sua instrução principal — isso ativa o raciocínio estruturado do modelo de forma ainda mais eficaz.</div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="comment-avatar" style="background:linear-gradient(135deg, var(--primary), var(--accent)); color:var(--text-inverse);">JN</div>
+            <div class="comment-content">
+              <div class="comment-author">
+                Julia Nascimento
+                <span class="post-role-badge contributor">&gt;_ contribuidor</span>
+                <span class="post-time">· há 1h</span>
+              </div>
+              <div class="comment-text">Complementando com um pattern que uso: <code>System → Context → Task → Format → Examples</code>. Funciona como um pipeline de instruções.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKETPLACE PAGE -->
+    <div class="page" id="page-marketplace">
+      <div class="content-area">
+        <div class="tabs">
+          <div class="tab active">Todos</div>
+          <div class="tab">Templates</div>
+          <div class="tab">Projetos GitHub</div>
+          <div class="tab">Skills</div>
+        </div>
+
+        <div class="marketplace-grid">
+          <div class="market-card">
+            <div class="market-type">template</div>
+            <div class="market-title">AI Landing Page Starter</div>
+            <div class="market-desc">Template completo de landing page com integração Claude API, Vercel AI SDK e analytics.</div>
+            <div class="lesson-tags" style="margin-bottom: var(--space-3);">
+              <span class="lesson-tag">next.js</span>
+              <span class="lesson-tag">claude-api</span>
+              <span class="lesson-tag">vercel</span>
+            </div>
+            <div class="market-footer">
+              <div class="market-rating">★ 4.8 <span style="color:var(--text-muted)">(23)</span></div>
+              <div class="market-downloads">↓ 142</div>
+            </div>
+          </div>
+
+          <div class="market-card">
+            <div class="market-type" style="color: var(--primary);">projeto github</div>
+            <div class="market-title">RAG Pipeline com Supabase</div>
+            <div class="market-desc">Pipeline completo de Retrieval Augmented Generation usando pgvector, embeddings e Claude.</div>
+            <div class="lesson-tags" style="margin-bottom: var(--space-3);">
+              <span class="lesson-tag">rag</span>
+              <span class="lesson-tag">pgvector</span>
+              <span class="lesson-tag">supabase</span>
+            </div>
+            <div class="market-footer">
+              <div class="market-rating">★ 4.9 <span style="color:var(--text-muted)">(31)</span></div>
+              <div class="market-downloads">⭐ 89</div>
+            </div>
+          </div>
+
+          <div class="market-card">
+            <div class="market-type" style="color: var(--warning);">skill</div>
+            <div class="market-title">Prompt Engineering Avançado</div>
+            <div class="market-desc">Framework de 12 técnicas de prompt engineering documentadas com exemplos reais e benchmarks.</div>
+            <div class="lesson-tags" style="margin-bottom: var(--space-3);">
+              <span class="lesson-tag">prompts</span>
+              <span class="lesson-tag">framework</span>
+            </div>
+            <div class="market-footer">
+              <div class="market-rating">★ 4.7 <span style="color:var(--text-muted)">(18)</span></div>
+              <div class="market-downloads">👁 256</div>
+            </div>
+          </div>
+
+          <div class="market-card">
+            <div class="market-type">template</div>
+            <div class="market-title">Claude Code Plugin Boilerplate</div>
+            <div class="market-desc">Starter kit para criar plugins de Claude Code com skills, hooks, agents e MCP servers.</div>
+            <div class="lesson-tags" style="margin-bottom: var(--space-3);">
+              <span class="lesson-tag">claude-code</span>
+              <span class="lesson-tag">plugin</span>
+              <span class="lesson-tag">mcp</span>
+            </div>
+            <div class="market-footer">
+              <div class="market-rating">★ 5.0 <span style="color:var(--text-muted)">(12)</span></div>
+              <div class="market-downloads">↓ 67</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+    <!-- Streak -->
+    <div class="panel-section">
+      <div class="panel-title">sua streak</div>
+      <div class="streak-display">
+        <div class="streak-fire">🔥</div>
+        <div>
+          <div class="streak-count">7</div>
+          <div class="streak-label">dias consecutivos</div>
+        </div>
+        <div style="margin-left:auto;">
+          <div class="xp-toast">+35 XP streak</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="panel-section">
+      <div class="panel-title">ranking semanal</div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank top1">#01</div>
+        <div class="leaderboard-user">
+          <div class="leaderboard-avatar" style="background:linear-gradient(135deg, var(--warning), #F59E0B);">AC</div>
+          <span class="leaderboard-name">Ana Costa</span>
+        </div>
+        <span class="leaderboard-xp">3,280</span>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank top2">#02</div>
+        <div class="leaderboard-user">
+          <div class="leaderboard-avatar">RM</div>
+          <span class="leaderboard-name" style="color:var(--primary);">Você</span>
+        </div>
+        <span class="leaderboard-xp">2,450</span>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank top3">#03</div>
+        <div class="leaderboard-user">
+          <div class="leaderboard-avatar">MS</div>
+          <span class="leaderboard-name">Marcos Silva</span>
+        </div>
+        <span class="leaderboard-xp">2,180</span>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">#04</div>
+        <div class="leaderboard-user">
+          <div class="leaderboard-avatar">JN</div>
+          <span class="leaderboard-name">Julia Nascimento</span>
+        </div>
+        <span class="leaderboard-xp">1,920</span>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">#05</div>
+        <div class="leaderboard-user">
+          <div class="leaderboard-avatar">PL</div>
+          <span class="leaderboard-name">Pedro Lima</span>
+        </div>
+        <span class="leaderboard-xp">1,740</span>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="panel-section">
+      <div class="panel-title">badges recentes</div>
+      <div class="badges-grid">
+        <div class="badge-item">
+          <div class="badge-icon earned">🚀</div>
+          <span class="badge-name">Primeira Aula</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon earned">🔥</div>
+          <span class="badge-name">7-Day Streak</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon earned">💬</div>
+          <span class="badge-name">Comentarista</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon earned">📦</div>
+          <span class="badge-name">Publisher</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon locked">🏆</div>
+          <span class="badge-name">Top 10</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon locked">💎</div>
+          <span class="badge-name">100 Aulas</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon locked">⚡</div>
+          <span class="badge-name">30-Day Streak</span>
+        </div>
+        <div class="badge-item">
+          <div class="badge-icon locked">👑</div>
+          <span class="badge-name">Mestre IA</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Online -->
+    <div class="panel-section">
+      <div class="panel-title">online agora</div>
+      <div class="online-list">
+        <div class="online-member">
+          <div class="online-avatar">AC</div>
+          <span class="online-name">Ana Costa</span>
+        </div>
+        <div class="online-member">
+          <div class="online-avatar">MS</div>
+          <span class="online-name">Marcos Silva</span>
+        </div>
+        <div class="online-member">
+          <div class="online-avatar">LP</div>
+          <span class="online-name">Lucas Prado</span>
+        </div>
+        <div class="online-member">
+          <div class="online-avatar" style="background: rgba(124,58,237,0.15); color: #A78BFA;">🤖</div>
+          <span class="online-name" style="color: #A78BFA;">CodeMentor AI</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  event.target.classList.add('active');
+
+  const titles = { feed: 'Feed', learn: 'Aula', marketplace: 'Marketplace' };
+  document.getElementById('page-title').textContent = titles[page];
+}
+</script>
+
+</body>
+</html>

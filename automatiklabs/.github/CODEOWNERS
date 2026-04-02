@@ -1,0 +1,18 @@
+# Global owners
+* @automatiklabs/core
+
+# Architecture
+/src/shared/ @automatiklabs/core
+/src/proxy.ts @automatiklabs/core
+
+# Features
+/src/features/auth/ @automatiklabs/core
+/src/features/billing/ @automatiklabs/core
+/src/features/courses/ @automatiklabs/core
+/src/features/community/ @automatiklabs/core
+/src/features/gamification/ @automatiklabs/core
+/src/features/admin/ @automatiklabs/core
+
+# Infrastructure
+/supabase/ @automatiklabs/core
+/.github/ @automatiklabs/core

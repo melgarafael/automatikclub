@@ -1,0 +1,55 @@
+import { createClient } from "@/shared/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { ProfileEditForm } from "@/features/auth/components/profile-edit-form";
+
+export default async function ProfileEditPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) {
+    redirect("/login");
+  }
+
+  return (
+    <div className="py-5">
+      <h1 className="mb-5 font-display text-[18px] font-bold text-text-1">
+        Editar Perfil
+      </h1>
+      <ProfileEditForm
+        profile={{
+          id: profile.id,
+          full_name: profile.full_name,
+          username: profile.username,
+          email: user.email ?? "",
+          role: profile.role,
+          subscription_level: profile.subscription_level,
+          avatar_url: profile.avatar_url,
+          bio: profile.bio,
+          whatsapp: profile.whatsapp,
+          instagram: profile.instagram,
+          portfolio_url: profile.portfolio_url,
+          stack: profile.stack ?? [],
+          xp: profile.xp ?? 0,
+          level: profile.level ?? 1,
+          streak: profile.streak ?? 0,
+          profile_visibility: profile.profile_visibility ?? "public",
+          created_at: profile.created_at,
+          updated_at: profile.updated_at,
+        }}
+      />
+    </div>
+  );
+}

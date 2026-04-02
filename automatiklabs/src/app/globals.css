@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+@theme {
+  /* Core Backgrounds */
+  --color-bg: #0B0D12;
+  --color-bg-raised: #13161D;
+  --color-bg-inset: #0E1016;
+  --color-bg-hover: #1A1E28;
+  --color-bg-active: #222838;
+
+  /* Borders */
+  --color-border: #1E2330;
+  --color-border-hard: #2A3040;
+  --color-border-focus: #4A9EFF;
+
+  /* Brand */
+  --color-blue: #4A9EFF;
+  --color-cyan: #5CE0D8;
+
+  /* Semantic */
+  --color-green: #3DDC84;
+  --color-amber: #F0A030;
+  --color-red: #EF5350;
+  --color-violet: #9B72FF;
+
+  /* Dimmed (for backgrounds) */
+  --color-blue-dim: rgba(74, 158, 255, 0.10);
+  --color-cyan-dim: rgba(92, 224, 216, 0.10);
+  --color-violet-dim: rgba(155, 114, 255, 0.10);
+
+  /* Text */
+  --color-text-1: #C9D1D9;
+  --color-text-2: #8B949E;
+  --color-text-3: #484F58;
+
+  /* Fonts */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Shape */
+  --radius-default: 2px;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+
+  /* Shadow */
+  --shadow-hard: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-1);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    color: var(--color-text-1);
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 2px;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    outline: none;
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 2px var(--color-blue-dim);
+  }
+}
