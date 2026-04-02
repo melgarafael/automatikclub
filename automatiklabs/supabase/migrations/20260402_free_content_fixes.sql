@@ -85,6 +85,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS trg_check_coin_balance ON coin_transactions;
 CREATE TRIGGER trg_check_coin_balance
   BEFORE INSERT ON coin_transactions
   FOR EACH ROW
@@ -103,6 +104,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_normalize_lead_email ON leads;
 CREATE TRIGGER trg_normalize_lead_email
   BEFORE INSERT OR UPDATE ON leads
   FOR EACH ROW
@@ -117,16 +119,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_normalize_transaction_email ON coin_transactions;
 CREATE TRIGGER trg_normalize_transaction_email
   BEFORE INSERT OR UPDATE ON coin_transactions
   FOR EACH ROW
   EXECUTE FUNCTION normalize_transaction_email();
 
+DROP TRIGGER IF EXISTS trg_normalize_unlock_email ON content_unlocks;
 CREATE TRIGGER trg_normalize_unlock_email
   BEFORE INSERT OR UPDATE ON content_unlocks
   FOR EACH ROW
   EXECUTE FUNCTION normalize_transaction_email();
 
+DROP TRIGGER IF EXISTS trg_normalize_activity_email ON lead_activity_log;
 CREATE TRIGGER trg_normalize_activity_email
   BEFORE INSERT OR UPDATE ON lead_activity_log
   FOR EACH ROW

@@ -5,7 +5,7 @@
 
 -- 1. LEADS
 -- Captures non-student visitors from Instagram
-CREATE TABLE leads (
+CREATE TABLE IF NOT EXISTS leads (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
@@ -16,11 +16,11 @@ CREATE TABLE leads (
   updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE INDEX idx_leads_email ON leads(email);
+CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
 
 -- 2. FREE_CONTENTS
 -- Stores free content metadata and body (JSONB)
-CREATE TABLE free_contents (
+CREATE TABLE IF NOT EXISTS free_contents (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
@@ -34,12 +34,12 @@ CREATE TABLE free_contents (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE INDEX idx_free_contents_slug ON free_contents(slug);
-CREATE INDEX idx_free_contents_status ON free_contents(status);
+CREATE INDEX IF NOT EXISTS idx_free_contents_slug ON free_contents(slug);
+CREATE INDEX IF NOT EXISTS idx_free_contents_status ON free_contents(status);
 
 -- 3. CONTENT_UNLOCKS
 -- Tracks which content each lead has unlocked
-CREATE TABLE content_unlocks (
+CREATE TABLE IF NOT EXISTS content_unlocks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   lead_email TEXT NOT NULL,
   content_id UUID NOT NULL REFERENCES free_contents(id) ON DELETE CASCADE,
@@ -48,11 +48,11 @@ CREATE TABLE content_unlocks (
   CONSTRAINT unique_unlock UNIQUE (lead_email, content_id)
 );
 
-CREATE INDEX idx_content_unlocks_email ON content_unlocks(lead_email);
+CREATE INDEX IF NOT EXISTS idx_content_unlocks_email ON content_unlocks(lead_email);
 
 -- 4. COIN_TRANSACTIONS
 -- Append-only ledger for coin economy
-CREATE TABLE coin_transactions (
+CREATE TABLE IF NOT EXISTS coin_transactions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   lead_email TEXT NOT NULL,
   content_id UUID REFERENCES free_contents(id) ON DELETE SET NULL,
@@ -62,12 +62,12 @@ CREATE TABLE coin_transactions (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE INDEX idx_coin_transactions_email ON coin_transactions(lead_email);
-CREATE INDEX idx_coin_transactions_created ON coin_transactions(created_at);
+CREATE INDEX IF NOT EXISTS idx_coin_transactions_email ON coin_transactions(lead_email);
+CREATE INDEX IF NOT EXISTS idx_coin_transactions_created ON coin_transactions(created_at);
 
 -- 5. LEAD_ACTIVITY_LOG
 -- Audit trail of all lead actions
-CREATE TABLE lead_activity_log (
+CREATE TABLE IF NOT EXISTS lead_activity_log (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   lead_email TEXT NOT NULL,
   action TEXT NOT NULL,
@@ -76,9 +76,9 @@ CREATE TABLE lead_activity_log (
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE INDEX idx_lead_activity_email ON lead_activity_log(lead_email);
-CREATE INDEX idx_lead_activity_action ON lead_activity_log(action);
-CREATE INDEX idx_lead_activity_created ON lead_activity_log(created_at);
+CREATE INDEX IF NOT EXISTS idx_lead_activity_email ON lead_activity_log(lead_email);
+CREATE INDEX IF NOT EXISTS idx_lead_activity_action ON lead_activity_log(action);
+CREATE INDEX IF NOT EXISTS idx_lead_activity_created ON lead_activity_log(created_at);
 
 -- ============================================================
 -- ROW LEVEL SECURITY
@@ -91,8 +91,11 @@ ALTER TABLE coin_transactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lead_activity_log ENABLE ROW LEVEL SECURITY;
 
 -- free_contents: allow public read for published content
-CREATE POLICY "public_read_published" ON free_contents
-  FOR SELECT USING (status = 'published');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'public_read_published' AND tablename = 'free_contents') THEN
+    CREATE POLICY "public_read_published" ON free_contents FOR SELECT USING (status = 'published');
+  END IF;
+END $$;
 
 -- All other tables: service_role only (API routes use createAdminClient())
 -- No public policies needed
@@ -116,6 +119,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+DROP TRIGGER IF EXISTS trg_update_lead_coins ON coin_transactions;
 CREATE TRIGGER trg_update_lead_coins
   AFTER INSERT ON coin_transactions
   FOR EACH ROW
@@ -125,7 +129,8 @@ CREATE TRIGGER trg_update_lead_coins
 -- SEED DATA: Post 1
 -- ============================================================
 
-INSERT INTO free_contents (slug, title, description, unlock_key, coin_reward, coin_cost, content_data, published_at) VALUES (
+INSERT INTO free_contents (slug, title, description, unlock_key, coin_reward, coin_cost, content_data, published_at)
+SELECT
   'post1',
   '3 Ferramentas Poderosas para Claude Code',
   'As 3 ferramentas que somadas ao Claude Code fazem um estrago: Claude-Mem, The Maestri e Obsidian. Aprenda a usar cada uma delas.',
@@ -163,4 +168,4 @@ INSERT INTO free_contents (slug, title, description, unlock_key, coin_reward, co
     ]
   }'::jsonb,
   now()
-);
+WHERE NOT EXISTS (SELECT 1 FROM free_contents WHERE slug = 'post1');
