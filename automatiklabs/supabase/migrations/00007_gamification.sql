@@ -61,8 +61,8 @@ CREATE INDEX idx_xp_transactions_user ON public.xp_transactions (user_id);
 CREATE INDEX idx_xp_transactions_source ON public.xp_transactions (source_type);
 CREATE INDEX idx_xp_transactions_created ON public.xp_transactions (created_at DESC);
 CREATE INDEX idx_xp_transactions_user_date ON public.xp_transactions (user_id, created_at DESC);
-CREATE INDEX idx_xp_transactions_weekly ON public.xp_transactions (created_at DESC)
-  WHERE created_at > (now() - interval '7 days');
+-- Note: partial index with now() not allowed (must be IMMUTABLE). Use query-time filtering instead.
+CREATE INDEX idx_xp_transactions_source_date ON public.xp_transactions (source_type, user_id, created_at DESC);
 
 COMMENT ON TABLE public.xp_transactions IS 'Immutable XP transaction log. UNIQUE(user_id, source_type, source_id) prevents duplication';
 

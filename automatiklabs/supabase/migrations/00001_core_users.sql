@@ -88,31 +88,6 @@ BEGIN
 END;
 $$;
 
--- Tier checking helper (alternative using subscription_tier enum)
-CREATE OR REPLACE FUNCTION public.user_has_tier(required_tier subscription_tier)
-RETURNS BOOLEAN AS $$
-  SELECT CASE
-    WHEN required_tier = 'free' THEN true
-    WHEN required_tier = 'pro' THEN (
-      SELECT EXISTS (
-        SELECT 1 FROM public.subscriptions
-        WHERE user_id = auth.uid()
-          AND status = 'active'
-          AND tier IN ('pro', 'premium')
-      )
-    )
-    WHEN required_tier = 'premium' THEN (
-      SELECT EXISTS (
-        SELECT 1 FROM public.subscriptions
-        WHERE user_id = auth.uid()
-          AND status = 'active'
-          AND tier = 'premium'
-      )
-    )
-    ELSE false
-  END;
-$$ LANGUAGE sql SECURITY DEFINER STABLE;
-
 -- Alias for auth.uid() for clarity
 CREATE OR REPLACE FUNCTION public.current_user_id()
 RETURNS UUID
@@ -192,6 +167,31 @@ CREATE INDEX idx_subscriptions_status ON public.subscriptions (status);
 CREATE UNIQUE INDEX idx_subscriptions_active_user ON public.subscriptions (user_id) WHERE status = 'active';
 
 COMMENT ON TABLE public.subscriptions IS 'Stripe subscription records linked to user profiles';
+
+-- Tier checking helper (must be after subscriptions table)
+CREATE OR REPLACE FUNCTION public.user_has_tier(required_tier subscription_tier)
+RETURNS BOOLEAN AS $$
+  SELECT CASE
+    WHEN required_tier = 'free' THEN true
+    WHEN required_tier = 'pro' THEN (
+      SELECT EXISTS (
+        SELECT 1 FROM public.subscriptions
+        WHERE user_id = auth.uid()
+          AND status = 'active'
+          AND tier IN ('pro', 'premium')
+      )
+    )
+    WHEN required_tier = 'premium' THEN (
+      SELECT EXISTS (
+        SELECT 1 FROM public.subscriptions
+        WHERE user_id = auth.uid()
+          AND status = 'active'
+          AND tier = 'premium'
+      )
+    )
+    ELSE false
+  END;
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
 
 -- =============================================
 -- TABLE: user_preferences

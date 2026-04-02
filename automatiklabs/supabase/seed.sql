@@ -203,49 +203,49 @@ VALUES
 
 INSERT INTO public.channels (id, name, slug, description, image_url, type, visibility, tier_required, position, is_archived, created_by)
 VALUES
-  ('g0000000-0000-0000-0000-000000000001', 'Geral', 'geral', 'Canal para discussoes gerais, apresentacoes e networking da comunidade.', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400', 'general', 'public', 'free', 0, false, 'a0000000-0000-0000-0000-000000000001'),
-  ('g0000000-0000-0000-0000-000000000002', 'IA na Pratica', 'ia-na-pratica', 'Compartilhe projetos, duvidas e descobertas sobre IA aplicada.', 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400', 'topic', 'public', 'free', 1, false, 'a0000000-0000-0000-0000-000000000001');
+  ('a7000000-0000-0000-0000-000000000001', 'Geral', 'geral', 'Canal para discussoes gerais, apresentacoes e networking da comunidade.', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400', 'general', 'public', 'free', 0, false, 'a0000000-0000-0000-0000-000000000001'),
+  ('a7000000-0000-0000-0000-000000000002', 'IA na Pratica', 'ia-na-pratica', 'Compartilhe projetos, duvidas e descobertas sobre IA aplicada.', 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400', 'topic', 'public', 'free', 1, false, 'a0000000-0000-0000-0000-000000000001');
 
 -- Channel tabs
 INSERT INTO public.channel_tabs (id, channel_id, name, slug, type, position)
 VALUES
-  ('h0000000-0000-0000-0000-000000000001', 'g0000000-0000-0000-0000-000000000001', 'Discussao', 'discussao', 'discussion', 0),
-  ('h0000000-0000-0000-0000-000000000002', 'g0000000-0000-0000-0000-000000000001', 'Recursos', 'recursos', 'resources', 1),
-  ('h0000000-0000-0000-0000-000000000003', 'g0000000-0000-0000-0000-000000000002', 'Discussao', 'discussao', 'discussion', 0),
-  ('h0000000-0000-0000-0000-000000000004', 'g0000000-0000-0000-0000-000000000002', 'Eventos', 'eventos', 'events', 1);
+  ('a8000000-0000-0000-0000-000000000001', 'a7000000-0000-0000-0000-000000000001', 'Discussao', 'discussao', 'discussion', 0),
+  ('a8000000-0000-0000-0000-000000000002', 'a7000000-0000-0000-0000-000000000001', 'Recursos', 'recursos', 'resources', 1),
+  ('a8000000-0000-0000-0000-000000000003', 'a7000000-0000-0000-0000-000000000002', 'Discussao', 'discussao', 'discussion', 0),
+  ('a8000000-0000-0000-0000-000000000004', 'a7000000-0000-0000-0000-000000000002', 'Eventos', 'eventos', 'events', 1);
 
 -- Posts
 INSERT INTO public.posts (id, channel_id, tab_id, author_id, title, content_md, images, is_pinned, likes_count, comments_count, status)
 VALUES
-  ('i0000000-0000-0000-0000-000000000001', 'g0000000-0000-0000-0000-000000000001', 'h0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Bem-vindos a AutomatikClub!', 'Ola, comunidade! Este e o espaco oficial para nos conectarmos, aprendermos juntos e construirmos o futuro com IA.\n\nRegras basicas:\n1. Seja respeitoso\n2. Compartilhe conhecimento\n3. Ajude os colegas\n\nBora automatizar!', ARRAY[]::TEXT[], true, 12, 3, 'published'),
-  ('i0000000-0000-0000-0000-000000000002', 'g0000000-0000-0000-0000-000000000001', 'h0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', 'Me apresentando!', 'Oi pessoal! Sou a Ana, tenho 28 anos e estou migrando de marketing para dev. Comecei o curso de ChatGPT e estou amando! Alguem mais aqui em transicao de carreira?', ARRAY[]::TEXT[], false, 5, 2, 'published'),
-  ('i0000000-0000-0000-0000-000000000003', 'g0000000-0000-0000-0000-000000000002', 'h0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000003', 'Dica: Usando Claude para code review', 'Descobri um workflow incrivel usando Claude para revisar codigo automaticamente.\n\n1. Conecte o GitHub no n8n\n2. Trigger no PR\n3. Envie o diff para Claude\n4. Post o review como comentario\n\nAlguem ja fez algo parecido?', ARRAY[]::TEXT[], false, 8, 1, 'published'),
-  ('i0000000-0000-0000-0000-000000000004', 'g0000000-0000-0000-0000-000000000002', 'h0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000002', 'Live: IA generativa na pratica', 'Vamos fazer uma live na sexta-feira as 19h sobre como usar IA generativa em projetos reais.\n\nTopicos:\n- Geracao de imagens com DALL-E\n- Automacao de textos\n- Chatbots personalizados\n\nQuem vem?', ARRAY[]::TEXT[], false, 15, 4, 'published');
+  ('a9000000-0000-0000-0000-000000000001', 'a7000000-0000-0000-0000-000000000001', 'a8000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Bem-vindos a AutomatikClub!', 'Ola, comunidade! Este e o espaco oficial para nos conectarmos, aprendermos juntos e construirmos o futuro com IA.\n\nRegras basicas:\n1. Seja respeitoso\n2. Compartilhe conhecimento\n3. Ajude os colegas\n\nBora automatizar!', ARRAY[]::TEXT[], true, 12, 3, 'published'),
+  ('a9000000-0000-0000-0000-000000000002', 'a7000000-0000-0000-0000-000000000001', 'a8000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', 'Me apresentando!', 'Oi pessoal! Sou a Ana, tenho 28 anos e estou migrando de marketing para dev. Comecei o curso de ChatGPT e estou amando! Alguem mais aqui em transicao de carreira?', ARRAY[]::TEXT[], false, 5, 2, 'published'),
+  ('a9000000-0000-0000-0000-000000000003', 'a7000000-0000-0000-0000-000000000002', 'a8000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000003', 'Dica: Usando Claude para code review', 'Descobri um workflow incrivel usando Claude para revisar codigo automaticamente.\n\n1. Conecte o GitHub no n8n\n2. Trigger no PR\n3. Envie o diff para Claude\n4. Post o review como comentario\n\nAlguem ja fez algo parecido?', ARRAY[]::TEXT[], false, 8, 1, 'published'),
+  ('a9000000-0000-0000-0000-000000000004', 'a7000000-0000-0000-0000-000000000002', 'a8000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000002', 'Live: IA generativa na pratica', 'Vamos fazer uma live na sexta-feira as 19h sobre como usar IA generativa em projetos reais.\n\nTopicos:\n- Geracao de imagens com DALL-E\n- Automacao de textos\n- Chatbots personalizados\n\nQuem vem?', ARRAY[]::TEXT[], false, 15, 4, 'published');
 
 -- Post likes
 INSERT INTO public.post_likes (post_id, user_id)
 VALUES
-  ('i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000002'),
-  ('i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000003'),
-  ('i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004'),
-  ('i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005'),
-  ('i0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000001'),
-  ('i0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000003'),
-  ('i0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001'),
-  ('i0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004'),
-  ('i0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000001'),
-  ('i0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000003'),
-  ('i0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000004'),
-  ('i0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000005');
+  ('a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000002'),
+  ('a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000003'),
+  ('a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004'),
+  ('a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005'),
+  ('a9000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000001'),
+  ('a9000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000003'),
+  ('a9000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001'),
+  ('a9000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004'),
+  ('a9000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000001'),
+  ('a9000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000003'),
+  ('a9000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000004'),
+  ('a9000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000005');
 
 -- Comments on posts
 INSERT INTO public.comments (id, commentable_type, commentable_id, author_id, parent_id, content, status, depth)
 VALUES
-  ('j0000000-0000-0000-0000-000000000001', 'post', 'i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', NULL, 'Que legal! Animada para aprender aqui!', 'approved', 0),
-  ('j0000000-0000-0000-0000-000000000002', 'post', 'i0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'j0000000-0000-0000-0000-000000000001', 'Bem-vinda, Ana! Qualquer duvida e so perguntar.', 'approved', 1),
-  ('j0000000-0000-0000-0000-000000000003', 'post', 'i0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000005', NULL, 'Eu tambem estou em transicao! Vamos trocar experiencias.', 'approved', 0),
-  ('j0000000-0000-0000-0000-000000000004', 'post', 'i0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001', NULL, 'Excelente dica, Carlos! Vou testar esse workflow.', 'approved', 0),
-  ('j0000000-0000-0000-0000-000000000005', 'post', 'i0000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000004', NULL, 'Vou estar la! Quero aprender sobre chatbots.', 'approved', 0);
+  ('ab000000-0000-0000-0000-000000000001', 'post', 'a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', NULL, 'Que legal! Animada para aprender aqui!', 'approved', 0),
+  ('ab000000-0000-0000-0000-000000000002', 'post', 'a9000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'ab000000-0000-0000-0000-000000000001', 'Bem-vinda, Ana! Qualquer duvida e so perguntar.', 'approved', 1),
+  ('ab000000-0000-0000-0000-000000000003', 'post', 'a9000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000005', NULL, 'Eu tambem estou em transicao! Vamos trocar experiencias.', 'approved', 0),
+  ('ab000000-0000-0000-0000-000000000004', 'post', 'a9000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000001', NULL, 'Excelente dica, Carlos! Vou testar esse workflow.', 'approved', 0),
+  ('ab000000-0000-0000-0000-000000000005', 'post', 'a9000000-0000-0000-0000-000000000004', 'a0000000-0000-0000-0000-000000000004', NULL, 'Vou estar la! Quero aprender sobre chatbots.', 'approved', 0);
 
 -- =============================================
 -- 11. MARKETPLACE ITEMS (3)
@@ -253,17 +253,17 @@ VALUES
 
 INSERT INTO public.marketplace_items (id, title, slug, type, description_md, thumbnail_url, external_url, author_id, avg_rating, review_count, download_count, tags, status, tier_required)
 VALUES
-  ('k0000000-0000-0000-0000-000000000001', 'Template: Landing Page com IA', 'template-landing-page-ia', 'template', '# Landing Page com IA\n\nTemplate completo de landing page com chatbot integrado.\n\n## Features\n- Design responsivo\n- Chatbot com OpenAI\n- Deploy em 1 click no Vercel', 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400', 'https://github.com/example/landing-ia', 'a0000000-0000-0000-0000-000000000003', 4.50, 2, 15, ARRAY['template', 'landing-page', 'chatbot', 'nextjs'], 'approved', 'free'),
-  ('k0000000-0000-0000-0000-000000000002', 'Skill: Prompt Engineering Avancado', 'skill-prompt-engineering-avancado', 'skill', '# Prompt Engineering Avancado\n\nGuia completo de tecnicas avancadas de prompts.\n\n## Conteudo\n- Chain of Thought\n- Few-Shot Learning\n- Constitutional AI\n- Tree of Thoughts', 'https://images.unsplash.com/photo-1684163761556-74c1a73bfa22?w=400', 'https://github.com/example/prompt-eng', 'a0000000-0000-0000-0000-000000000001', 5.00, 1, 30, ARRAY['prompts', 'ia', 'avancado'], 'approved', 'pro'),
-  ('k0000000-0000-0000-0000-000000000003', 'GitHub: Bot de Atendimento n8n', 'github-bot-atendimento-n8n', 'github_project', '# Bot de Atendimento com n8n\n\nBot completo de atendimento ao cliente usando n8n + OpenAI.\n\nInclui workflows prontos para importar.', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400', 'https://github.com/example/bot-n8n', 'a0000000-0000-0000-0000-000000000003', 4.00, 1, 8, ARRAY['n8n', 'bot', 'atendimento', 'openai'], 'approved', 'free');
+  ('ac000000-0000-0000-0000-000000000001', 'Template: Landing Page com IA', 'template-landing-page-ia', 'template', '# Landing Page com IA\n\nTemplate completo de landing page com chatbot integrado.\n\n## Features\n- Design responsivo\n- Chatbot com OpenAI\n- Deploy em 1 click no Vercel', 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400', 'https://github.com/example/landing-ia', 'a0000000-0000-0000-0000-000000000003', 4.50, 2, 15, ARRAY['template', 'landing-page', 'chatbot', 'nextjs'], 'approved', 'free'),
+  ('ac000000-0000-0000-0000-000000000002', 'Skill: Prompt Engineering Avancado', 'skill-prompt-engineering-avancado', 'skill', '# Prompt Engineering Avancado\n\nGuia completo de tecnicas avancadas de prompts.\n\n## Conteudo\n- Chain of Thought\n- Few-Shot Learning\n- Constitutional AI\n- Tree of Thoughts', 'https://images.unsplash.com/photo-1684163761556-74c1a73bfa22?w=400', 'https://github.com/example/prompt-eng', 'a0000000-0000-0000-0000-000000000001', 5.00, 1, 30, ARRAY['prompts', 'ia', 'avancado'], 'approved', 'pro'),
+  ('ac000000-0000-0000-0000-000000000003', 'GitHub: Bot de Atendimento n8n', 'github-bot-atendimento-n8n', 'github_project', '# Bot de Atendimento com n8n\n\nBot completo de atendimento ao cliente usando n8n + OpenAI.\n\nInclui workflows prontos para importar.', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400', 'https://github.com/example/bot-n8n', 'a0000000-0000-0000-0000-000000000003', 4.00, 1, 8, ARRAY['n8n', 'bot', 'atendimento', 'openai'], 'approved', 'free');
 
 -- Marketplace reviews
 INSERT INTO public.marketplace_reviews (item_id, user_id, rating, content)
 VALUES
-  ('k0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', 5, 'Template excelente! Fiz deploy em 10 minutos.'),
-  ('k0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005', 4, 'Muito bom, so faltou documentacao mais detalhada.'),
-  ('k0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000004', 5, 'Melhor guia de prompts que ja vi!'),
-  ('k0000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004', 4, 'Funcionou muito bem. Recomendo.');
+  ('ac000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', 5, 'Template excelente! Fiz deploy em 10 minutos.'),
+  ('ac000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005', 4, 'Muito bom, so faltou documentacao mais detalhada.'),
+  ('ac000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000004', 5, 'Melhor guia de prompts que ja vi!'),
+  ('ac000000-0000-0000-0000-000000000003', 'a0000000-0000-0000-0000-000000000004', 4, 'Funcionou muito bem. Recomendo.');
 
 -- =============================================
 -- 12. SAMPLE LESSON PROGRESS
@@ -297,16 +297,16 @@ VALUES
 
 INSERT INTO public.challenges (id, title, description, criteria_type, criteria_value, xp_reward, starts_at, ends_at, status, created_by)
 VALUES
-  ('l0000000-0000-0000-0000-000000000001', 'Maratona de Abril', 'Complete 5 aulas durante o mes de abril e ganhe XP bonus!', 'lessons_completed', 5, 500, '2026-04-01'::timestamptz, '2026-04-30 23:59:59'::timestamptz, 'active', 'a0000000-0000-0000-0000-000000000001'),
-  ('l0000000-0000-0000-0000-000000000002', 'Primeiro Comentario', 'Faca seu primeiro comentario em uma aula ou post.', 'comments_posted', 1, 100, '2026-04-01'::timestamptz, '2026-06-30 23:59:59'::timestamptz, 'active', 'a0000000-0000-0000-0000-000000000001');
+  ('ad000000-0000-0000-0000-000000000001', 'Maratona de Abril', 'Complete 5 aulas durante o mes de abril e ganhe XP bonus!', 'lessons_completed', 5, 500, '2026-04-01'::timestamptz, '2026-04-30 23:59:59'::timestamptz, 'active', 'a0000000-0000-0000-0000-000000000001'),
+  ('ad000000-0000-0000-0000-000000000002', 'Primeiro Comentario', 'Faca seu primeiro comentario em uma aula ou post.', 'comments_posted', 1, 100, '2026-04-01'::timestamptz, '2026-06-30 23:59:59'::timestamptz, 'active', 'a0000000-0000-0000-0000-000000000001');
 
 -- Challenge participations
 INSERT INTO public.challenge_participations (challenge_id, user_id, enrolled_at, completed_at)
 VALUES
-  ('l0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', now() - interval '5 days', NULL),
-  ('l0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005', now() - interval '3 days', NULL),
-  ('l0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000004', now() - interval '5 days', now() - interval '4 days'),
-  ('l0000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000005', now() - interval '2 days', now() - interval '1 day');
+  ('ad000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000004', now() - interval '5 days', NULL),
+  ('ad000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000005', now() - interval '3 days', NULL),
+  ('ad000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000004', now() - interval '5 days', now() - interval '4 days'),
+  ('ad000000-0000-0000-0000-000000000002', 'a0000000-0000-0000-0000-000000000005', now() - interval '2 days', now() - interval '1 day');
 
 -- =============================================
 -- 14. NEWSLETTERS
