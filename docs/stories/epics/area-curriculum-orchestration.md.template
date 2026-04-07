@@ -1,0 +1,64 @@
+# Epic — Curriculum Orchestration
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/curriculum-orchestration.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Establish the production coordination infrastructure for Fase 1: cube cell prioritization, SLA contracts, the Production Board, and the onboarding protocol for new content authors — enabling all 7 specialist terminals to work in a coordinated sequence toward a coherent, publishable first Formação.
+
+## Scope
+
+- Publishes `fase1-cube-cells.yaml` (blocking dependency for all generation work).
+- Creates and maintains `production-board.md` with real-time lesson pipeline state.
+- Publishes `sla-contracts.yaml` defining SLAs per area and escalation paths.
+- Creates the new professor onboarding document and session protocol.
+- Does NOT write schema migrations, generate content, or define pedagogical doctrine.
+
+## Stories
+
+### Story 1: Publish fase1-cube-cells.yaml
+- **id:** ORCH-01
+- **points:** S
+- **deps:** [INSTR-01]
+- **acceptance_criteria:**
+  - [ ] File `docs/educational-system/curriculum/fase1-cube-cells.yaml` exists.
+  - [ ] Contains at minimum: tier 1 cells (spines), tier 2 cells (optional Fase 1), tier 3 cells (Fase 2 scope).
+  - [ ] Tier 1 includes `{stage: 2, persona: organizado, layer: logica}` and `{stage: 3, persona: organizado, layer: logica}`.
+  - [ ] File reviewed by Instructional Design and Content Production before any lesson generation begins.
+  - [ ] `deferred_until_fase2` section lists at minimum: live_demo assessment, multi-language, revenue_milestones.
+
+### Story 2: Create and initialize Production Board
+- **id:** ORCH-02
+- **points:** S
+- **deps:** []
+- **acceptance_criteria:**
+  - [ ] File `docs/educational-system/production-board.md` exists.
+  - [ ] Table has columns: `lesson_slug`, `ldd_status`, `generation_status`, `agent_review`, `human_review`, `published`.
+  - [ ] One row exists per lesson skeleton entry in the first approved course YAML.
+  - [ ] "human_review" column is always visible (never hidden or merged).
+  - [ ] Document can be updated by any terminal via PR without area-owner approval (it is a status board, not a doctrine doc).
+
+### Story 3: Publish SLA contracts and escalation paths
+- **id:** ORCH-03
+- **points:** S
+- **deps:** []
+- **acceptance_criteria:**
+  - [ ] File `docs/educational-system/sla-contracts.yaml` exists.
+  - [ ] Contains SLA entries for: Instructional Design (LDD), Content Production (lesson generation), agent review, human review (Bloom 3–4), human review (Bloom 5–6).
+  - [ ] Each entry has `sla_hours` (or `sla_business_days`), `escalation_to`, and `escalation_action`.
+  - [ ] SLA document linked from each area's context doc (or at minimum from `curriculum-orchestration.md`).
+  - [ ] Master Maestro has confirmed SLA values before publication.
+
+(Area owner adds stories for: new professor onboarding document + session protocol, Formação build order declaration, cross-area dependency mapping in `01-distribution.md`, backpressure notification protocol, and periodic Production Board review cadence.)
+
+## Notes for the future executor agent
+
+- ORCH-01 (`fase1-cube-cells.yaml`) is a hard dependency for every story in Content Production and Assessment Engine. It must exist before any lesson generation begins. Treat it as the first deliverable.
+- Curriculum Orchestration does NOT make content or doctrine decisions. If executing a story requires a content judgment call (e.g., "which Bloom level should this competency have?"), stop and escalate to Master Maestro — do not improvise.
+- The Production Board is a living document updated as lessons move through the pipeline. It is not a gate — it is a visibility tool. Updates to it should be low-friction and not require reviews.
+- The Scrum Master terminal was absent from the Fase 0 brainstorm. This entire area was reconstructed from the Charter + other terminals' concerns. If you are the Scrum Master terminal, read `curriculum-orchestration.md` carefully and flag any disagreements via PR before executing stories.
+- Cross-area story dependencies (Schema Extensions must complete before Content Production can run) are not yet captured in the `deps` fields of individual epics. Curriculum Orchestration must document these in `docs/stories/epics/01-distribution.md` as the orchestration layer.

@@ -1,0 +1,69 @@
+# Epic — Lesson Experience
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/lesson-experience.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Build the lesson page UI that delivers a personalized, CBE-first learning experience for every learner profile in the Cubo 3D — replacing time-based progress signals with competency-based signals, rendering persona-adapted layouts via PersonaWrapper, and providing honest feedback on unlock state and evidence submission.
+
+## Scope
+
+- Components under `automatiklabs/src/app/(platform)/learn/**` and `automatiklabs/src/shared/components/lesson/**`.
+- Consumes `resolve_lesson_for_user` RPC and the 4 secondary RPCs defined in `schema-extensions.md`.
+- Delivers `<PersonaWrapper>`, `<LessonPlayer>`, `<ChapterNav>`, `<EvidenceSubmitter>`, `<CompetencyGraph>`, `<UnlockReasonModal>`, `<NextActionCard>`, `<FallbackNotice>`.
+- Does NOT write to `lesson_variants.content_overrides`, does NOT own schema, does NOT define assessment grading logic.
+
+## Stories
+
+### Story 1: Implement PersonaWrapper server component
+- **id:** LESSX-01
+- **points:** M
+- **deps:** []
+- **acceptance_criteria:**
+  - [ ] `src/shared/components/lesson/persona-wrapper.tsx` exists as a Next.js server component.
+  - [ ] Accepts `LayoutOverrides` prop (§4.2 shape in context doc).
+  - [ ] Applies all 9 differentiation axes (scaffolding_level, visible_sections, show_checkpoints, etc.).
+  - [ ] No `if (persona === '...')` conditionals inside the component — uses `layout_overrides` as reducer input.
+  - [ ] `deriveDefaultOverrides()` in `src/shared/lib/persona/derive-overrides.ts` exists and produces valid defaults for all 3 personas.
+  - [ ] Component verified against `node_modules/next/dist/docs/` (non-stock Next.js — confirm API compatibility).
+  - **screens:** lesson page
+  - **accessibility_notes:** Scaffold level 3 (Zerado) must not reduce ARIA landmark coverage.
+
+### Story 2: Implement FallbackNotice component + honest fallback display
+- **id:** LESSX-02
+- **points:** S
+- **deps:** [LESSX-01]
+- **acceptance_criteria:**
+  - [ ] `src/shared/components/lesson/fallback-notice.tsx` exists.
+  - [ ] Component renders only when `variant_resolved.fallback_applied === true`.
+  - [ ] Message is in PT-BR using tone tokens, not hardcoded string.
+  - [ ] Component has 375px layout.
+  - [ ] Playwright test: render lesson with `fallback_applied=true` → `<FallbackNotice>` is visible; `fallback_applied=false` → not visible.
+
+### Story 3: Implement CompetencyGraph replacing lesson list
+- **id:** LESSX-03
+- **points:** L
+- **deps:** [LESSX-01]
+- **acceptance_criteria:**
+  - [ ] `src/shared/components/learn/competency-graph.tsx` exists using react-flow.
+  - [ ] Graph data from `get_competency_graph_for_track(user_id, track_id)` RPC.
+  - [ ] Mobile (375px): collapses to vertical timeline with current + next 3 nodes.
+  - [ ] Desktop: full react-flow graph.
+  - [ ] No `% watched` metric visible anywhere in this component.
+  - [ ] Nodes show competency status using `v_user_competency_progress` values.
+  - **screens:** track page (replaces lesson list)
+
+(Area owner adds stories for LessonPlayer, ChapterNav, EvidenceSubmitter, UnlockReasonModal, NextActionCard, tone tokens file, and Playwright tests for canonical cube cells.)
+
+## Notes for the future executor agent
+
+- This is a non-stock Next.js distribution. Before creating any new route, layout, or server component, read `node_modules/next/dist/docs/` to verify the API. Do not assume stock Next.js behavior.
+- All copy strings must go through `src/shared/lib/tone/tokens.ts`. Never hardcode PT-BR strings in JSX.
+- Only ONE RPC call per lesson page render: `resolve_lesson_for_user`. If data is missing, add a field to the RPC — do not add a second fetch.
+- Never write to `lesson_variants.content_overrides`. RLS will reject it. This column belongs to Content Production.
+- Every component must ship with a 375px layout. This is a ship gate, not a nice-to-have.
+- `data-testid` attributes on each Kolb section (Contexto, Conceito, Demonstração, Prática, Síntese) are required for Pedagogical QA's E2E tests.

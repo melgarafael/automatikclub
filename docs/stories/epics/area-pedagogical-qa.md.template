@@ -1,0 +1,65 @@
+# Epic — Pedagogical QA
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/pedagogical-qa.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Publish the `pedagogical-gate-rubric` as a versioned YAML artifact and atomic skill, implement the `pedagogical-drift-detector` worker, and wire the 8 hard-fail criteria into `fn_validate_lesson_doctrine` — creating an automated pre-screening layer that filters ~60% of lessons before they reach the human review queue.
+
+## Scope
+
+- Publishes `pedagogical-gate-rubric.yaml` with exactly 8 hard-fail criteria.
+- Creates the `pedagogical-gate-rubric` skill wrapping those criteria.
+- Implements the `pedagogical-drift-detector` worker (Python, runs locally via Bash tool).
+- Defines the JSON Schema for `pedagogical_reviews.criterion_results`.
+- Does NOT write lesson content, does NOT write schema migrations (those are Schema Extensions), does NOT adjudicate content disputes.
+
+## Stories
+
+### Story 1: Publish pedagogical-gate-rubric.yaml v1
+- **id:** QA-01
+- **points:** M
+- **deps:** [INSTR-01]
+- **acceptance_criteria:**
+  - [ ] File `automatiklabs/docs/educational-system/curriculum/pedagogical-gate-rubric.yaml` exists.
+  - [ ] Contains exactly 8 criteria each with `slug`, `description`, `automated` (true/semi/false), `charter_ref`.
+  - [ ] The 8 slugs match those in `pedagogical-qa.md` §4.1.
+  - [ ] PR reviewed and approved by Instructional Design (Arquiteto) terminal.
+  - [ ] Content Production terminal confirms their `lesson-validator` will mirror these 8 criteria.
+
+### Story 2: Create pedagogical-gate-rubric skill
+- **id:** QA-02
+- **points:** M
+- **deps:** [QA-01]
+- **acceptance_criteria:**
+  - [ ] Skill file exists in `~/.claude/skills/pedagogical-gate-rubric.md` (or equivalent).
+  - [ ] Skill accepts a lesson frontmatter YAML as input.
+  - [ ] Skill returns JSON with `{criterion_slug: "pass"|"fail"|"advisory", detail: "..."}` for each of the 8 criteria.
+  - [ ] Skill is callable from Content Production's `lesson-validator` script.
+  - [ ] Skill returns markdown when consumed by a human (criterion-by-criterion with Charter refs).
+
+### Story 3: Implement pedagogical-drift-detector worker
+- **id:** QA-03
+- **points:** L
+- **deps:** [QA-01, SCHEMA-02, WORKFLOW-01]
+- **acceptance_criteria:**
+  - [ ] Script `automatiklabs/scripts/pedagogical-drift-detector.py` (or `.sh`) exists.
+  - [ ] Script runs without arguments via `bash automatiklabs/scripts/pedagogical-drift-detector.py`.
+  - [ ] Script samples 5% of published lessons, re-runs the 8 criteria, records pass/fail to `review_audits`.
+  - [ ] Script computes `agent_human_agreement_rate` per `agent_slug` from `review_audits`.
+  - [ ] Script inserts `domain_events` row if drift detected (agreement rate < 80%).
+  - [ ] Script has a test suite with at least 5 "known good" + 5 "known bad" synthetic lessons that must score 100% correctly.
+
+(Area owner adds stories for: JSON Schema for `criterion_results`, `v_lesson_doctrine_status` view spec, SLA timeout escalation cron, inter-rater audit sampling, and the `formation_completion` view.)
+
+## Notes for the future executor agent
+
+- This area defines the criteria that `fn_validate_lesson_doctrine` checks, but does NOT write that function — Pedagogical Workflow owns the function body. The interface between the two areas is the JSON Schema for `criterion_results` and the list of criterion slugs.
+- `pedagogical-gate-rubric.yaml` is a versioned artifact. Any change requires: (1) increment version, (2) PR reviewing Instructional Design + Content Production, (3) update Content Production's `lesson-validator`, (4) update `fn_validate_lesson_doctrine`.
+- The drift detector worker runs locally as a Python script via Bash tool (Charter §4.5). No external infra. Schedule it as a cron Bash worker or `pg_cron` job — check which is available on the Supabase project first.
+- QA Review does NOT reject lessons based on tone, vocabulary, or style. The rubric has ZERO criteria about these. If rejecting a lesson, the rejection must cite a criterion slug. "Ficou estranho" is not valid.
+- `review_audits` rows are the evidence for the QA terminal's own calibration. If these rows are not being written, the `agent_human_agreement_rate` metric is blind and the drift detector is a placebo.

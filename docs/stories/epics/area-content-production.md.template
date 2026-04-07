@@ -1,0 +1,66 @@
+# Epic — Content Production
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/content-production.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Build and run the lesson generation pipeline that transforms `learning_design_doc.yaml` (from Instructional Design) into `script_md` + frontmatter + persona/layer variants, storing results via `set_lesson_draft()` and self-validating against the 8 hard-fail criteria before submission.
+
+## Scope
+
+- Develops and operates the lesson generation prompt pipeline (`senior-prompt-engineer` + doctrine).
+- Generates canonical spine lessons for the first Formação (Empresa com IA Humanizada, all 3 Pilares).
+- Implements `lesson-validator` local script mirroring QA's 8 criteria.
+- Implements `spine-transformer` for variant derivation per cube cell.
+- Does NOT write `learning_design_doc.yaml` files (Instructional Design), does NOT build UI, does NOT define competencies.
+
+## Stories
+
+### Story 1: Implement lesson-validator local script
+- **id:** CONTENT-01
+- **points:** M
+- **deps:** [QA-01, QA-02]
+- **acceptance_criteria:**
+  - [ ] Script `automatiklabs/scripts/lesson-validator.py` (or `.sh`) exists and runs via `bash automatiklabs/scripts/lesson-validator.py <lesson_frontmatter.yaml>`.
+  - [ ] Script checks all 8 criteria from `pedagogical-gate-rubric.yaml` exactly.
+  - [ ] Returns exit code 0 when all pass, non-zero with criterion list on any hard-fail.
+  - [ ] Test with 3 synthetic lessons: 1 passing, 1 failing criterion #1 (no bloom_target), 1 failing criterion #3 (quiz for Bloom 4).
+  - [ ] Script does not submit anything to the DB — it is a pre-submission check only.
+
+### Story 2: Generate first canonical spine lesson (Pilar 1, lesson 1)
+- **id:** CONTENT-02
+- **points:** L
+- **deps:** [CONTENT-01, INSTR-03, WORKFLOW-03]
+- **acceptance_criteria:**
+  - [ ] LDD YAML for the first lesson in Pilar 1 is present and approved (`status: approved`).
+  - [ ] `lesson-validator` runs on the generated frontmatter and returns exit 0.
+  - [ ] `set_lesson_draft()` called and returns without error.
+  - [ ] `lesson_generator_runs` row exists with `prompt_version`, `tokens_in`, `tokens_out`, `cost_usd_estimate`.
+  - [ ] `pedagogical_reviews` row created with `status='pending'`.
+  - [ ] `is_published` is NOT set to true by this terminal.
+  - [ ] `script_md` contains all 5 Kolb sections with their exact headings.
+
+### Story 3: Implement spine-transformer for Zerado variant
+- **id:** CONTENT-03
+- **points:** L
+- **deps:** [CONTENT-02]
+- **acceptance_criteria:**
+  - [ ] Transformer script exists for `persona: zerado` variant derivation.
+  - [ ] Derived variant has `is_spine: false` and `derived_from_variant_id` pointing to spine.
+  - [ ] `lesson-validator` passes on the derived variant.
+  - [ ] Derived variant passes `fn_validate_lesson_doctrine` (via `set_lesson_draft`).
+  - [ ] Transformer does NOT rewrite the spine; it only produces `content_overrides` jsonb diff.
+
+(Area owner adds stories for: Pilar 2 and Pilar 3 spine generation, Autodidata variant transformer, backpressure monitoring script, `lesson_generator_runs` cost dashboard, and the `lesson-content-linter` vocabulary check.)
+
+## Notes for the future executor agent
+
+- Every generation task requires a complete and `status: approved` LDD YAML as input. If the LDD is in `draft` or `review` state, wait for Instructional Design to approve it before starting.
+- The canonical spine is ALWAYS `(stage: 2 or 3, persona: organizado, layer: logica)`. Generate this first, even if it is not in the requested `target_cells` — it is the golden master.
+- Check the human review queue before calling `set_lesson_draft()`. If `v_review_queue_health` shows overflow, stop and log. Do not generate into a saturated queue.
+- `script_md` must NOT contain persona-specific greetings, tone, or microcopy. Lesson Experience's runtime chrome handles those. Keep the script structurally neutral.
+- `evidence_expected` in the generated frontmatter must echo the LDD exactly — do not modify it. It is a contract with Assessment Engine.
