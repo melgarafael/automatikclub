@@ -4,6 +4,7 @@ import { ExternalLink } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils';
 import type { FreeContent } from '../types';
+import { HtmlBlock } from './html-block';
 
 const MONTHS = [
   'JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN',
@@ -32,7 +33,7 @@ export function TransmissionRenderer({
   isStudent,
 }: TransmissionRendererProps) {
   const { contentData, publishedAt, id } = content;
-  const { intro, items } = contentData;
+  const { intro, items, htmlContent } = contentData;
 
   return (
     <div className="w-full">
@@ -58,6 +59,11 @@ export function TransmissionRenderer({
           {intro}
         </p>
       )}
+
+      {/* Rich HTML block (optional). Content is ADMIN-AUTHORED only —
+          inserted via SUPABASE_SERVICE_ROLE_KEY, never from user input.
+          Safe to render directly. */}
+      {htmlContent && <HtmlBlock html={htmlContent} />}
 
       {/* Items */}
       <div className="mt-6 flex flex-col gap-0">
