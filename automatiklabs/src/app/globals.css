@@ -117,3 +117,176 @@
     box-shadow: 0 0 0 2px var(--color-blue-dim);
   }
 }
+
+/* =========================================================
+   Admin-authored HTML block (free_contents.content_data.htmlContent)
+   Rendered via HtmlBlock component after DOMPurify sanitization.
+   ========================================================= */
+.free-content-html {
+  font-family: var(--font-body, system-ui), sans-serif;
+  color: var(--color-text-1, #E6E8EC);
+  line-height: 1.6;
+}
+
+.free-content-html h2 {
+  font-family: var(--font-display, system-ui), sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-1, #E6E8EC);
+  margin-top: 40px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border, #1E2330);
+}
+
+.free-content-html h2:first-child {
+  margin-top: 8px;
+}
+
+.free-content-html h3 {
+  font-family: var(--font-display, system-ui), sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-1, #E6E8EC);
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.free-content-html p {
+  font-size: 14px;
+  color: var(--color-text-1, #E6E8EC);
+  margin-bottom: 12px;
+}
+
+.free-content-html strong {
+  color: var(--color-blue, #4A9EFF);
+  font-weight: 700;
+}
+
+.free-content-html em {
+  font-style: italic;
+  color: var(--color-text-2, #A8ADB8);
+}
+
+.free-content-html ul,
+.free-content-html ol {
+  padding-left: 20px;
+  margin-bottom: 14px;
+}
+
+.free-content-html li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.free-content-html code {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  background: var(--color-bg-inset, #0B0E13);
+  color: var(--color-cyan, #6EE7FF);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.free-content-html pre {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  background: var(--color-bg-inset, #0B0E13);
+  border: 1px solid var(--color-border, #1E2330);
+  border-radius: 2px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+.free-content-html pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--color-text-1, #E6E8EC);
+}
+
+.free-content-html blockquote {
+  border-left: 3px solid var(--color-blue, #4A9EFF);
+  background: var(--color-bg-raised, #13161D);
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.free-content-html .framework-card {
+  border: 2px solid var(--color-border, #1E2330);
+  background: var(--color-bg-raised, #13161D);
+  border-radius: 2px;
+  padding: 18px 20px;
+  margin: 18px 0;
+}
+
+.free-content-html .framework-card h3 {
+  margin-top: 0;
+  color: var(--color-blue, #4A9EFF);
+}
+
+.free-content-html .framework-number {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--color-blue, #4A9EFF);
+  background: var(--color-blue-dim, rgba(74, 158, 255, 0.10));
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-right: 8px;
+  letter-spacing: 0.1em;
+}
+
+.free-content-html .framework-alert {
+  border: 2px solid var(--color-blue, #4A9EFF);
+  background: var(--color-blue-dim, rgba(74, 158, 255, 0.10));
+  border-radius: 2px;
+  padding: 14px 18px;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.free-content-html .framework-alert strong {
+  color: var(--color-blue, #4A9EFF);
+  text-transform: uppercase;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.free-content-html .framework-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+@media (min-width: 640px) {
+  .free-content-html .framework-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.free-content-html .framework-cell {
+  border: 1px solid var(--color-border, #1E2330);
+  background: var(--color-bg-inset, #0B0E13);
+  padding: 12px 14px;
+  border-radius: 2px;
+}
+
+.free-content-html .framework-cell-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--color-text-3, #6B7280);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.free-content-html .framework-cell-value {
+  font-size: 13px;
+  color: var(--color-text-1, #E6E8EC);
+}

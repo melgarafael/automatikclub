@@ -29,6 +29,7 @@ export interface ContentData {
   type: string;
   intro: string;
   items: ContentItem[];
+  htmlContent?: string;
 }
 
 export interface ContentItem {
