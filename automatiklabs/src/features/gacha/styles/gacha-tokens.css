@@ -1,0 +1,113 @@
+/* =============================================
+   Gacha Design Tokens — Forja do Conhecimento
+   Extends Design System V2 "Cockpit Indiehacker"
+   ============================================= */
+
+@layer components {
+  :root {
+    /* -----------------------------------------
+       Rarity Colors
+       Aliases to DS V2 palette for disambiguation.
+       Inside src/features/gacha/**, always use
+       --gacha-* tokens instead of --color-blue etc.
+       ----------------------------------------- */
+    --gacha-common: #9CA3AF;
+    --gacha-uncommon: #22C55E;
+    --gacha-rare: #3B82F6;
+    --gacha-epic: #A855F7;
+    --gacha-legendary: #F59E0B;
+
+    /* Dimmed (12% opacity for backgrounds) */
+    --gacha-common-dim: rgba(156, 163, 175, 0.10);
+    --gacha-uncommon-dim: rgba(34, 197, 94, 0.10);
+    --gacha-rare-dim: rgba(59, 130, 246, 0.10);
+    --gacha-epic-dim: rgba(168, 85, 247, 0.10);
+    --gacha-legendary-dim: rgba(245, 158, 11, 0.10);
+
+    /* -----------------------------------------
+       Rarity Gradients
+       ----------------------------------------- */
+    --gacha-gradient-common: linear-gradient(135deg, #9CA3AF, #6B7280);
+    --gacha-gradient-uncommon: linear-gradient(135deg, #22C55E, #16A34A);
+    --gacha-gradient-rare: linear-gradient(135deg, #3B82F6, #2563EB);
+    --gacha-gradient-epic: linear-gradient(135deg, #A855F7, #7C3AED);
+    --gacha-gradient-legendary: linear-gradient(135deg, #F59E0B, #FFD700, #F59E0B);
+
+    /* -----------------------------------------
+       Rarity Glow (box-shadow)
+       ----------------------------------------- */
+    --gacha-glow-common: none;
+    --gacha-glow-uncommon: 0 0 8px rgba(34, 197, 94, 0.25);
+    --gacha-glow-rare: 0 0 12px rgba(59, 130, 246, 0.35);
+    --gacha-glow-epic: 0 0 16px rgba(168, 85, 247, 0.45), 0 0 32px rgba(168, 85, 247, 0.15);
+    --gacha-glow-legendary: 0 0 20px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.2), 0 0 60px rgba(245, 158, 11, 0.1);
+
+    /* -----------------------------------------
+       Animation Durations
+       EXCEPTION DOMAIN: These exceed DS V2's
+       200ms limit. Only valid inside PullSequence.
+       ----------------------------------------- */
+    --gacha-anticipation: 2500ms;
+    --gacha-anticipation-buildup: 800ms;
+    --gacha-reveal: 1500ms;
+    --gacha-reveal-flash: 200ms;
+    --gacha-reveal-silence: 200ms;
+    --gacha-reveal-splash: 600ms;
+    --gacha-celebration: 2000ms;
+    --gacha-celebration-legendary: 3000ms;
+    --gacha-skip-transition: 300ms;
+
+    /* -----------------------------------------
+       Animation Easings
+       ----------------------------------------- */
+    --gacha-ease-anticipation: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --gacha-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+    --gacha-ease-celebration: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --gacha-ease-particle: linear;
+
+    /* -----------------------------------------
+       Currency Colors
+       ----------------------------------------- */
+    --gacha-fragments: var(--color-cyan, #5CE0D8);
+    --gacha-credits: var(--color-amber, #F0A030);
+  }
+}
+
+/* -----------------------------------------
+   Shimmer Keyframes (ambient, per rarity)
+   ----------------------------------------- */
+
+@keyframes gacha-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes gacha-glow-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes gacha-legendary-hue {
+  0% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(15deg); }
+  100% { filter: hue-rotate(0deg); }
+}
+
+/* -----------------------------------------
+   prefers-reduced-motion fallbacks
+   ----------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --gacha-anticipation: 500ms;
+    --gacha-celebration: 300ms;
+    --gacha-celebration-legendary: 500ms;
+    --gacha-reveal: 300ms;
+  }
+
+  .gacha-shimmer,
+  .gacha-glow-pulse,
+  .gacha-legendary-hue {
+    animation: none !important;
+  }
+}
