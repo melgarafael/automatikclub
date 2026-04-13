@@ -31,6 +31,10 @@ def run_pipeline(
     Returns the ResearchOutput and the path to the run directory containing
     ``pipeline_output.json``.
     """
+    if not direction or not direction.strip():
+        print("Error: direction cannot be empty. Provide a research direction.")
+        sys.exit(1)
+
     config = yaml.safe_load(Path(config_path).read_text())
     firecrawl_cfg = config.get("firecrawl", {})
     vault_path: str = config.get("vault_path", "~/Documents/Obsidian Vault/")

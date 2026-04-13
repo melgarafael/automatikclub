@@ -86,8 +86,20 @@ def _search_with_retry(
 ) -> list[dict]:
     for attempt in range(max_retries):
         try:
-            results = app.search(query, params={"limit": limit})
-            return results if isinstance(results, list) else []
+            results = app.search(query, limit=limit)
+            # firecrawl-py v4+ returns SearchData with .web attribute
+            if isinstance(results, list):
+                return results
+            if hasattr(results, "web") and results.web:
+                return [
+                    {
+                        "url": r.url,
+                        "title": r.title or "",
+                        "description": r.description or "",
+                    }
+                    for r in results.web
+                ]
+            return []
         except Exception as exc:
             if attempt == max_retries - 1:
                 raise ScoutError(
