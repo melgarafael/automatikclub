@@ -156,3 +156,38 @@ export interface MarketplaceListing {
   createdAt: string;
   item?: GachaItem;
 }
+
+// -- Provably Fair / Fairness Verification --
+
+export interface FairnessRecord {
+  pullId: string;
+  serverSeedHash: string;
+  nonce: number;
+  rarity: ItemRarity;
+  itemName: string;
+  createdAt: string;
+  /** Only available after seed rotation */
+  serverSeed: string | null;
+  clientSeed: string | null;
+}
+
+export interface SeedRotationResult {
+  newSeedHash: string;
+  oldServerSeed: string | null;
+  oldSeedHash: string | null;
+  oldNonce: number | null;
+  clientSeed: string;
+}
+
+export interface FairnessVerification {
+  pullId: string;
+  verified: boolean;
+  serverSeedHash: string;
+  nonce: number;
+  /** null if seed still active (not yet revealed) */
+  serverSeed: string | null;
+  clientSeed: string | null;
+  expectedHash: string | null;
+  resultRarity: ItemRarity;
+  message: string;
+}
