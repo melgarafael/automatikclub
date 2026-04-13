@@ -2,7 +2,7 @@
 
 import "../../styles/pull-animation.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useReducedMotion } from "../../hooks/use-reduced-motion";
 import { AnticipationPhase } from "./anticipation-phase";
 import { RevealPhase } from "./reveal-phase";
@@ -36,30 +36,32 @@ export function PullSequence({
 }: PullSequenceProps) {
   const prefersReduced = useReducedMotion();
   const [phase, setPhase] = useState<AnimPhase>("anticipation");
-  const [skipped, setSkipped] = useState(false);
+  const skippedRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   const bestRarity = highestRarity(results);
 
   const handleSkip = useCallback(() => {
-    setSkipped(true);
-    onComplete();
-  }, [onComplete]);
+    skippedRef.current = true;
+    onCompleteRef.current();
+  }, []);
 
-  const advancePhase = useCallback(
-    (next: AnimPhase) => {
-      if (skipped) return;
-      if (next === "complete") {
-        onComplete();
-      } else {
-        setPhase(next);
-      }
-    },
-    [skipped, onComplete]
-  );
+  // Stable callbacks — refs avoid deps on skipped/onComplete
+  const toReveal = useCallback(() => {
+    if (!skippedRef.current) setPhase("reveal");
+  }, []);
+
+  const toCelebration = useCallback(() => {
+    if (!skippedRef.current) setPhase("celebration");
+  }, []);
+
+  const toComplete = useCallback(() => {
+    if (!skippedRef.current) onCompleteRef.current();
+  }, []);
 
   // Reduced motion: skip all animation, go straight to completion
   if (prefersReduced) {
-    // Render a simple fade-in result announcement then complete
     return (
       <div className="flex flex-col items-center gap-4 py-8">
         <div className="sr-only" role="status" aria-live="assertive">
@@ -81,23 +83,19 @@ export function PullSequence({
     );
   }
 
-  // Multi-pull: anticipation → grid reveal → complete (no per-item reveal/celebration)
+  // Multi-pull: anticipation → grid reveal → complete
   if (mode === "multi") {
     if (phase === "anticipation") {
       return (
         <div className="relative">
-          <AnticipationPhase
-            rarity={bestRarity}
-            onComplete={() => advancePhase("reveal")}
-          />
+          <AnticipationPhase rarity={bestRarity} onComplete={toReveal} />
           <SkipButton onSkip={handleSkip} />
         </div>
       );
     }
-    // Reveal + celebration merged into grid
     return (
       <div className="relative">
-        <MultiPullGrid results={results} onComplete={onComplete} />
+        <MultiPullGrid results={results} onComplete={toComplete} />
         <SkipButton onSkip={handleSkip} />
       </div>
     );
@@ -111,22 +109,16 @@ export function PullSequence({
       {phase === "anticipation" && (
         <AnticipationPhase
           rarity={singleResult.rarity}
-          onComplete={() => advancePhase("reveal")}
+          onComplete={toReveal}
         />
       )}
 
       {phase === "reveal" && (
-        <RevealPhase
-          result={singleResult}
-          onComplete={() => advancePhase("celebration")}
-        />
+        <RevealPhase result={singleResult} onComplete={toCelebration} />
       )}
 
       {phase === "celebration" && (
-        <CelebrationPhase
-          result={singleResult}
-          onComplete={() => advancePhase("complete")}
-        />
+        <CelebrationPhase result={singleResult} onComplete={toComplete} />
       )}
 
       <SkipButton onSkip={handleSkip} />

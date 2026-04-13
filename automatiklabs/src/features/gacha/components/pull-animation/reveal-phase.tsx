@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { parseCssDuration } from "../../lib/parse-css-duration";
 import { RarityBadge } from "../rarity-badge";
 import type { PullResult } from "../../types";
 
@@ -18,8 +19,8 @@ export function RevealPhase({ result, onComplete }: RevealPhaseProps) {
 
   useEffect(() => {
     const style = getComputedStyle(document.documentElement);
-    const raw = style.getPropertyValue("--gacha-reveal").trim();
-    const ms = parseInt(raw, 10) || 1500;
+    const raw = style.getPropertyValue("--gacha-reveal");
+    const ms = parseCssDuration(raw, 1500);
 
     timerRef.current = setTimeout(onComplete, ms);
     return () => {

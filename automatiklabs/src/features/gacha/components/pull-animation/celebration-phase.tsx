@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo } from "react";
+import { parseCssDuration } from "../../lib/parse-css-duration";
 import { RarityBadge } from "../rarity-badge";
 import type { PullResult, ItemRarity } from "../../types";
 
@@ -57,8 +58,8 @@ export function CelebrationPhase({
     const prop = isLegendary
       ? "--gacha-celebration-legendary"
       : "--gacha-celebration";
-    const raw = style.getPropertyValue(prop).trim();
-    const ms = parseInt(raw, 10) || (isLegendary ? 3000 : 2000);
+    const raw = style.getPropertyValue(prop);
+    const ms = parseCssDuration(raw, isLegendary ? 3000 : 2000);
 
     timerRef.current = setTimeout(onComplete, ms);
     return () => {

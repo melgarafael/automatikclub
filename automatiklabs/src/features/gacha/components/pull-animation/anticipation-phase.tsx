@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { parseCssDuration } from "../../lib/parse-css-duration";
 import type { ItemRarity } from "../../types";
 
 interface AnticipationPhaseProps {
@@ -32,10 +33,9 @@ export function AnticipationPhase({
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
-    // Read the CSS custom property for duration
     const style = getComputedStyle(document.documentElement);
-    const raw = style.getPropertyValue("--gacha-anticipation").trim();
-    const ms = parseInt(raw, 10) || 2500;
+    const raw = style.getPropertyValue("--gacha-anticipation");
+    const ms = parseCssDuration(raw, 2500);
 
     timerRef.current = setTimeout(onComplete, ms);
     return () => {
