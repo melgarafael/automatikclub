@@ -2,7 +2,7 @@
 
 > **Versao:** 1.0.0
 > **Data:** 2026-04-01
-> **Total:** 17 Epics, 90 Stories
+> **Total:** 18 Epics, 101 Stories
 
 ---
 
@@ -27,6 +27,7 @@
 | 15 | Admin Panel | 7 | 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14 | Fullstack |
 | 16 | AI Comment Responder | 4 | 06 | Backend |
 | 17 | Polish & Performance | 5 | All (01-16) | Frontend/Infra |
+| 18 | Gacha System (Forja do Conhecimento) | 11 | 03, 04, 07 | Fullstack |
 
 ---
 
@@ -53,6 +54,9 @@
 - **EPIC-12:** Recommendation Engine
 - **EPIC-13:** Newsletter
 - **EPIC-14:** Book Recommendations
+
+### Fase 4b — Gacha (apos EPIC-07)
+- **EPIC-18:** Gacha System (Forja do Conhecimento)
 
 ### Fase 5 — Consolidacao
 - **EPIC-15:** Admin Panel
@@ -84,4 +88,5 @@
 | 15 | [EPIC-15-admin-panel.md](./EPIC-15-admin-panel.md) |
 | 16 | [EPIC-16-ai-comment-responder.md](./EPIC-16-ai-comment-responder.md) |
 | 17 | [EPIC-17-polish-performance.md](./EPIC-17-polish-performance.md) |
+| 18 | [EPIC-18-gacha-system.md](./EPIC-18-gacha-system.md) |
 | — | [DEPENDENCY-GRAPH.md](./DEPENDENCY-GRAPH.md) |
