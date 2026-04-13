@@ -57,7 +57,7 @@ export interface GachaItem {
   description: string | null;
   rarity: ItemRarity;
   bindType: BindType;
-  category: "booster" | "cosmetic" | "community" | "asset" | "external";
+  category: "booster" | "cosmetic" | "perk" | "asset" | "external";
   iconUrl: string | null;
   baseWeight: number;
   properties: Record<string, unknown>;

@@ -20,7 +20,7 @@ interface MarketplaceGridProps {
 const CATEGORIES: GachaItem["category"][] = [
   "booster",
   "cosmetic",
-  "community",
+  "perk",
   "asset",
   "external",
 ];

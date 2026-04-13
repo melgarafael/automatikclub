@@ -12,7 +12,7 @@ interface CollectionTrackerProps {
 const CATEGORY_LABELS: Record<string, string> = {
   booster: "Boosters",
   cosmetic: "Cosméticos",
-  community: "Comunidade",
+  perk: "Perks",
   asset: "Assets",
   external: "Externos",
 };

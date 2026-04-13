@@ -19,7 +19,7 @@ interface InventoryGridProps {
 const CATEGORIES: GachaItem["category"][] = [
   "booster",
   "cosmetic",
-  "community",
+  "perk",
   "asset",
   "external",
 ];
@@ -27,7 +27,7 @@ const CATEGORIES: GachaItem["category"][] = [
 const CATEGORY_LABELS: Record<GachaItem["category"], string> = {
   booster: "Boosters",
   cosmetic: "Cosméticos",
-  community: "Comunidade",
+  perk: "Perks",
   asset: "Assets",
   external: "Externos",
 };
