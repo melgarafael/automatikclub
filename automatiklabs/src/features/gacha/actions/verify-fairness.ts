@@ -2,6 +2,7 @@
 
 import { verifyPull, rotateSeed, getUserFairnessHistory } from "../services/fairness-engine";
 import { verifyFairnessSchema, rotateSeedSchema } from "../schemas";
+import { createClient } from "@/shared/lib/supabase/server";
 import type {
   FairnessVerification,
   SeedRotationResult,
@@ -22,6 +23,12 @@ export async function verifyFairnessAction(
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Input invalido" };
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
 
   try {
     const verification = await verifyPull(parsed.data.pullId);
@@ -47,6 +54,12 @@ export async function rotateSeedAction(): Promise<RotateSeedResult> {
     return { error: "Input invalido" };
   }
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const result = await rotateSeed();
     return { result };
@@ -67,6 +80,12 @@ export type FairnessHistoryResult = {
 export async function getFairnessHistoryAction(
   limit?: number
 ): Promise<FairnessHistoryResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const records = await getUserFairnessHistory(limit);
     return { records };

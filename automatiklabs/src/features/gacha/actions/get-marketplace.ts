@@ -5,6 +5,7 @@ import {
   getMyListings,
   type MarketplaceFilters,
 } from "../services/marketplace-engine";
+import { createClient } from "@/shared/lib/supabase/server";
 import type { MarketplaceListing } from "../types";
 
 export type GetMarketplaceResult = {
@@ -15,6 +16,12 @@ export type GetMarketplaceResult = {
 export async function getMarketplaceAction(
   filters?: MarketplaceFilters
 ): Promise<GetMarketplaceResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const listings = await getListings(filters);
     return { listings };
@@ -24,6 +31,12 @@ export async function getMarketplaceAction(
 }
 
 export async function getMyListingsAction(): Promise<GetMarketplaceResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const listings = await getMyListings();
     return { listings };

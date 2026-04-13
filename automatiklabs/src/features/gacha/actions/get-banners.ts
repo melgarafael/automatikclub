@@ -1,6 +1,7 @@
 "use server";
 
 import { getBanners, getBannerItems } from "../services/gacha-engine";
+import { createClient } from "@/shared/lib/supabase/server";
 import type { GachaBanner, BannerItem } from "../types";
 
 interface BannersActionResult {
@@ -9,6 +10,12 @@ interface BannersActionResult {
 }
 
 export async function getBannersAction(): Promise<BannersActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const banners = await getBanners();
     return { banners };
@@ -25,6 +32,12 @@ interface BannerItemsActionResult {
 export async function getBannerItemsAction(
   bannerId: string
 ): Promise<BannerItemsActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
   try {
     const items = await getBannerItems(bannerId);
     return { items };

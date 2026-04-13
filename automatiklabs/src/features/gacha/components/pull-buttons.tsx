@@ -33,7 +33,7 @@ export function PullButtons({
   const disabledTen = !canPullTen || isPulling;
 
   return (
-    <div className={cn("flex gap-3", className)}>
+    <div className={cn("flex w-full gap-3", className)}>
       {/* Pull x1 */}
       <button
         type="button"

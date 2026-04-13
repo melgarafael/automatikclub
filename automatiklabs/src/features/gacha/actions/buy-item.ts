@@ -2,6 +2,7 @@
 
 import { buyItem } from "../services/marketplace-engine";
 import { buyItemSchema } from "../schemas";
+import { createClient } from "@/shared/lib/supabase/server";
 import type { MarketplaceListing } from "../types";
 
 export type BuyItemResult = {
@@ -16,6 +17,12 @@ export async function buyItemAction(
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Input invalido" };
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
 
   try {
     const listing = await buyItem(parsed.data.listingId);

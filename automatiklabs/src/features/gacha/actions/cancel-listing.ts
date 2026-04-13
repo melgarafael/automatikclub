@@ -2,6 +2,7 @@
 
 import { cancelListing } from "../services/marketplace-engine";
 import { cancelListingSchema } from "../schemas";
+import { createClient } from "@/shared/lib/supabase/server";
 
 export type CancelListingResult = {
   success?: boolean;
@@ -15,6 +16,12 @@ export async function cancelListingAction(
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Input invalido" };
   }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
 
   try {
     await cancelListing(parsed.data.listingId);
