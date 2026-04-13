@@ -7,7 +7,7 @@ import { getUserPityAction } from "../actions/get-user-pity";
 import { GACHA_PULL_COST } from "../constants";
 import type { PullResult, UserWallet, PityState } from "../types";
 
-type PullPhase = "idle" | "pulling" | "done";
+type PullPhase = "idle" | "pulling" | "revealing" | "done";
 
 interface UseGachaPullOptions {
   bannerId: string;
@@ -24,6 +24,7 @@ interface UseGachaPullReturn {
   pull: () => void;
   pullTen: () => void;
   reset: () => void;
+  completeReveal: () => void;
   canPullSingle: boolean;
   canPullTen: boolean;
 }
@@ -70,7 +71,7 @@ export function useGachaPull({
         return;
       }
       setResults(res.results);
-      setPhase("done");
+      setPhase("revealing");
       await refreshState();
     });
   }, [bannerId, canPullSingle, phase, refreshState]);
@@ -92,10 +93,14 @@ export function useGachaPull({
         return;
       }
       setResults(res.results);
-      setPhase("done");
+      setPhase("revealing");
       await refreshState();
     });
   }, [bannerId, canPullTen, phase, refreshState]);
+
+  const completeReveal = useCallback(() => {
+    setPhase("done");
+  }, []);
 
   const reset = useCallback(() => {
     setPhase("idle");
@@ -111,6 +116,7 @@ export function useGachaPull({
     pull,
     pullTen,
     reset,
+    completeReveal,
     canPullSingle,
     canPullTen,
   };

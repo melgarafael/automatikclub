@@ -7,6 +7,7 @@ import { PullButtons } from "./pull-buttons";
 import { PityCounter } from "./pity-counter";
 import { CurrencyDisplay } from "./currency-display";
 import { PullResultDisplay } from "./pull-result-display";
+import { PullSequence } from "./pull-animation/pull-sequence";
 import { useGachaPull } from "../hooks/use-gacha-pull";
 import type { GachaBanner, UserWallet, PityState } from "../types";
 
@@ -36,6 +37,7 @@ export function GachaPullScreen({
     pull,
     pullTen,
     reset,
+    completeReveal,
     canPullSingle,
     canPullTen,
   } = useGachaPull({
@@ -43,6 +45,17 @@ export function GachaPullScreen({
     initialWallet,
     initialPity,
   });
+
+  // --- ANIMATION PHASE ---
+  if (phase === "revealing" && results.length > 0) {
+    return (
+      <PullSequence
+        results={results}
+        mode={results.length > 1 ? "multi" : "single"}
+        onComplete={completeReveal}
+      />
+    );
+  }
 
   // --- RESULT PHASE ---
   if (phase === "done" && results.length > 0) {
