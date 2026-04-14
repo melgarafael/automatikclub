@@ -66,6 +66,7 @@ export interface Level {
   name: string;
   minXP: number;
   icon: string;
+  color?: string;
 }
 
 export interface LevelProgress {
@@ -160,4 +161,6 @@ export interface AwardXPResult {
   success: boolean;
   xpAwarded: number;
   reason?: string;
+  leveledUp?: boolean;
+  newLevel?: Level;
 }

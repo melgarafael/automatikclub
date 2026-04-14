@@ -33,6 +33,7 @@ export const STREAK_BONUSES = {
   daily: 5,
   week: 50, // at 7 days
   month: 200, // at 30 days
+  quarter: 500, // at 90 days
 } as const;
 
 export const COOLDOWN_SECONDS = 30;

@@ -49,6 +49,15 @@ export async function recordActivity(userId: string): Promise<void> {
       STREAK_BONUSES.month
     );
   }
+
+  if (streak === 90) {
+    await awardXP(
+      userId,
+      "streak",
+      `streak-quarter-${today}`,
+      STREAK_BONUSES.quarter
+    );
+  }
 }
 
 /**
@@ -90,5 +99,6 @@ function calculateStreakBonus(streak: number): number {
   let bonus = streak * STREAK_BONUSES.daily;
   if (streak >= 7) bonus += STREAK_BONUSES.week;
   if (streak >= 30) bonus += STREAK_BONUSES.month;
+  if (streak >= 90) bonus += STREAK_BONUSES.quarter;
   return bonus;
 }
