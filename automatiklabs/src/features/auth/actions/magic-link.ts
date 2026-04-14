@@ -2,6 +2,7 @@
 
 import { createClient } from "@/shared/lib/supabase/server";
 import { magicLinkSchema } from "../schemas/auth";
+import { magicLinkLimiter, formatRetryAfter } from "@/shared/lib/rate-limit";
 
 export type MagicLinkState = {
   success?: boolean;
@@ -22,6 +23,14 @@ export async function sendMagicLink(
   if (!parsed.success) {
     return {
       fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  // Rate limit: 3 magic link requests per email per 15 min
+  const rl = magicLinkLimiter(parsed.data.email.toLowerCase());
+  if (!rl.allowed) {
+    return {
+      error: `Muitas tentativas. Tente novamente em ${formatRetryAfter(rl.retryAfterMs)}.`,
     };
   }
 

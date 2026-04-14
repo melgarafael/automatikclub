@@ -30,8 +30,16 @@ export default async function MemberProfilePage({
     notFound();
   }
 
-  // Check visibility
-  if (profile.profile_visibility === "private" && profile.id !== user.id) {
+  // Check visibility — fetch from user_preferences
+  const { data: prefs } = await supabase
+    .from("user_preferences")
+    .select("profile_visibility")
+    .eq("user_id", profile.id)
+    .single();
+
+  const visibility = prefs?.profile_visibility ?? "public";
+
+  if (visibility === "private" && profile.id !== user.id) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <p className="font-display text-[16px] font-bold text-text-1">
@@ -44,6 +52,13 @@ export default async function MemberProfilePage({
     );
   }
 
+  // Fetch XP data
+  const { data: xpData } = await supabase
+    .from("user_xp")
+    .select("total_xp, level, current_streak")
+    .eq("user_id", profile.id)
+    .single();
+
   return (
     <div className="py-5">
       <ProfileHeader
@@ -54,11 +69,15 @@ export default async function MemberProfilePage({
         subscription_level={profile.subscription_level}
         bio={profile.bio}
         instagram={profile.instagram}
+        linkedin={profile.linkedin ?? null}
+        github={profile.github ?? null}
+        youtube={profile.youtube ?? null}
+        reddit={profile.reddit ?? null}
         portfolio_url={profile.portfolio_url}
         stack={profile.stack ?? []}
-        xp={profile.xp ?? 0}
-        level={profile.level ?? 1}
-        streak={profile.streak ?? 0}
+        xp={xpData?.total_xp ?? 0}
+        level={xpData?.level ?? 1}
+        streak={xpData?.current_streak ?? 0}
       />
     </div>
   );

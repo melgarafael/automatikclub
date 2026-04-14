@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { MarkdownRenderer } from "@/shared/components/markdown-renderer";
 import { formatRelativeTime } from "@/shared/utils/format-date";
 import { PostActions } from "./post-actions";
+import { CommentSection } from "@/features/comments/components/comment-section";
 import type { PostWithAuthor } from "../types";
 import type { UserRole } from "@/features/auth/types";
 
@@ -26,7 +28,8 @@ function getRoleBadge(role: UserRole) {
   }
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])
@@ -36,6 +39,7 @@ function getInitials(name: string) {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const [showComments, setShowComments] = useState(false);
   const isAiPost = post.author.role === "admin" && post.title?.toLowerCase().includes("ai");
   const isPinned = post.is_pinned;
 
@@ -57,7 +61,7 @@ export function PostCard({ post }: PostCardProps) {
 
       {/* Head: avatar + meta */}
       <div className="mb-[10px] flex items-center gap-[10px]">
-        <Link href={`/members/${post.author.username}`}>
+        <Link href={post.author.username ? `/members/${post.author.username}` : "/members"}>
           <Avatar>
             {post.author.avatar_url ? (
               <AvatarImage
@@ -74,7 +78,7 @@ export function PostCard({ post }: PostCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <Link
-              href={`/members/${post.author.username}`}
+              href={post.author.username ? `/members/${post.author.username}` : "/members"}
               className="font-display text-[14px] font-semibold text-text-1 hover:underline"
             >
               {post.author.full_name}
@@ -122,10 +126,23 @@ export function PostCard({ post }: PostCardProps) {
       {/* Actions */}
       <PostActions
         postId={post.id}
+        channelSlug={post.channel.slug}
         likesCount={post.likes_count}
         commentsCount={post.comments_count}
         userHasLiked={post.user_has_liked}
+        onCommentClick={() => setShowComments(!showComments)}
       />
+
+      {/* Inline comments */}
+      {showComments && (
+        <div className="mt-3 border-t border-border pt-3">
+          <CommentSection
+            commentableType="post"
+            commentableId={post.id}
+            comments={[]}
+          />
+        </div>
+      )}
     </article>
   );
 }

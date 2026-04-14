@@ -1,0 +1,22 @@
+[project]
+name = "opportunity-research"
+version = "0.1.0"
+description = "Opportunity Research Engine — scout, scan vault, score, and generate docs"
+requires-python = ">=3.12"
+dependencies = [
+    "firecrawl-py",
+    "pyyaml",
+    "pydantic>=2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

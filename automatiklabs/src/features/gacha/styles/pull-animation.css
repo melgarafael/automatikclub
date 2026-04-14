@@ -1,0 +1,134 @@
+/* =============================================
+   Pull Animation Keyframes
+   CSS-only particles, glow, flash, and confetti.
+   All durations read from gacha-tokens.css vars.
+   ============================================= */
+
+/* --- Anticipation: particles converge to center --- */
+
+@keyframes gacha-converge {
+  0% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes gacha-anticipation-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 0.3;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Reveal: flash + scale-in --- */
+
+@keyframes gacha-flash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes gacha-item-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(20px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Celebration: confetti particles --- */
+
+@keyframes gacha-confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--cx), var(--cy)) rotate(var(--cr)) scale(0.3);
+  }
+}
+
+@keyframes gacha-celebration-pulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* --- Multi-pull: sequential card reveal --- */
+
+@keyframes gacha-card-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotateY(90deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) rotateY(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+/* --- Reduced motion overrides --- */
+
+@media (prefers-reduced-motion: reduce) {
+  .gacha-anim-anticipation,
+  .gacha-anim-reveal,
+  .gacha-anim-celebration,
+  .gacha-anim-converge,
+  .gacha-anim-confetti {
+    animation: none !important;
+  }
+
+  .gacha-anim-item-appear {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .gacha-anim-card-pop {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

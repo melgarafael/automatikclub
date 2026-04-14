@@ -1,0 +1,66 @@
+# Epic — Pedagogical Workflow
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/pedagogical-workflow.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Implement all SECURITY DEFINER SQL functions that enforce the pedagogical state machine: `publish_lesson`, `record_competency_transition`, `record_review_decision`, `escalate_review`, and `set_lesson_draft` — creating the only authorized write paths for lesson publication, review decisions, and competency progress.
+
+## Scope
+
+- Writes SECURITY DEFINER function bodies in SQL (placed into Schema Extensions migration files).
+- Implements `fn_validate_lesson_doctrine` logic based on Pedagogical QA's 8 criteria.
+- Creates `v_user_unlocked_lessons` view (on-demand, not materialized).
+- Creates the `domain_events` table + insert patterns used by all functions.
+- Does NOT create table DDL (Schema Extensions owns migrations), does NOT define rubric criteria (Pedagogical QA owns those), does NOT write frontend code.
+
+## Stories
+
+### Story 1: Implement fn_validate_lesson_doctrine
+- **id:** WORKFLOW-01
+- **points:** M
+- **deps:** [SCHEMA-02, SCHEMA-03]
+- **acceptance_criteria:**
+  - [ ] Function `public.fn_validate_lesson_doctrine(p_lesson_id UUID)` exists and returns `TABLE(check_name text, passed bool, detail text)`.
+  - [ ] Function checks all 8 hard-fail criteria from `pedagogical-qa.md` §4.1.
+  - [ ] Returns at least one failing row when a lesson is missing `bloom_target`.
+  - [ ] Returns empty result set (all passed) for a fully compliant lesson fixture.
+  - [ ] Function is SECURITY DEFINER; callable by `authenticated` role.
+
+### Story 2: Implement publish_lesson SECURITY DEFINER function
+- **id:** WORKFLOW-02
+- **points:** L
+- **deps:** [WORKFLOW-01]
+- **acceptance_criteria:**
+  - [ ] Function `public.publish_lesson(p_lesson_id UUID, p_actor_id UUID)` exists and returns `TABLE(passed bool, failing_criteria jsonb)`.
+  - [ ] Function calls `fn_validate_lesson_doctrine` first.
+  - [ ] Function requires at least 1 approved human review in `pedagogical_reviews`.
+  - [ ] Function requires at least 1 competency in `lesson_competencies`.
+  - [ ] Function obtains `pg_advisory_xact_lock` before any write.
+  - [ ] Function is placed in a migration file under Schema Extensions ownership.
+  - [ ] Calling `publish_lesson` on a lesson missing a human review raises an exception with a meaningful message.
+
+### Story 3: Implement set_lesson_draft with backpressure gate
+- **id:** WORKFLOW-03
+- **points:** M
+- **deps:** [SCHEMA-01, SCHEMA-02]
+- **acceptance_criteria:**
+  - [ ] Function `public.set_lesson_draft(p_payload JSONB, p_generator_run_id UUID)` exists.
+  - [ ] Function checks `v_review_queue_health` and raises `queue_overflow` exception when human queue > 20 items for > 3 days.
+  - [ ] Function creates `lesson_variants` + `pedagogical_reviews(status='pending')` in a single transaction.
+  - [ ] Partial failure results in complete rollback (no orphaned rows).
+  - [ ] Callable by `content_author` role only.
+
+(Area owner adds stories for `record_review_decision`, `escalate_review`, `record_competency_transition`, `v_user_unlocked_lessons`, domain_events emission pattern, and the SLA cron escalation worker.)
+
+## Notes for the future executor agent
+
+- This area writes SQL function bodies but does NOT create migration files — those are owned by Schema Extensions. Coordinate file placement: Pedagogical Workflow writes the function, Schema Extensions wraps it in a migration with the correct REVOKE + GRANT EXECUTE wiring.
+- `v_user_unlocked_lessons` must be a plain view, NOT a materialized view. Persona and competency status change in real time.
+- The `domain_events` table is append-only. All inserts use `ON CONFLICT DO NOTHING` with a producer-set `dedupe_key`.
+- `publish_lesson` returns `TABLE(passed bool, failing_criteria jsonb)`, not a boolean — this is required by Pedagogical QA to show authors which criterion failed.
+- Workers running as `service_role` bypass RLS. Rely on plpgsql RAISE in append-only triggers, not on RLS, for immutability enforcement.

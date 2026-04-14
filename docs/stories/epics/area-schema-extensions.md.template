@@ -1,0 +1,72 @@
+# Epic — Schema Extensions
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/schema-extensions.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Deliver all Supabase migrations (00012–00020) that materialize the AutomatikLabs Educational System doctrine as Postgres constraints, triggers, RLS policies, and SECURITY DEFINER functions — enabling the competency-based education system to operate on the existing platform.
+
+## Scope
+
+- Creates migrations 00012 through 00020 under `automatiklabs/supabase/migrations/`.
+- Drops the `auto_complete_lesson` time-based trigger from `00003_learning.sql`.
+- Does NOT write app code, frontend components, skill files, or lesson content.
+- Does NOT create roles (`CREATE ROLE` is owned by the Security terminal).
+
+## Stories
+
+### Story 1: Create enums migration (00012)
+- **id:** SCHEMA-01
+- **points:** M
+- **deps:** []
+- **acceptance_criteria:**
+  - [ ] File `automatiklabs/supabase/migrations/00012_educational_enums.sql` created.
+  - [ ] All 7 enums in `schema-extensions.md` §4.1 exist: `journey_stage`, `learner_persona`, `mastery_layer`, `competency_framework`, `competency_status`, `reviewer_type`, `review_status`.
+  - [ ] Migration is idempotent (`IF NOT EXISTS`).
+  - [ ] `-- ROLLBACK:` block present with `DROP TYPE IF EXISTS` for each enum.
+  - [ ] `supabase db reset` applies cleanly.
+  - **migration_file:** `automatiklabs/supabase/migrations/00012_educational_enums.sql`
+  - **rls_required:** false
+  - **rollback_strategy:** `DROP TYPE IF EXISTS journey_stage, learner_persona, mastery_layer, competency_framework, competency_status, reviewer_type, review_status CASCADE;`
+
+### Story 2: Create competencies tables migration (00013)
+- **id:** SCHEMA-02
+- **points:** L
+- **deps:** [SCHEMA-01]
+- **acceptance_criteria:**
+  - [ ] Tables `public.competencies`, `public.lesson_competencies`, `public.competency_prerequisites` created per §4.2 shape in context doc.
+  - [ ] Immutability trigger on `competencies.slug` and `competencies.bloom_level`.
+  - [ ] `competency_prerequisites` has CONSTRAINT TRIGGER `fn_check_no_competency_cycle`.
+  - [ ] RLS enabled on all three tables with at least one explicit policy each.
+  - [ ] `-- Charter §4.2` cited in header comment.
+  - [ ] Migration idempotent; `supabase db reset` applies cleanly.
+  - **migration_file:** `automatiklabs/supabase/migrations/00013_competencies.sql`
+  - **rls_required:** true
+
+### Story 3: Drop auto_complete_lesson + add competency progress events (00015)
+- **id:** SCHEMA-03
+- **points:** L
+- **deps:** [SCHEMA-02]
+- **acceptance_criteria:**
+  - [ ] `DROP TRIGGER IF EXISTS auto_complete_lesson_trigger ON public.user_lesson_progress` executes.
+  - [ ] Table `public.user_competency_progress_events` created per §4.4 shape with `dedupe_key UNIQUE` constraint.
+  - [ ] View `public.v_user_competency_progress` created using `DISTINCT ON`.
+  - [ ] Append-only trigger on `user_competency_progress_events`.
+  - [ ] `-- Charter §4.2 (CBE), drops Charter §1.3 anti-pattern (time-based completion)` in header.
+  - **migration_file:** `automatiklabs/supabase/migrations/00015_competency_progress_events.sql`
+  - **rls_required:** true
+  - **rollback_strategy:** Must include re-creation of `auto_complete_lesson_trigger` for safe rollback.
+
+(Area owner adds stories for migrations 00014, 00016, 00017, 00018, 00019, 00020.)
+
+## Notes for the future executor agent
+
+- Migration numbering is sequential and immutable. Check the highest existing migration number before creating a new file (`ls automatiklabs/supabase/migrations/ | tail -5`).
+- SCHEMA-01 (enums) is a hard dependency for every subsequent migration. Always run it first in a fresh environment.
+- Schema Extensions does NOT write function bodies — it owns REVOKE + GRANT EXECUTE wiring. The function bodies for `publish_lesson`, `record_competency_transition` are written by Pedagogical Workflow but placed into migration files here.
+- Use `tomik-db-doctrine` skill for migration style conventions.
+- Always run `supabase db reset` locally after creating a migration to verify clean apply.

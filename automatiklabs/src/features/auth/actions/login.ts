@@ -3,6 +3,7 @@
 import { createClient } from "@/shared/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { loginSchema } from "../schemas/auth";
+import { loginLimiter, formatRetryAfter } from "@/shared/lib/rate-limit";
 
 export type LoginState = {
   error?: string;
@@ -23,6 +24,14 @@ export async function login(
   if (!parsed.success) {
     return {
       fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  // Rate limit: 5 attempts per email per 15 min
+  const rl = loginLimiter(parsed.data.email.toLowerCase());
+  if (!rl.allowed) {
+    return {
+      error: `Muitas tentativas. Tente novamente em ${formatRetryAfter(rl.retryAfterMs)}.`,
     };
   }
 

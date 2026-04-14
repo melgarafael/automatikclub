@@ -112,33 +112,31 @@ async function getUserCriteriaStats(
     .eq("user_id", userId)
     .single();
 
-  // Count lessons completed
+  // Count lessons completed (actual progress, not XP transactions)
   const { count: lessonsCount } = await supabase
-    .from("xp_transactions")
+    .from("user_lesson_progress")
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId)
-    .eq("source_type", "lesson_complete");
+    .eq("is_completed", true);
 
-  // Count courses completed
+  // Count courses completed (actual progress)
   const { count: coursesCount } = await supabase
-    .from("xp_transactions")
+    .from("user_course_progress")
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId)
-    .eq("source_type", "course_complete");
+    .eq("is_completed", true);
 
-  // Count comments
+  // Count comments (actual rows in comments table)
   const { count: commentsCount } = await supabase
-    .from("xp_transactions")
+    .from("comments")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .eq("source_type", "comment");
+    .eq("author_id", userId);
 
-  // Count posts
+  // Count posts (actual rows in posts table)
   const { count: postsCount } = await supabase
-    .from("xp_transactions")
+    .from("posts")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .eq("source_type", "post");
+    .eq("author_id", userId);
 
   // Count challenges completed
   const { count: challengesCount } = await supabase
@@ -147,12 +145,11 @@ async function getUserCriteriaStats(
     .eq("user_id", userId)
     .not("completed_at", "is", null);
 
-  // Count marketplace items
+  // Count marketplace items (actual uploads)
   const { count: marketplaceCount } = await supabase
-    .from("xp_transactions")
+    .from("marketplace_items")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .eq("source_type", "marketplace_upload");
+    .eq("author_id", userId);
 
   return {
     total_points: xpData?.total_xp ?? 0,

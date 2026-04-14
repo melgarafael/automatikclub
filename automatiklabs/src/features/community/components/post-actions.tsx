@@ -1,10 +1,12 @@
 "use client";
 
 import { useTransition, useOptimistic } from "react";
+import { toast } from "sonner";
 import { likePost } from "../actions/like-post";
 
 interface PostActionsProps {
   postId: string;
+  channelSlug: string;
   likesCount: number;
   commentsCount: number;
   userHasLiked: boolean;
@@ -13,6 +15,7 @@ interface PostActionsProps {
 
 export function PostActions({
   postId,
+  channelSlug,
   likesCount,
   commentsCount,
   userHasLiked,
@@ -31,10 +34,11 @@ export function PostActions({
   }
 
   function handleShare() {
+    const url = `${window.location.origin}/community/${channelSlug}/post/${postId}`;
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(
-        `${window.location.origin}/community/post/${postId}`
-      );
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success("Link copiado!");
+      });
     }
   }
 

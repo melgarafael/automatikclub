@@ -1,0 +1,32 @@
+"use server";
+
+import { cancelListing } from "../services/marketplace-engine";
+import { cancelListingSchema } from "../schemas";
+import { createClient } from "@/shared/lib/supabase/server";
+
+export type CancelListingResult = {
+  success?: boolean;
+  error?: string;
+};
+
+export async function cancelListingAction(
+  listingId: string
+): Promise<CancelListingResult> {
+  const parsed = cancelListingSchema.safeParse({ listingId });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Input invalido" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated" };
+
+  try {
+    await cancelListing(parsed.data.listingId);
+    return { success: true };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Erro ao cancelar listing" };
+  }
+}

@@ -33,7 +33,8 @@ function getRoleBadge(role: UserRole) {
   }
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])
@@ -70,9 +71,13 @@ export function CommentItem({
   const isAI = comment.is_ai_response;
 
   // AI comments: violet avatar + "Assistente IA" name
-  const authorName = isAI ? "Assistente IA" : comment.author.full_name;
+  const authorName = isAI ? "Assistente IA" : (comment.author.full_name ?? "Usuario");
   const authorInitials = isAI ? "IA" : getInitials(comment.author.full_name);
-  const authorLink = isAI ? null : `/members/${comment.author.username}`;
+  const authorLink = isAI
+    ? null
+    : comment.author.username
+      ? `/members/${comment.author.username}`
+      : "/members";
 
   return (
     <div

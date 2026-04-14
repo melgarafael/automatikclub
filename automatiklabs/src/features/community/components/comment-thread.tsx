@@ -30,7 +30,8 @@ function getRoleBadge(role: UserRole) {
   }
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])
@@ -75,7 +76,7 @@ function CommentItem({
       style={{ paddingLeft: comment.depth > 0 ? `${comment.depth * 24}px` : undefined }}
     >
       <div className="flex gap-[10px]">
-        <Link href={`/members/${comment.author.username}`} className="shrink-0">
+        <Link href={comment.author.username ? `/members/${comment.author.username}` : "/members"} className="shrink-0">
           <Avatar size="sm">
             {comment.author.avatar_url ? (
               <AvatarImage
@@ -93,7 +94,7 @@ function CommentItem({
           {/* Author line */}
           <div className="flex items-center gap-2">
             <Link
-              href={`/members/${comment.author.username}`}
+              href={comment.author.username ? `/members/${comment.author.username}` : "/members"}
               className="font-display text-[13px] font-semibold text-text-1 hover:underline"
             >
               {comment.author.full_name}

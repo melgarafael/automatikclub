@@ -1,0 +1,62 @@
+# Epic — Instructional Design
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/instructional-design.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Produce and publish the canonical competency catalog (`competency_catalog_v1.yaml`) and the first set of `learning_design_doc.yaml` course files for the "Empresa com IA Humanizada" Formação, enabling Content Production and Assessment Engine to begin Fase 1 work.
+
+## Scope
+
+- Creates and version-controls `competency_catalog_v1.yaml` in git.
+- Produces `learning_design_doc.yaml` for each course in the first Formação (all 3 Pilares).
+- Defines the `fase1-cube-cells.yaml` prioritization artifact for Curriculum Orchestration.
+- Publishes `competency-acceptance-criteria.md` v1 (blocking dependency for Pedagogical QA).
+- Does NOT write migrations, generate lesson prose, or build UI components.
+
+## Stories
+
+### Story 1: Publish competency-acceptance-criteria.md v1
+- **id:** INSTR-01
+- **points:** M
+- **deps:** []
+- **acceptance_criteria:**
+  - [ ] File `docs/educational-system/curriculum/competency-acceptance-criteria.md` exists with definitions for "competency demonstrated" at each Bloom level 1–6.
+  - [ ] Document reviewed and approved by QA Review terminal.
+  - [ ] Document cited in `pedagogical-qa.md` §2 as required pre-reading.
+
+### Story 2: Create competency_catalog_v1.yaml — Pilar 1 competencies
+- **id:** INSTR-02
+- **points:** L
+- **deps:** [INSTR-01]
+- **acceptance_criteria:**
+  - [ ] File `automatiklabs/docs/educational-system/curriculum/competency_catalog_v1.yaml` exists.
+  - [ ] At least 8 competencies for "Fluxo de Trabalho Inteligente" (Pilar 1) following the §4.1 shape in `instructional-design.md`.
+  - [ ] Every competency has `bloom_level`, `bloom_verb_anchors`, `prerequisites`, `reviewer_type`.
+  - [ ] Terminal competencies of Pilar 1 include at least one with `bloom_level >= 5`.
+  - [ ] PR reviewed by QA Review terminal.
+
+### Story 3: Create learning_design_doc.yaml — Pilar 1 (first course)
+- **id:** INSTR-03
+- **points:** L
+- **deps:** [INSTR-02]
+- **acceptance_criteria:**
+  - [ ] File `automatiklabs/docs/educational-system/curriculum/empresa-ia-humanizada/pilar-1-fluxo/course-pilar1-v1.yaml` exists.
+  - [ ] `desired_outcome.kirkpatrick_level == 4` AND `evidence_milestone_slug` set.
+  - [ ] `target_cube_cells.spine_cell == {stage:3, persona:organizado, layer:logica}`.
+  - [ ] Every `lesson_skeleton` entry has `bloom_target`, `kolb_focus`, `new_concepts_max <= 1`.
+  - [ ] Kolb cycle (4 phases) covered across at least one module.
+  - [ ] SLA: delivered within 5 business days of Fase 1 start.
+
+(Area owner adds stories for Pilar 2, Pilar 3, fase1-cube-cells.yaml, and subsequent courses.)
+
+## Notes for the future executor agent
+
+- This area produces YAML files in git, not database rows. Output is file creation + PR.
+- The first deliverable is `competency-acceptance-criteria.md` (INSTR-01) — every other area is blocked until this exists. Treat it as P0.
+- The `competency_catalog_v1.yaml` is seeded into the DB via migration `00013_competencies.sql` (owned by Schema Extensions). Do not attempt DB inserts directly.
+- Starred skills (`backward-design`, `bloom-calibrator`) do not yet exist. Apply these frameworks manually using Charter Part II as the reference.

@@ -14,16 +14,23 @@ import {
   TrophyIcon,
   StarIcon,
   AtSignIcon,
+  BriefcaseIcon,
+  CodeIcon,
+  PlayIcon,
 } from "lucide-react";
 
 interface ProfileHeaderProps {
-  full_name: string;
+  full_name: string | null;
   username: string;
   avatar_url: string | null;
   role: UserRole;
   subscription_level: SubscriptionTier;
   bio: string | null;
   instagram: string | null;
+  linkedin: string | null;
+  github: string | null;
+  youtube: string | null;
+  reddit: string | null;
   portfolio_url: string | null;
   stack: string[];
   xp: number;
@@ -38,30 +45,37 @@ export function ProfileHeader({
   subscription_level,
   bio,
   instagram,
+  linkedin,
+  github,
+  youtube,
+  reddit,
   portfolio_url,
   stack,
   xp,
   level,
   streak,
 }: ProfileHeaderProps) {
-  const initials = full_name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const displayName = full_name || "";
+  const initials = displayName
+    ? displayName
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "?";
 
   return (
     <div className="flex flex-col gap-5">
       {/* Avatar + Name */}
       <div className="flex items-start gap-4">
         <Avatar className="size-20">
-          <AvatarImage src={avatar_url ?? undefined} alt={full_name} />
+          <AvatarImage src={avatar_url ?? undefined} alt={displayName || "User"} />
           <AvatarFallback className="text-[24px]">{initials}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <h1 className="font-display text-[24px] font-bold text-text-1">
-            {full_name}
+            {displayName || "Sem nome"}
           </h1>
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <Badge variant={getRoleBadgeVariant(role)}>
@@ -112,6 +126,50 @@ export function ProfileHeader({
           >
             <AtSignIcon className="size-3.5" />
             {instagram}
+          </a>
+        )}
+        {linkedin && (
+          <a
+            href={linkedin.startsWith("http") ? linkedin : `https://linkedin.com/in/${linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-mono text-[11px] text-text-3 hover:text-blue"
+          >
+            <BriefcaseIcon className="size-3.5" />
+            LinkedIn
+          </a>
+        )}
+        {github && (
+          <a
+            href={`https://github.com/${github.replace("@", "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-mono text-[11px] text-text-3 hover:text-blue"
+          >
+            <CodeIcon className="size-3.5" />
+            {github}
+          </a>
+        )}
+        {youtube && (
+          <a
+            href={youtube.startsWith("http") ? youtube : `https://youtube.com/@${youtube}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-mono text-[11px] text-text-3 hover:text-blue"
+          >
+            <PlayIcon className="size-3.5" />
+            YouTube
+          </a>
+        )}
+        {reddit && (
+          <a
+            href={`https://reddit.com/u/${reddit.replace("u/", "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 font-mono text-[11px] text-text-3 hover:text-blue"
+          >
+            <AtSignIcon className="size-3.5" />
+            {reddit}
           </a>
         )}
         {portfolio_url && (

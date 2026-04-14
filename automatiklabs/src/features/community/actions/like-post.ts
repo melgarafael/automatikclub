@@ -20,7 +20,7 @@ export async function likePost(postId: string) {
     .select("post_id")
     .eq("post_id", postId)
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     // Unlike — remove the like

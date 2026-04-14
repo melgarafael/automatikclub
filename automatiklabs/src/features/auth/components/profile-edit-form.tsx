@@ -42,18 +42,25 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
     if (!file) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("avatar", file);
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
 
-    const result = await uploadAvatar(formData);
+      const result = await uploadAvatar(formData);
 
-    if (result.error) {
-      toast.error(result.error);
-    } else if (result.url) {
-      setAvatarUrl(result.url);
-      toast.success("Avatar atualizado!");
+      if (result.error) {
+        toast.error(result.error);
+      } else if (result.url) {
+        setAvatarUrl(result.url);
+        toast.success("Avatar atualizado!");
+      } else {
+        toast.error("Erro inesperado ao fazer upload.");
+      }
+    } catch {
+      toast.error("Falha ao conectar com o servidor. Tente novamente.");
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   const addTag = () => {
@@ -79,19 +86,22 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
     toast.success("Perfil atualizado!");
   }
 
-  const initials = profile.full_name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const displayName = profile.full_name || "";
+  const initials = displayName
+    ? displayName
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "?";
 
   return (
     <form action={action} className="flex flex-col gap-6">
       {/* Avatar */}
       <div className="flex items-center gap-4">
         <Avatar className="size-16">
-          <AvatarImage src={avatarUrl ?? undefined} alt={profile.full_name} />
+          <AvatarImage src={avatarUrl ?? undefined} alt={displayName || "User"} />
           <AvatarFallback className="text-[18px]">{initials}</AvatarFallback>
         </Avatar>
         <div>
@@ -133,7 +143,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         <Input
           id="full_name"
           name="full_name"
-          defaultValue={profile.full_name}
+          defaultValue={profile.full_name ?? ""}
           required
         />
         {state.fieldErrors?.full_name && (
@@ -224,6 +234,92 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         {state.fieldErrors?.instagram && (
           <p className="font-mono text-[11px] text-red">
             {state.fieldErrors.instagram[0]}
+          </p>
+        )}
+      </div>
+
+      {/* LinkedIn */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="linkedin"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          LinkedIn
+        </label>
+        <Input
+          id="linkedin"
+          name="linkedin"
+          type="url"
+          defaultValue={profile.linkedin ?? ""}
+          placeholder="https://linkedin.com/in/seuusuario"
+        />
+        {state.fieldErrors?.linkedin && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.linkedin[0]}
+          </p>
+        )}
+      </div>
+
+      {/* GitHub */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="github"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          GitHub
+        </label>
+        <Input
+          id="github"
+          name="github"
+          defaultValue={profile.github ?? ""}
+          placeholder="@seuusuario"
+        />
+        {state.fieldErrors?.github && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.github[0]}
+          </p>
+        )}
+      </div>
+
+      {/* YouTube */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="youtube"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          YouTube
+        </label>
+        <Input
+          id="youtube"
+          name="youtube"
+          type="url"
+          defaultValue={profile.youtube ?? ""}
+          placeholder="https://youtube.com/@seucanal"
+        />
+        {state.fieldErrors?.youtube && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.youtube[0]}
+          </p>
+        )}
+      </div>
+
+      {/* Reddit */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="reddit"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          Reddit
+        </label>
+        <Input
+          id="reddit"
+          name="reddit"
+          defaultValue={profile.reddit ?? ""}
+          placeholder="u/seuusuario"
+        />
+        {state.fieldErrors?.reddit && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.reddit[0]}
           </p>
         )}
       </div>

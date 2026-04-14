@@ -153,7 +153,7 @@ export async function getWeeklyStats(): Promise<WeeklyStats> {
         .gte("created_at", oneWeekAgo.toISOString()),
       supabase
         .from("courses")
-        .select("title")
+        .select("id, title")
         .eq("is_published", true)
         .order("created_at", { ascending: false })
         .limit(5),
@@ -162,9 +162,26 @@ export async function getWeeklyStats(): Promise<WeeklyStats> {
   const xpDistributed =
     xpRows?.reduce((sum, row) => sum + (row.amount ?? 0), 0) ?? 0;
 
+  // Fetch enrollment counts for top courses
+  const courseIds = (topCourseRows ?? []).map((c) => c.id);
+  let enrollmentMap: Record<string, number> = {};
+
+  if (courseIds.length > 0) {
+    const { data: enrollmentRows } = await supabase
+      .from("user_course_progress")
+      .select("course_id")
+      .in("course_id", courseIds);
+
+    if (enrollmentRows) {
+      for (const row of enrollmentRows) {
+        enrollmentMap[row.course_id] = (enrollmentMap[row.course_id] ?? 0) + 1;
+      }
+    }
+  }
+
   const topCourses = (topCourseRows ?? []).map((c) => ({
     title: c.title,
-    enrollments: 0,
+    enrollments: enrollmentMap[c.id] ?? 0,
   }));
 
   return {

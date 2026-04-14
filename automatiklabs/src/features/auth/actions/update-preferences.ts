@@ -38,15 +38,19 @@ export async function updateNotificationPreferences(
     return { error: "Dados invalidos" };
   }
 
+  // Upsert into user_preferences (auto-create if row doesn't exist)
   const { error } = await supabase
-    .from("user_profiles")
-    .update({
-      notification_email: parsed.data.notification_email,
-      notification_push: parsed.data.notification_push,
-      notification_in_app: parsed.data.notification_in_app,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", user.id);
+    .from("user_preferences")
+    .upsert(
+      {
+        user_id: user.id,
+        notification_email: parsed.data.notification_email,
+        notification_push: parsed.data.notification_push,
+        notification_inapp: parsed.data.notification_in_app,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" }
+    );
 
   if (error) {
     return { error: "Erro ao salvar preferencias. Tente novamente." };
@@ -80,13 +84,17 @@ export async function updatePrivacyPreferences(
     return { error: "Dados invalidos" };
   }
 
+  // Upsert into user_preferences (auto-create if row doesn't exist)
   const { error } = await supabase
-    .from("user_profiles")
-    .update({
-      profile_visibility: parsed.data.profile_visibility,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", user.id);
+    .from("user_preferences")
+    .upsert(
+      {
+        user_id: user.id,
+        profile_visibility: parsed.data.profile_visibility,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" }
+    );
 
   if (error) {
     return { error: "Erro ao salvar preferencias. Tente novamente." };

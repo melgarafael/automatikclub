@@ -10,6 +10,7 @@ const PUBLIC_ROUTES = [
   "/redefinir-senha",
   "/pricing",
   "/register",
+  "/free-content",
 ];
 
 // Routes that require authentication
@@ -86,7 +87,23 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. Admin routes — check role from JWT claims
+  // 4. Soft-delete check — redirect deleted users to /login
+  if (user && isProtectedRoute(pathname)) {
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("is_deleted")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.is_deleted) {
+      await supabase.auth.signOut({ scope: "local" });
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("error", "account_deleted");
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // 5. Admin routes — check role from JWT claims
   if (user && isAdminRoute(pathname)) {
     const role =
       user.app_metadata?.role ?? user.user_metadata?.role ?? "aluno";

@@ -6,6 +6,7 @@
 import { createAdminClient } from "@/shared/lib/supabase/admin";
 import { XP_VALUES } from "@/shared/utils/constants";
 import { validateAntiGaming } from "./anti-gaming";
+import { getLevelForXP } from "./levels";
 import type { XpSourceType, AwardXPResult } from "../types";
 
 /**
@@ -62,8 +63,25 @@ export async function awardXP(
     return { success: false, xpAwarded: 0, reason: error.message };
   }
 
-  // The DB trigger (recalculate_user_xp) automatically updates user_xp table
-  return { success: true, xpAwarded: xpAmount };
+  // The DB trigger (recalculate_user_xp) automatically updates user_xp table.
+  // Check if level changed after the XP award.
+  const { data: xpData } = await supabase
+    .from("user_xp")
+    .select("total_xp")
+    .eq("user_id", userId)
+    .single();
+
+  const newTotalXP = xpData?.total_xp ?? xpAmount;
+  const oldLevel = getLevelForXP(newTotalXP - xpAmount);
+  const newLevel = getLevelForXP(newTotalXP);
+  const leveledUp = newLevel.level > oldLevel.level;
+
+  return {
+    success: true,
+    xpAwarded: xpAmount,
+    leveledUp,
+    newLevel: leveledUp ? newLevel : undefined,
+  };
 }
 
 /**

@@ -34,7 +34,7 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
 
   const { data: users } = await supabase
     .from("user_profiles")
-    .select("id, full_name, username, email, role, tier, avatar_url, created_at")
+    .select("id, full_name, username, email, role, subscription_level, avatar_url, created_at")
     .order("created_at", { ascending: false });
 
   if (!users) return [];
@@ -49,8 +49,15 @@ export async function getAdminUsers(): Promise<AdminUser[]> {
   const xpMap = new Map(xpRows?.map((x) => [x.user_id, x.total_xp]) ?? []);
 
   return users.map((u) => ({
-    ...u,
+    id: u.id,
+    full_name: u.full_name,
+    username: u.username,
+    email: u.email,
+    role: u.role,
+    tier: u.subscription_level,
     xp: xpMap.get(u.id) ?? 0,
+    avatar_url: u.avatar_url,
+    created_at: u.created_at,
   }));
 }
 
@@ -81,7 +88,7 @@ export async function updateUserTier(
 
   const { error: updateError } = await supabase
     .from("user_profiles")
-    .update({ tier })
+    .update({ subscription_level: tier })
     .eq("id", userId);
 
   if (updateError) return { error: updateError.message };

@@ -1,0 +1,67 @@
+# Epic — Assessment Engine
+
+> **For epic-executor:** This epic will be executed wave-by-wave.
+> **Required pre-reading by every wave's build subagent:**
+> 1. Charter: `automatiklabs/docs/educational-system/CHARTER.md`
+> 2. Context: `docs/educational-system/context/assessment-engine.md`
+> 3. Skill: `automatiklabs-doctrine`
+
+## Goal
+
+Generate rubrics and assessments for the first set of competencies in the catalog, implement the agent-reviewer workflow, and wire `fn_promote_competency` so that evidence submission can result in a student advancing their competency status — completing the CBE loop.
+
+## Scope
+
+- Generates rubric YAML for competencies from `competency_catalog_v1.yaml`.
+- Implements agent-reviewer skill/script for automated grading of Bloom 1–4 artifacts.
+- Wires `fn_promote_competency` caller logic (function body owned with Pedagogical Workflow).
+- Produces `GET /assessments/:id/rubric` endpoint for pre-submit rubric display.
+- Does NOT define which competencies exist (Instructional Design), does NOT write migrations (Schema Extensions), does NOT build submission UI (Lesson Experience).
+
+## Stories
+
+### Story 1: Generate rubrics for Pilar 1 competencies (Bloom 1–4)
+- **id:** ASSESS-01
+- **points:** L
+- **deps:** [INSTR-02, SCHEMA-02]
+- **acceptance_criteria:**
+  - [ ] For each competency in `competency_catalog_v1.yaml` with `bloom_level <= 4` and `framework: empresa-ia-humanizada` and `pilar: 1`: an `assessments` row exists in the DB.
+  - [ ] `assessments.type` follows the Bloom mapping: 1–3 → `quiz_auto` allowed; 4 → `rubric_artifact`.
+  - [ ] No row has `bloom_target >= 5 AND type = 'quiz_auto'` (CHECK constraint must not be violated).
+  - [ ] `assessments.passing_threshold` is identical for all persona variants of the same competency.
+  - [ ] `rubrics.dimensions` jsonb is schema-valid per §4.2 shape in context doc.
+
+### Story 2: Implement agent-reviewer for json_workflow evidence type
+- **id:** ASSESS-02
+- **points:** L
+- **deps:** [ASSESS-01]
+- **acceptance_criteria:**
+  - [ ] Script/skill `automatiklabs/scripts/agent-reviewer-json-workflow.py` exists.
+  - [ ] Accepts `(attempt_id, evidence_json, rubric_id)` as inputs.
+  - [ ] Respects token budget: ≤4k tokens input, ≤1k tokens output per invocation.
+  - [ ] Caches rubric by `competency_id` (does not re-fetch for every attempt).
+  - [ ] Writes `rubric_scores` rows for each graded criterion.
+  - [ ] Does NOT write `user_competency_progress` directly — calls `fn_promote_competency` after grading.
+  - [ ] Logs `cost_tokens` per invocation.
+  - [ ] Test with 3 synthetic workflows: 1 should pass, 1 should fail F1 (não funciona), 1 should fail with structured feedback.
+
+### Story 3: Expose pre-submit rubric endpoint
+- **id:** ASSESS-03
+- **points:** M
+- **deps:** [ASSESS-01]
+- **acceptance_criteria:**
+  - [ ] `GET /api/assessments/[id]/rubric` endpoint exists (or equivalent RPC).
+  - [ ] Returns `{dimensions: [...], passing_threshold}` for the assessment.
+  - [ ] Response is the same rubric the agent-reviewer uses — no divergence.
+  - [ ] Lesson Experience's `<EvidenceSubmitter>` can call this before submission to show criteria to the student.
+  - [ ] Bloom ≥ 5 assessments show only human-graded dimensions pre-submit (Funcionamento and Robustez are agent-graded and may be shown; Decisão and Reflexão are human-graded and are shown as "reviewed by a teacher").
+
+(Area owner adds stories for: Bloom 5–6 rubric generation, human reviewer grading interface integration, `fn_promote_competency` caller wiring, `v_criterion_failure_rate` view, retry + cooldown enforcement, and `evidence_expected` co-authoring with Content Production.)
+
+## Notes for the future executor agent
+
+- The `passing_threshold` is the same across all persona variants of a competency. Never lower it for "Zerado mode." Doing so certifies students who cannot actually do the thing — a Kirkpatrick L4 violation.
+- Agent reviewer handles Funcionamento and Robustez dimensions only for Bloom 5–6. Decisão and Reflexão require a human reviewer. Do not build an agent that claims to grade semantic dimensions alone.
+- Negociação Bloom 6 (closing a real deal) is NOT rubric-evaluable. Do not create an assessment for it. It gates on `revenue_milestones` (not yet designed). Skip in Fase 1 and mark as deferred.
+- The `live_demo` assessment type enum value exists but must NOT be used in Fase 1. Scheduling and execution flow for live demos is deferred to Fase 2.
+- Token budget (4k in / 1k out) is a hard constraint. If a rubric requires more tokens, simplify the rubric — do not exceed the budget.

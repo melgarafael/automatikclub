@@ -7,8 +7,8 @@ import type { CreateCommentState } from "../types";
 
 const createCommentSchema = z.object({
   commentable_type: z.enum(["lesson", "post", "ai_post"]),
-  commentable_id: z.string().uuid(),
-  parent_id: z.string().uuid().nullable().optional(),
+  commentable_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "ID invalido"),
+  parent_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "ID invalido").nullable().optional(),
   content: z
     .string()
     .trim()
@@ -84,16 +84,21 @@ export async function createComment(
     }
   }
 
-  // ── Determine status from platform_settings ──
+  // ── Determine status ──
+  // Default to auto-approve. platform_settings table may not exist yet.
   let status: "approved" | "pending" = "approved";
-  const { data: setting } = await supabase
-    .from("platform_settings")
-    .select("value")
-    .eq("key", "auto_approve_comments")
-    .single();
+  try {
+    const { data: setting } = await supabase
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "auto_approve_comments")
+      .single();
 
-  if (setting && setting.value === "false") {
-    status = "pending";
+    if (setting && setting.value === "false") {
+      status = "pending";
+    }
+  } catch {
+    // Table may not exist yet — default to approved
   }
 
   // ── Insert ──
@@ -109,6 +114,20 @@ export async function createComment(
 
   if (error) {
     return { error: "Erro ao criar comentario. Tente novamente." };
+  }
+
+  // Award XP for commenting (dedup via commentable + timestamp)
+  try {
+    const { awardXP } = await import(
+      "@/features/gamification/services/xp-engine"
+    );
+    await awardXP(
+      user.id,
+      "comment",
+      `comment:${parsed.data.commentable_id}:${Date.now()}`
+    );
+  } catch {
+    // XP award is best-effort — don't block comment creation
   }
 
   revalidatePath("/feed");

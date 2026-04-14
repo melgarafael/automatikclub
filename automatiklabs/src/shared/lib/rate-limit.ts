@@ -1,5 +1,6 @@
 // ── In-memory sliding window rate limiter ──
-// Reusable across API routes. Each route creates its own limiter instance.
+// Reusable across API routes and server actions.
+// Each limiter has its own named store.
 // For distributed deployments, replace with @upstash/ratelimit + Redis.
 
 interface RateLimiterConfig {
@@ -9,7 +10,7 @@ interface RateLimiterConfig {
   windowMs: number;
 }
 
-interface RateLimitResult {
+export interface RateLimitResult {
   allowed: boolean;
   remaining: number;
   retryAfterMs: number;
@@ -50,3 +51,39 @@ export function createRateLimiter(name: string, config: RateLimiterConfig) {
     };
   };
 }
+
+/**
+ * Format milliseconds into a human-readable Portuguese string.
+ * e.g. 120000 → "2 minutos", 3600000 → "60 minutos"
+ */
+export function formatRetryAfter(ms: number): string {
+  const minutes = Math.ceil(ms / 60_000);
+  if (minutes <= 1) return "1 minuto";
+  return `${minutes} minutos`;
+}
+
+// ── Pre-configured auth rate limiters ──
+
+/** 5 login attempts per email per 15 minutes */
+export const loginLimiter = createRateLimiter("auth:login", {
+  limit: 5,
+  windowMs: 15 * 60 * 1000,
+});
+
+/** 3 registrations per IP per hour */
+export const registerLimiter = createRateLimiter("auth:register", {
+  limit: 3,
+  windowMs: 60 * 60 * 1000,
+});
+
+/** 3 magic link requests per email per 15 minutes */
+export const magicLinkLimiter = createRateLimiter("auth:magic-link", {
+  limit: 3,
+  windowMs: 15 * 60 * 1000,
+});
+
+/** 3 password reset requests per email per 15 minutes */
+export const resetPasswordLimiter = createRateLimiter("auth:reset-password", {
+  limit: 3,
+  windowMs: 15 * 60 * 1000,
+});

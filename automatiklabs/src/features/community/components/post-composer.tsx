@@ -98,8 +98,7 @@ export function PostComposer({ channels, defaultChannelId }: PostComposerProps) 
         )}
       </div>
 
-      {/* Hidden fields */}
-      <input type="hidden" name="channel_id" value={channelId} />
+      {/* Hidden field for channel_id is unnecessary — the <select> already has name="channel_id" */}
 
       {/* Error */}
       {state.error && (

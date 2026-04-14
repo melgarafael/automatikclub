@@ -28,7 +28,8 @@ interface ModerationQueueProps {
   comments: PendingCommentRow[];
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])

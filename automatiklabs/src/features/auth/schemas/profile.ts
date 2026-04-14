@@ -17,6 +17,26 @@ export const profileSchema = z.object({
     .regex(/^@?[\w.]+$/, "Handle invalido. Ex: @usuario")
     .optional()
     .or(z.literal("")),
+  linkedin: z
+    .string()
+    .url("URL invalida. Ex: https://linkedin.com/in/usuario")
+    .optional()
+    .or(z.literal("")),
+  github: z
+    .string()
+    .regex(/^@?[\w.-]+$/, "Handle invalido. Ex: @usuario ou usuario")
+    .optional()
+    .or(z.literal("")),
+  youtube: z
+    .string()
+    .url("URL invalida. Ex: https://youtube.com/@canal")
+    .optional()
+    .or(z.literal("")),
+  reddit: z
+    .string()
+    .regex(/^(u\/)?[\w-]+$/, "Handle invalido. Ex: u/usuario")
+    .optional()
+    .or(z.literal("")),
   portfolio_url: z
     .string()
     .url("URL invalida")
@@ -43,7 +63,7 @@ export const notificationPreferencesSchema = z.object({
 });
 
 export const privacyPreferencesSchema = z.object({
-  profile_visibility: z.enum(["public", "members", "private"]),
+  profile_visibility: z.enum(["public", "members_only", "private"]),
 });
 
 export type ProfileInput = z.infer<typeof profileSchema>;
