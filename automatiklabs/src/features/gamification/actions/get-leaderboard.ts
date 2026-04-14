@@ -60,7 +60,7 @@ async function getAllTimeLeaderboard(
       user_id,
       total_xp,
       level,
-      user_profiles!inner(display_name, avatar_url)
+      user_profiles!inner(full_name, avatar_url)
     `
     )
     .order("total_xp", { ascending: false })
@@ -70,12 +70,12 @@ async function getAllTimeLeaderboard(
 
   return data.map((row, index) => {
     const profile = row.user_profiles as unknown as {
-      display_name: string;
+      full_name: string;
       avatar_url: string | null;
     };
     return {
       userId: row.user_id,
-      displayName: profile.display_name ?? "Usuario",
+      displayName: profile.full_name ?? "Usuario",
       avatarUrl: profile.avatar_url ?? null,
       totalXp: row.total_xp,
       rank: index + 1,
@@ -134,7 +134,7 @@ async function getPeriodLeaderboard(
   const userIds = sorted.map(([id]) => id);
   const { data: profiles } = await supabase
     .from("user_profiles")
-    .select("id, display_name, avatar_url")
+    .select("id, full_name, avatar_url")
     .in("id", userIds);
 
   const profileMap = new Map(
@@ -145,7 +145,7 @@ async function getPeriodLeaderboard(
     const profile = profileMap.get(userId);
     return {
       userId,
-      displayName: profile?.display_name ?? "Usuario",
+      displayName: profile?.full_name ?? "Usuario",
       avatarUrl: profile?.avatar_url ?? null,
       totalXp,
       rank: index + 1,
@@ -165,7 +165,7 @@ async function getUserPosition(
       .from("user_xp")
       .select("total_xp, level")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
 
     if (!data) return null;
 
@@ -177,13 +177,13 @@ async function getUserPosition(
 
     const { data: profile } = await supabase
       .from("user_profiles")
-      .select("display_name, avatar_url")
+      .select("full_name, avatar_url")
       .eq("id", userId)
-      .single();
+      .maybeSingle();
 
     return {
       userId,
-      displayName: profile?.display_name ?? "Voce",
+      displayName: profile?.full_name ?? "Voce",
       avatarUrl: profile?.avatar_url ?? null,
       totalXp: data.total_xp,
       rank: (count ?? 0) + 1,
