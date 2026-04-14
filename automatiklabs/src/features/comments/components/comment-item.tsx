@@ -71,8 +71,8 @@ export function CommentItem({
   const isAI = comment.is_ai_response;
 
   // AI comments: violet avatar + "Assistente IA" name
-  const authorName = isAI ? "Assistente IA" : (comment.author.full_name ?? comment.author.email?.split("@")[0] ?? "Usuario");
-  const authorInitials = isAI ? "IA" : getInitials(comment.author.full_name ?? comment.author.email);
+  const authorName = isAI ? "Assistente IA" : (comment.author.full_name ?? "Usuario");
+  const authorInitials = isAI ? "IA" : getInitials(comment.author.full_name);
   const authorLink = isAI
     ? null
     : comment.author.username
