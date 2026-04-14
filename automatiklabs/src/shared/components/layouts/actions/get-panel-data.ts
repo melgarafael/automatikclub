@@ -59,7 +59,7 @@ export async function getRightPanelData(): Promise<RightPanelData> {
           user_id,
           total_xp,
           level,
-          user_profiles!inner(display_name, avatar_url)
+          user_profiles!inner(full_name, avatar_url)
         `
         )
         .order("total_xp", { ascending: false })
@@ -68,7 +68,7 @@ export async function getRightPanelData(): Promise<RightPanelData> {
       // Recently active users
       supabase
         .from("user_profiles")
-        .select("id, display_name, avatar_url, updated_at")
+        .select("id, full_name, avatar_url, updated_at")
         .order("updated_at", { ascending: false })
         .limit(10),
 
@@ -78,7 +78,7 @@ export async function getRightPanelData(): Promise<RightPanelData> {
             .from("user_xp")
             .select("current_streak")
             .eq("user_id", currentUserId)
-            .single()
+            .maybeSingle()
         : Promise.resolve({ data: null, error: null }),
 
       // Total recently active users count (updated in last 24h)
@@ -96,12 +96,12 @@ export async function getRightPanelData(): Promise<RightPanelData> {
     leaderboardResult.data ?? []
   ).map((row, index) => {
     const profile = row.user_profiles as unknown as {
-      display_name: string;
+      full_name: string;
       avatar_url: string | null;
     };
     return {
       userId: row.user_id,
-      displayName: profile.display_name ?? "Usuario",
+      displayName: profile.full_name ?? "Usuario",
       avatarUrl: profile.avatar_url ?? null,
       totalXp: row.total_xp,
       level: getLevelProgress(row.total_xp).level,
@@ -116,7 +116,7 @@ export async function getRightPanelData(): Promise<RightPanelData> {
     .slice(0, 10)
     .map((row) => ({
       id: row.id,
-      displayName: row.display_name ?? "Usuario",
+      displayName: row.full_name ?? "Usuario",
       avatarUrl: row.avatar_url ?? null,
       updatedAt: row.updated_at,
     }));

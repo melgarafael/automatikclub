@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect, useRef } from "react";
 import { Button } from "@/shared/components/ui/button";
 import {
   createComment,
@@ -23,24 +23,28 @@ export function CommentComposer({
   placeholder = "Escrever comentario...",
 }: CommentComposerProps) {
   const [content, setContent] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
+  // Pass server action directly — wrapping breaks FormData in Next.js 16
   const [state, formAction, isPending] = useActionState<
     CreateCommentState,
     FormData
-  >(async (prevState, formData) => {
-    const result = await createComment(prevState, formData);
-    if (result.success) {
+  >(createComment, {});
+
+  // Handle success: clear form and close reply
+  useEffect(() => {
+    if (state.success) {
       setContent("");
+      formRef.current?.reset();
       onCancel?.();
     }
-    return result;
-  }, {});
+  }, [state.success, onCancel]);
 
   const charCount = content.trim().length;
   const isOverLimit = charCount > 2000;
 
   return (
-    <form action={formAction}>
+    <form ref={formRef} action={formAction}>
       <input type="hidden" name="commentable_type" value={commentableType} />
       <input type="hidden" name="commentable_id" value={commentableId} />
       {parentId && <input type="hidden" name="parent_id" value={parentId} />}
@@ -58,6 +62,11 @@ export function CommentComposer({
         {state.error && (
           <div className="px-3 pb-1 font-mono text-[11px] text-red">
             {state.error}
+          </div>
+        )}
+        {state.fieldErrors && Object.keys(state.fieldErrors).length > 0 && (
+          <div className="px-3 pb-1 font-mono text-[11px] text-red">
+            Erro de validacao. Tente novamente.
           </div>
         )}
 

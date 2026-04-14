@@ -34,12 +34,12 @@ export function useAuth(): UseAuthReturn {
             .from("user_xp")
             .select("total_xp, level, current_streak")
             .eq("user_id", authUser.id)
-            .single(),
+            .maybeSingle(),
           supabase
             .from("user_preferences")
             .select("profile_visibility")
             .eq("user_id", authUser.id)
-            .single(),
+            .maybeSingle(),
         ]);
 
       if (profile) {

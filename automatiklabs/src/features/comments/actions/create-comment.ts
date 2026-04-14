@@ -7,8 +7,8 @@ import type { CreateCommentState } from "../types";
 
 const createCommentSchema = z.object({
   commentable_type: z.enum(["lesson", "post", "ai_post"]),
-  commentable_id: z.string().uuid(),
-  parent_id: z.string().uuid().nullable().optional(),
+  commentable_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "ID invalido"),
+  parent_id: z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "ID invalido").nullable().optional(),
   content: z
     .string()
     .trim()
