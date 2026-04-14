@@ -88,18 +88,23 @@ export async function proxy(request: NextRequest) {
   }
 
   // 4. Soft-delete check — redirect deleted users to /login
+  // Wrapped in try/catch: is_deleted column may not exist if migration 00019 not yet applied
   if (user && isProtectedRoute(pathname)) {
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("is_deleted")
-      .eq("id", user.id)
-      .single();
+    try {
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("is_deleted")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (profile?.is_deleted) {
-      await supabase.auth.signOut({ scope: "local" });
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("error", "account_deleted");
-      return NextResponse.redirect(loginUrl);
+      if (profile?.is_deleted) {
+        await supabase.auth.signOut({ scope: "local" });
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("error", "account_deleted");
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch {
+      // Column may not exist yet — skip soft-delete check
     }
   }
 

@@ -86,7 +86,7 @@ export function PostCard({ post }: PostCardProps) {
             {getRoleBadge(post.author.role)}
           </div>
           <div className="font-mono text-[11px] text-text-3">
-            <span className="before:content-['\2192\0020']">
+            <span className="before:content-['\2192\0020']" suppressHydrationWarning>
               {formatRelativeTime(new Date(post.created_at))}
               {" \u00B7 "}
               <Link
