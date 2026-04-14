@@ -53,7 +53,8 @@ function RatingStars({ rating, count }: { rating: number; count: number }) {
   );
 }
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])

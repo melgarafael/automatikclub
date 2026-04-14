@@ -22,7 +22,8 @@ interface UserTableProps {
 const ROLES: UserRole[] = ["aluno", "contribuidor", "moderador", "admin"];
 const TIERS: SubscriptionTier[] = ["free", "pro", "premium"];
 
-function getInitials(name: string) {
+function getInitials(name: string | null | undefined) {
+  if (!name) return "?";
   return name
     .split(" ")
     .map((n) => n[0])
