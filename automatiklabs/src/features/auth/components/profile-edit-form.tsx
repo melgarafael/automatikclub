@@ -231,6 +231,92 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         )}
       </div>
 
+      {/* LinkedIn */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="linkedin"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          LinkedIn
+        </label>
+        <Input
+          id="linkedin"
+          name="linkedin"
+          type="url"
+          defaultValue={profile.linkedin ?? ""}
+          placeholder="https://linkedin.com/in/seuusuario"
+        />
+        {state.fieldErrors?.linkedin && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.linkedin[0]}
+          </p>
+        )}
+      </div>
+
+      {/* GitHub */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="github"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          GitHub
+        </label>
+        <Input
+          id="github"
+          name="github"
+          defaultValue={profile.github ?? ""}
+          placeholder="@seuusuario"
+        />
+        {state.fieldErrors?.github && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.github[0]}
+          </p>
+        )}
+      </div>
+
+      {/* YouTube */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="youtube"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          YouTube
+        </label>
+        <Input
+          id="youtube"
+          name="youtube"
+          type="url"
+          defaultValue={profile.youtube ?? ""}
+          placeholder="https://youtube.com/@seucanal"
+        />
+        {state.fieldErrors?.youtube && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.youtube[0]}
+          </p>
+        )}
+      </div>
+
+      {/* Reddit */}
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="reddit"
+          className="font-body text-[13px] font-medium text-text-2"
+        >
+          Reddit
+        </label>
+        <Input
+          id="reddit"
+          name="reddit"
+          defaultValue={profile.reddit ?? ""}
+          placeholder="u/seuusuario"
+        />
+        {state.fieldErrors?.reddit && (
+          <p className="font-mono text-[11px] text-red">
+            {state.fieldErrors.reddit[0]}
+          </p>
+        )}
+      </div>
+
       {/* Portfolio URL */}
       <div className="flex flex-col gap-1.5">
         <label

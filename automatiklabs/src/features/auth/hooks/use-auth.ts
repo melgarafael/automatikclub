@@ -22,19 +22,25 @@ export function useAuth(): UseAuthReturn {
 
   const fetchProfile = useCallback(
     async (authUser: User) => {
-      // Fetch profile and XP data in parallel
-      const [{ data: profile }, { data: xpData }] = await Promise.all([
-        supabase
-          .from("user_profiles")
-          .select("*")
-          .eq("id", authUser.id)
-          .single(),
-        supabase
-          .from("user_xp")
-          .select("total_xp, level, current_streak")
-          .eq("user_id", authUser.id)
-          .single(),
-      ]);
+      // Fetch profile, XP, and preferences in parallel
+      const [{ data: profile }, { data: xpData }, { data: prefs }] =
+        await Promise.all([
+          supabase
+            .from("user_profiles")
+            .select("*")
+            .eq("id", authUser.id)
+            .single(),
+          supabase
+            .from("user_xp")
+            .select("total_xp, level, current_streak")
+            .eq("user_id", authUser.id)
+            .single(),
+          supabase
+            .from("user_preferences")
+            .select("profile_visibility")
+            .eq("user_id", authUser.id)
+            .single(),
+        ]);
 
       if (profile) {
         setUser({
@@ -57,7 +63,7 @@ export function useAuth(): UseAuthReturn {
           xp: xpData?.total_xp ?? 0,
           level: xpData?.level ?? 1,
           streak: xpData?.current_streak ?? 0,
-          profile_visibility: profile.profile_visibility ?? "public",
+          profile_visibility: prefs?.profile_visibility ?? "public",
           created_at: profile.created_at,
         });
       }

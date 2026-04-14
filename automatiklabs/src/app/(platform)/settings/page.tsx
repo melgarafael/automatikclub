@@ -13,11 +13,19 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  // Fetch profile and preferences in parallel
+  const [{ data: profile }, { data: preferences }] = await Promise.all([
+    supabase
+      .from("user_profiles")
+      .select("subscription_level")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("user_preferences")
+      .select("notification_email, notification_push, notification_inapp, profile_visibility")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
   if (!profile) {
     redirect("/login");
@@ -30,10 +38,10 @@ export default async function SettingsPage() {
       </h1>
       <SettingsTabs
         tier={profile.subscription_level ?? "free"}
-        notification_email={profile.notification_email ?? true}
-        notification_push={profile.notification_push ?? true}
-        notification_in_app={profile.notification_in_app ?? true}
-        profile_visibility={profile.profile_visibility ?? "public"}
+        notification_email={preferences?.notification_email ?? true}
+        notification_push={preferences?.notification_push ?? true}
+        notification_in_app={preferences?.notification_inapp ?? true}
+        profile_visibility={preferences?.profile_visibility ?? "public"}
       />
     </div>
   );

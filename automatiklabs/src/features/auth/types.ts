@@ -1,7 +1,7 @@
 export type UserRole = "aluno" | "contribuidor" | "moderador" | "admin";
 export type AuthProvider = "email" | "google" | "github";
 export type SubscriptionTier = "free" | "pro" | "premium";
-export type ProfileVisibility = "public" | "members" | "private";
+export type ProfileVisibility = "public" | "members_only" | "private";
 
 export interface AuthUser {
   id: string;

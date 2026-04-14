@@ -16,11 +16,18 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  const [{ data: profile }, { data: xpData }] = await Promise.all([
+    supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("user_xp")
+      .select("total_xp, level, current_streak")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
   if (!profile) {
     redirect("/login");
@@ -48,11 +55,15 @@ export default async function ProfilePage() {
         subscription_level={profile.subscription_level}
         bio={profile.bio}
         instagram={profile.instagram}
+        linkedin={profile.linkedin ?? null}
+        github={profile.github ?? null}
+        youtube={profile.youtube ?? null}
+        reddit={profile.reddit ?? null}
         portfolio_url={profile.portfolio_url}
         stack={profile.stack ?? []}
-        xp={profile.xp ?? 0}
-        level={profile.level ?? 1}
-        streak={profile.streak ?? 0}
+        xp={xpData?.total_xp ?? 0}
+        level={xpData?.level ?? 1}
+        streak={xpData?.current_streak ?? 0}
       />
     </div>
   );

@@ -46,10 +46,10 @@ export function PrivacySettings({
           />
           <RadioOption
             name="profile_visibility"
-            value="members"
+            value="members_only"
             label="Apenas membros"
             description="Somente usuarios logados podem ver seu perfil."
-            defaultChecked={profile_visibility === "members"}
+            defaultChecked={profile_visibility === "members_only"}
           />
           <RadioOption
             name="profile_visibility"
