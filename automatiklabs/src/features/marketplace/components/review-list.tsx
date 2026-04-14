@@ -53,7 +53,7 @@ function ReviewItem({ review }: { review: MarketplaceReviewWithAuthor }) {
               ))}
             </div>
 
-            <span className="ml-auto font-mono text-[10px] text-text-3">
+            <span className="ml-auto font-mono text-[10px] text-text-3" suppressHydrationWarning>
               {formatRelativeTime(new Date(review.created_at))}
             </span>
           </div>

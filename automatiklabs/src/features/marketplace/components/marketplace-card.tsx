@@ -119,7 +119,7 @@ export function MarketplaceCard({ item }: MarketplaceCardProps) {
           <span className="text-[12px] text-text-2 truncate">
             {item.author.full_name}
           </span>
-          <span className="ml-auto font-mono text-[10px] text-text-3">
+          <span className="ml-auto font-mono text-[10px] text-text-3" suppressHydrationWarning>
             {formatRelativeTime(new Date(item.created_at))}
           </span>
         </div>
