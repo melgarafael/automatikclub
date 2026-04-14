@@ -84,16 +84,21 @@ export async function createComment(
     }
   }
 
-  // ── Determine status from platform_settings ──
+  // ── Determine status ──
+  // Default to auto-approve. platform_settings table may not exist yet.
   let status: "approved" | "pending" = "approved";
-  const { data: setting } = await supabase
-    .from("platform_settings")
-    .select("value")
-    .eq("key", "auto_approve_comments")
-    .single();
+  try {
+    const { data: setting } = await supabase
+      .from("platform_settings")
+      .select("value")
+      .eq("key", "auto_approve_comments")
+      .single();
 
-  if (setting && setting.value === "false") {
-    status = "pending";
+    if (setting && setting.value === "false") {
+      status = "pending";
+    }
+  } catch {
+    // Table may not exist yet — default to approved
   }
 
   // ── Insert ──

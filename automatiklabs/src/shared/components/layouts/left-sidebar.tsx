@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { logout } from "@/features/auth/actions/logout";
 
 interface NavItemConfig {
   icon: string;
@@ -173,6 +174,41 @@ export function LeftSidebar() {
             className="rounded-[2px] border border-border bg-bg-raised font-mono text-[11px] text-text-1 shadow-[2px_2px_0_rgba(0,0,0,0.4)]"
           >
             Configuracoes
+          </TooltipContent>
+        </Tooltip>
+      )}
+
+      {/* Logout */}
+      {expanded ? (
+        <button
+          type="button"
+          onClick={() => logout()}
+          aria-label="Sair"
+          data-testid="logout-button"
+          className="flex h-10 w-full items-center gap-3 rounded-[2px] px-3 text-[18px] text-text-3 transition-all duration-[80ms] hover:bg-red/10 hover:text-red"
+        >
+          <span className="shrink-0">🚪</span>
+          <span className="truncate font-mono text-[12px] font-medium">Sair</span>
+        </button>
+      ) : (
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={() => logout()}
+              aria-label="Sair"
+              data-testid="logout-button"
+              className="flex h-10 w-10 items-center justify-center rounded-[2px] text-[18px] text-text-3 transition-all duration-[80ms] hover:bg-red/10 hover:text-red"
+            >
+              <span>🚪</span>
+            </button>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            sideOffset={12}
+            className="rounded-[2px] border border-border bg-bg-raised font-mono text-[11px] text-text-1 shadow-[2px_2px_0_rgba(0,0,0,0.4)]"
+          >
+            Sair
           </TooltipContent>
         </Tooltip>
       )}
