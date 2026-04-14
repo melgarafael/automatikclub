@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useOptimistic } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { likePost } from "../actions/like-post";
 
@@ -21,25 +21,44 @@ export function PostActions({
   userHasLiked,
   onCommentClick,
 }: PostActionsProps) {
+  const [liked, setLiked] = useState(userHasLiked);
+  const [count, setCount] = useState(likesCount);
   const [isPending, startTransition] = useTransition();
-  const [optimisticLiked, setOptimisticLiked] = useOptimistic(userHasLiked);
-  const [optimisticCount, setOptimisticCount] = useOptimistic(likesCount);
 
   function handleLike() {
+    if (isPending) return;
+
+    const wasLiked = liked;
+    const prevCount = count;
+
+    // Optimistic update
+    setLiked(!wasLiked);
+    setCount(wasLiked ? prevCount - 1 : prevCount + 1);
+
     startTransition(async () => {
-      setOptimisticLiked(!optimisticLiked);
-      setOptimisticCount(optimisticLiked ? optimisticCount - 1 : optimisticCount + 1);
-      await likePost(postId);
+      const result = await likePost(postId);
+      if (result.error) {
+        setLiked(wasLiked);
+        setCount(prevCount);
+        toast.error(result.error);
+      }
     });
   }
 
   function handleShare() {
     const url = `${window.location.origin}/community/${channelSlug}/post/${postId}`;
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success("Link copiado!"))
+      .catch(() => {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
         toast.success("Link copiado!");
       });
-    }
   }
 
   return (
@@ -48,13 +67,13 @@ export function PostActions({
         onClick={handleLike}
         disabled={isPending}
         className={`flex items-center gap-1 rounded-[2px] px-3 py-1 font-mono text-[12px] transition-all duration-[80ms] ${
-          optimisticLiked
+          liked
             ? "text-blue"
             : "text-text-3 hover:bg-bg-hover hover:text-text-2"
         }`}
       >
         <span>{"\u25B2"}</span>
-        <span>{optimisticCount}</span>
+        <span>{count}</span>
       </button>
 
       <button
