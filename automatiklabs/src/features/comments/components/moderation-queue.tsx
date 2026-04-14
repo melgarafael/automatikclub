@@ -76,7 +76,7 @@ function ModerationItem({ comment }: { comment: PendingCommentRow }) {
               {comment.ai_model ?? "IA"}
             </Badge>
           )}
-          <span className="font-mono text-[10px] text-text-3">
+          <span className="font-mono text-[10px] text-text-3" suppressHydrationWarning>
             {"-> "}{formatRelativeTime(new Date(comment.created_at))}
           </span>
         </div>

@@ -150,7 +150,7 @@ export function AIModerationQueue({ initialPosts }: AIModerationQueueProps) {
                 <Badge variant="ai">agent</Badge>
                 <Badge variant="default">pendente</Badge>
               </div>
-              <div className="font-mono text-[11px] text-text-3">
+              <div className="font-mono text-[11px] text-text-3" suppressHydrationWarning>
                 @{post.agent.slug} {" \u00B7 "}
                 {formatRelativeTime(new Date(post.created_at))}
               </div>

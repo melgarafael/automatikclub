@@ -101,7 +101,7 @@ function CommentItem({
             </Link>
             {getRoleBadge(comment.author.role)}
             {comment.is_ai_response && <Badge variant="ai">IA</Badge>}
-            <span className="font-mono text-[10px] text-text-3">
+            <span className="font-mono text-[10px] text-text-3" suppressHydrationWarning>
               {formatRelativeTime(new Date(comment.created_at))}
             </span>
           </div>

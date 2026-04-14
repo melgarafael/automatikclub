@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 // Build CSP directives — report-only mode for initial rollout
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://*.supabase.co";
+// Trim env var to prevent %0A (newline) in CSP header causing 500 on Vercel
+const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://*.supabase.co").trim();
 const cspDirectives = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
