@@ -7,7 +7,10 @@ import { ModuleAccordion } from "@/features/courses/components/module-accordion"
 import { ContinueButton } from "@/features/courses/components/continue-button";
 import { Paywall } from "@/shared/components/paywall";
 import { createClient } from "@/shared/lib/supabase/server";
-import { hasMinTier, type SubscriptionTier } from "@/shared/lib/auth/subscriptions";
+import {
+  hasMinTier,
+  type SubscriptionTier,
+} from "@/shared/lib/auth/subscriptions";
 
 export default async function CoursePage({
   params,
@@ -19,7 +22,6 @@ export default async function CoursePage({
 
   if (!course) notFound();
 
-  // Check tier access
   const supabase = await createClient();
   const {
     data: { user },
@@ -54,7 +56,6 @@ export default async function CoursePage({
 
         {hasAccess ? (
           <>
-            {/* Continue/Start button */}
             <ContinueButton
               trackSlug={trackSlug}
               courseSlug={courseSlug}
@@ -62,7 +63,6 @@ export default async function CoursePage({
               hasProgress={(course.user_progress?.percentage ?? 0) > 0}
             />
 
-            {/* Module accordion */}
             <ModuleAccordion
               modules={course.modules}
               trackSlug={trackSlug}

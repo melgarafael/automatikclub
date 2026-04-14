@@ -18,7 +18,6 @@ export default async function TrackPage({
 
   if (!track) notFound();
 
-  // Calculate aggregate progress
   const progressCourses = courses.filter((c) => c.user_progress);
   const avgProgress =
     progressCourses.length > 0
@@ -42,7 +41,6 @@ export default async function TrackPage({
           ]}
         />
 
-        {/* Track header */}
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-3">
             <h1 className="font-display text-[22px] font-bold tracking-[-0.03em] text-text-1">

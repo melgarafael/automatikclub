@@ -8,13 +8,20 @@ import { LessonContent } from "@/features/courses/components/lesson-content";
 import { CurriculumSidebar } from "@/features/courses/components/curriculum-sidebar";
 import { Paywall } from "@/shared/components/paywall";
 import { createClient } from "@/shared/lib/supabase/server";
-import { hasMinTier, type SubscriptionTier } from "@/shared/lib/auth/subscriptions";
+import {
+  hasMinTier,
+  type SubscriptionTier,
+} from "@/shared/lib/auth/subscriptions";
 import { getComments } from "@/features/comments/actions/get-comments";
 
 export default async function LessonPage({
   params,
 }: {
-  params: Promise<{ trackSlug: string; courseSlug: string; lessonSlug: string }>;
+  params: Promise<{
+    trackSlug: string;
+    courseSlug: string;
+    lessonSlug: string;
+  }>;
 }) {
   const { trackSlug, courseSlug, lessonSlug } = await params;
   const [lesson, courseDetail] = await Promise.all([
@@ -24,7 +31,6 @@ export default async function LessonPage({
 
   if (!lesson) notFound();
 
-  // Check tier access
   const supabase = await createClient();
   const {
     data: { user },
@@ -41,8 +47,6 @@ export default async function LessonPage({
   }
 
   const hasAccess = hasMinTier(userTier, lesson.tier_required);
-
-  // Fetch lesson comments (only if user has access)
   const comments = hasAccess ? await getComments("lesson", lesson.id) : [];
 
   return (
@@ -53,7 +57,10 @@ export default async function LessonPage({
         <Breadcrumb
           items={[
             { label: "learn", href: "/learn" },
-            { label: lesson.course.track.slug, href: `/learn/${trackSlug}` },
+            {
+              label: lesson.course.track.slug,
+              href: `/learn/${trackSlug}`,
+            },
             {
               label: lesson.course.slug,
               href: `/learn/${trackSlug}/${courseSlug}`,
@@ -66,10 +73,8 @@ export default async function LessonPage({
           <div className="space-y-5">
             <LessonPlayer lesson={lesson} comments={comments} />
 
-            {/* Markdown content */}
             <LessonContent content={lesson.content_md} />
 
-            {/* Inline curriculum for mobile (right panel handles desktop) */}
             {courseDetail && (
               <div className="border-t border-border pt-5 lg:hidden">
                 <CurriculumSidebar
