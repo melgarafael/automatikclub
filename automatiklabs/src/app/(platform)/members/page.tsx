@@ -23,8 +23,8 @@ export default async function MembersPage({ searchParams }: MembersPageProps) {
   let query = supabase
     .from("user_profiles")
     .select("*")
-    .eq("profile_visibility", "public")
-    .order("xp", { ascending: false });
+    .eq("is_deleted", false)
+    .order("total_points", { ascending: false });
 
   if (params.q) {
     query = query.ilike("full_name", `%${params.q}%`);
@@ -87,7 +87,7 @@ export default async function MembersPage({ searchParams }: MembersPageProps) {
               full_name={member.full_name}
               avatar_url={member.avatar_url}
               role={member.role}
-              xp={member.xp ?? 0}
+              xp={member.total_points ?? 0}
               bio={member.bio}
               stack={member.stack ?? []}
             />

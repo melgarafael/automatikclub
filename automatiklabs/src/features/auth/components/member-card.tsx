@@ -9,8 +9,8 @@ import type { UserRole } from "@/shared/lib/auth/roles";
 import Link from "next/link";
 
 interface MemberCardProps {
-  username: string;
-  full_name: string;
+  username: string | null;
+  full_name: string | null;
   avatar_url: string | null;
   role: UserRole;
   xp: number;
@@ -27,26 +27,29 @@ export function MemberCard({
   bio,
   stack,
 }: MemberCardProps) {
-  const initials = full_name
+  const displayName = full_name || "Usuario";
+  const initials = displayName
     .split(" ")
     .map((n) => n[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
 
+  const href = username ? `/members/${username}` : "#";
+
   return (
     <Link
-      href={`/members/${username}`}
+      href={href}
       className="flex flex-col gap-3 rounded-[2px] border-2 border-border bg-bg-raised p-4 transition-colors duration-[80ms] hover:border-blue/40"
     >
       <div className="flex items-center gap-3">
         <Avatar size="lg">
-          <AvatarImage src={avatar_url ?? undefined} alt={full_name} />
+          <AvatarImage src={avatar_url ?? undefined} alt={displayName} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[14px] font-bold text-text-1">
-            {full_name}
+            {displayName}
           </p>
           <div className="flex items-center gap-2">
             <Badge variant={getRoleBadgeVariant(role)}>
