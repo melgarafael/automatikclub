@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -8,6 +8,8 @@ import { MarkdownRenderer } from "@/shared/components/markdown-renderer";
 import { formatRelativeTime } from "@/shared/utils/format-date";
 import { PostActions } from "./post-actions";
 import { CommentSection } from "@/features/comments/components/comment-section";
+import { getComments } from "@/features/comments/actions/get-comments";
+import type { CommentWithAuthor } from "@/features/comments/types";
 import type { PostWithAuthor } from "../types";
 import type { UserRole } from "@/features/auth/types";
 
@@ -40,8 +42,23 @@ function getInitials(name: string | null | undefined) {
 
 export function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState<CommentWithAuthor[]>([]);
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
   const isAiPost = post.author.role === "admin" && post.title?.toLowerCase().includes("ai");
   const isPinned = post.is_pinned;
+
+  const loadComments = useCallback(async () => {
+    const data = await getComments("post", post.id);
+    setComments(data);
+    setCommentsLoaded(true);
+  }, [post.id]);
+
+  // Fetch comments when section opens (and refetch periodically)
+  useEffect(() => {
+    if (showComments) {
+      loadComments();
+    }
+  }, [showComments, loadComments]);
 
   return (
     <article
@@ -139,7 +156,8 @@ export function PostCard({ post }: PostCardProps) {
           <CommentSection
             commentableType="post"
             commentableId={post.id}
-            comments={[]}
+            comments={comments}
+            onCommentCreated={loadComments}
           />
         </div>
       )}
