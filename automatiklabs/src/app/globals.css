@@ -290,3 +290,123 @@
   font-size: 13px;
   color: var(--color-text-1, #E6E8EC);
 }
+
+/* Equation display box */
+.free-content-html .equation-box {
+  border: 2px solid var(--color-blue, #4A9EFF);
+  background: var(--color-bg-inset, #0B0E13);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin: 16px 0;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  line-height: 2;
+  color: var(--color-text-1, #E6E8EC);
+}
+
+.free-content-html .equation-box .eq-highlight {
+  color: var(--color-blue, #4A9EFF);
+  font-weight: 700;
+}
+
+.free-content-html .equation-box .eq-divider {
+  display: block;
+  width: 60%;
+  margin: 4px auto;
+  border-top: 1px solid var(--color-text-3, #6B7280);
+}
+
+/* Case price tag */
+.free-content-html .case-price {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-blue, #4A9EFF);
+  margin-top: 8px;
+}
+
+.free-content-html .case-price.case-price--low {
+  color: var(--color-text-3, #6B7280);
+}
+
+.free-content-html .case-price.case-price--high {
+  color: var(--color-cyan, #6EE7FF);
+}
+
+/* Equation score row */
+.free-content-html .eq-scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.free-content-html .eq-score {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--color-text-2, #A8ADB8);
+  padding: 6px 10px;
+  background: var(--color-bg-inset, #0B0E13);
+  border: 1px solid var(--color-border, #1E2330);
+  border-radius: 2px;
+}
+
+.free-content-html .eq-score strong {
+  color: var(--color-text-1, #E6E8EC);
+  font-weight: 600;
+}
+
+/* Event CTA banner */
+.free-content-html .event-banner {
+  border: 2px solid var(--color-blue, #4A9EFF);
+  background: linear-gradient(135deg, var(--color-blue-dim, rgba(74,158,255,0.10)) 0%, var(--color-bg-raised, #13161D) 100%);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin: 28px 0 8px;
+  text-align: center;
+}
+
+.free-content-html .event-banner h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: var(--color-blue, #4A9EFF);
+}
+
+.free-content-html .event-banner p {
+  font-size: 13px;
+  color: var(--color-text-2, #A8ADB8);
+  margin-bottom: 14px;
+}
+
+.free-content-html .event-banner .event-date {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: var(--color-cyan, #6EE7FF);
+  background: var(--color-bg-inset, #0B0E13);
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  letter-spacing: 0.05em;
+}
+
+.free-content-html .event-banner a {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-bg, #0A0D12);
+  background: var(--color-blue, #4A9EFF);
+  padding: 10px 28px;
+  border-radius: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: opacity 0.15s;
+}
+
+.free-content-html .event-banner a:hover {
+  opacity: 0.85;
+}

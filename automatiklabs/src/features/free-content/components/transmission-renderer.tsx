@@ -21,6 +21,20 @@ function formatTransmissionNumber(id: string): string {
   return String(num).padStart(3, '0');
 }
 
+const TYPE_LABELS: Record<string, [string, string]> = {
+  'tool-showcase': ['FERRAMENTA', 'FERRAMENTAS'],
+  'tutorial': ['PASSO', 'PASSOS'],
+  'checklist': ['ITEM', 'ITENS'],
+  'case-study': ['CASO', 'CASOS'],
+  'curiosity-demo': ['SEÇÃO', 'SEÇÕES'],
+  'functionality-demo': ['ETAPA', 'ETAPAS'],
+};
+
+function itemLabel(type: string, count: number): string {
+  const [singular, plural] = TYPE_LABELS[type] ?? ['ITEM', 'ITENS'];
+  return `${count} ${count === 1 ? singular : plural}`;
+}
+
 interface TransmissionRendererProps {
   content: FreeContent;
   coinsEarned: number;
@@ -48,7 +62,7 @@ export function TransmissionRenderer({
           </span>
           <span className="font-mono text-[11px] text-text-3">·</span>
           <span className="font-mono text-[11px] text-text-2">
-            {items.length} {items.length === 1 ? 'FERRAMENTA' : 'FERRAMENTAS'}
+            {itemLabel(contentData.type, items.length)}
           </span>
         </div>
       </div>
