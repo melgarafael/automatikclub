@@ -26,7 +26,7 @@ export async function likeComment(
     .select("comment_id")
     .eq("comment_id", commentId)
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     // Unlike

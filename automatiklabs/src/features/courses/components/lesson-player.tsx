@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import type { LessonDetail } from "../types";
 import { VideoEmbed } from "./video-embed";
 import { MarkCompleteButton } from "./mark-complete-button";
@@ -16,6 +17,8 @@ interface LessonPlayerProps {
 }
 
 export function LessonPlayer({ lesson, comments = [] }: LessonPlayerProps) {
+  const router = useRouter();
+
   return (
     <div className="space-y-5">
       {/* Video */}
@@ -77,6 +80,7 @@ export function LessonPlayer({ lesson, comments = [] }: LessonPlayerProps) {
           commentableType="lesson"
           commentableId={lesson.id}
           comments={comments}
+          onCommentCreated={() => router.refresh()}
         />
       </div>
     </div>

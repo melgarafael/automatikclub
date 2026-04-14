@@ -1,6 +1,7 @@
 "use client";
 
-import { useTransition, useOptimistic, useState } from "react";
+import { useTransition, useState } from "react";
+import { toast } from "sonner";
 import Link from "next/link";
 import {
   Avatar,
@@ -49,21 +50,26 @@ export function CommentItem({
   commentableId,
 }: CommentItemProps) {
   const [isPending, startTransition] = useTransition();
-  const [optimisticLiked, setOptimisticLiked] = useOptimistic(
-    comment.user_has_liked
-  );
-  const [optimisticCount, setOptimisticCount] = useOptimistic(
-    comment.likes_count
-  );
+  const [liked, setLiked] = useState(comment.user_has_liked);
+  const [likeCount, setLikeCount] = useState(comment.likes_count);
   const [showReply, setShowReply] = useState(false);
 
   function handleLike() {
+    if (isPending) return;
+
+    const wasLiked = liked;
+    const prevCount = likeCount;
+
+    setLiked(!wasLiked);
+    setLikeCount(wasLiked ? prevCount - 1 : prevCount + 1);
+
     startTransition(async () => {
-      setOptimisticLiked(!optimisticLiked);
-      setOptimisticCount(
-        optimisticLiked ? optimisticCount - 1 : optimisticCount + 1
-      );
-      await likeComment(comment.id);
+      const result = await likeComment(comment.id);
+      if (result.error) {
+        setLiked(wasLiked);
+        setLikeCount(prevCount);
+        toast.error(result.error);
+      }
     });
   }
 
@@ -160,12 +166,12 @@ export function CommentItem({
               onClick={handleLike}
               disabled={isPending}
               className={`font-mono text-[11px] transition-colors duration-[80ms] ${
-                optimisticLiked
+                liked
                   ? "text-blue"
                   : "text-text-3 hover:text-text-2"
               }`}
             >
-              {"\u2665"} {optimisticCount > 0 ? optimisticCount : ""}
+              {"\u2665"} {likeCount > 0 ? likeCount : ""}
             </button>
             {canReply && (
               <button
