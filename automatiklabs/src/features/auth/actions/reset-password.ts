@@ -2,6 +2,7 @@
 
 import { createClient } from "@/shared/lib/supabase/server";
 import { resetPasswordSchema } from "../schemas/auth";
+import { resetPasswordLimiter, formatRetryAfter } from "@/shared/lib/rate-limit";
 
 export type ResetPasswordState = {
   success?: boolean;
@@ -22,6 +23,14 @@ export async function resetPassword(
   if (!parsed.success) {
     return {
       fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  // Rate limit: 3 reset requests per email per 15 min
+  const rl = resetPasswordLimiter(parsed.data.email.toLowerCase());
+  if (!rl.allowed) {
+    return {
+      error: `Muitas tentativas. Tente novamente em ${formatRetryAfter(rl.retryAfterMs)}.`,
     };
   }
 

@@ -1,0 +1,26 @@
+# AutomatikLabs — SEO / Indexing Protection
+# Allow public marketing and free content pages.
+# Block all authenticated, admin, API, and user-specific routes.
+
+User-agent: *
+Allow: /
+Allow: /pricing
+Allow: /free-content/*
+
+Disallow: /admin/*
+Disallow: /api/*
+Disallow: /profile/*
+Disallow: /settings/*
+Disallow: /feed/*
+Disallow: /learn/*
+Disallow: /community/*
+Disallow: /marketplace/*
+Disallow: /ranking/*
+Disallow: /members/*
+Disallow: /login
+Disallow: /registro
+Disallow: /recuperar-senha
+Disallow: /redefinir-senha
+
+# Sitemap
+# Sitemap: https://automatiklabs.com.br/sitemap.xml

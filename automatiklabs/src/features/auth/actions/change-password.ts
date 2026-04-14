@@ -55,5 +55,8 @@ export async function changePassword(
     return { error: "Erro ao atualizar senha. Tente novamente." };
   }
 
+  // Sign out all other sessions for security (keeps current session active)
+  await supabase.auth.signOut({ scope: "others" });
+
   return { success: true };
 }
