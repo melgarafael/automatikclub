@@ -23,7 +23,6 @@ export async function likePost(postId: string) {
     .maybeSingle();
 
   if (existing) {
-    // Unlike — remove the like
     const { error } = await supabase
       .from("post_likes")
       .delete()
@@ -38,7 +37,6 @@ export async function likePost(postId: string) {
     return { liked: false };
   }
 
-  // Like — insert
   const { error } = await supabase
     .from("post_likes")
     .insert({ post_id: postId, user_id: user.id });
