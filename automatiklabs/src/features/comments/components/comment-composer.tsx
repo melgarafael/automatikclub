@@ -12,6 +12,7 @@ interface CommentComposerProps {
   commentableId: string;
   parentId?: string | null;
   onCancel?: () => void;
+  onCommentCreated?: () => void;
   placeholder?: string;
 }
 
@@ -20,6 +21,7 @@ export function CommentComposer({
   commentableId,
   parentId,
   onCancel,
+  onCommentCreated,
   placeholder = "Escrever comentario...",
 }: CommentComposerProps) {
   const [content, setContent] = useState("");
@@ -37,8 +39,9 @@ export function CommentComposer({
       setContent("");
       formRef.current?.reset();
       onCancel?.();
+      onCommentCreated?.();
     }
-  }, [state.success, onCancel]);
+  }, [state.success, onCancel, onCommentCreated]);
 
   const charCount = content.trim().length;
   const isOverLimit = charCount > 2000;

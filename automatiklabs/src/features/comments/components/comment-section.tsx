@@ -14,6 +14,8 @@ interface CommentSectionProps {
   comments: CommentWithAuthor[];
   /** Total approved comment count (for header display) */
   count?: number;
+  /** Called after a comment is created — parent can refetch */
+  onCommentCreated?: () => void;
 }
 
 /**
@@ -25,6 +27,7 @@ export function CommentSection({
   commentableId,
   comments,
   count,
+  onCommentCreated,
 }: CommentSectionProps) {
   const displayCount = count ?? comments.length;
 
@@ -40,6 +43,7 @@ export function CommentSection({
         <CommentComposer
           commentableType={commentableType}
           commentableId={commentableId}
+          onCommentCreated={onCommentCreated}
         />
       </div>
 
