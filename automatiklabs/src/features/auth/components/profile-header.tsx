@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 interface ProfileHeaderProps {
-  full_name: string;
+  full_name: string | null;
   username: string;
   avatar_url: string | null;
   role: UserRole;
@@ -44,24 +44,27 @@ export function ProfileHeader({
   level,
   streak,
 }: ProfileHeaderProps) {
-  const initials = full_name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const displayName = full_name || "";
+  const initials = displayName
+    ? displayName
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "?";
 
   return (
     <div className="flex flex-col gap-5">
       {/* Avatar + Name */}
       <div className="flex items-start gap-4">
         <Avatar className="size-20">
-          <AvatarImage src={avatar_url ?? undefined} alt={full_name} />
+          <AvatarImage src={avatar_url ?? undefined} alt={displayName || "User"} />
           <AvatarFallback className="text-[24px]">{initials}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <h1 className="font-display text-[24px] font-bold text-text-1">
-            {full_name}
+            {displayName || "Sem nome"}
           </h1>
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <Badge variant={getRoleBadgeVariant(role)}>

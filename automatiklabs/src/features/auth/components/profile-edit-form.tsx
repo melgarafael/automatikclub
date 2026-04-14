@@ -79,19 +79,22 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
     toast.success("Perfil atualizado!");
   }
 
-  const initials = profile.full_name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const displayName = profile.full_name || "";
+  const initials = displayName
+    ? displayName
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "?";
 
   return (
     <form action={action} className="flex flex-col gap-6">
       {/* Avatar */}
       <div className="flex items-center gap-4">
         <Avatar className="size-16">
-          <AvatarImage src={avatarUrl ?? undefined} alt={profile.full_name} />
+          <AvatarImage src={avatarUrl ?? undefined} alt={displayName || "User"} />
           <AvatarFallback className="text-[18px]">{initials}</AvatarFallback>
         </Avatar>
         <div>
@@ -133,7 +136,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
         <Input
           id="full_name"
           name="full_name"
-          defaultValue={profile.full_name}
+          defaultValue={profile.full_name ?? ""}
           required
         />
         {state.fieldErrors?.full_name && (

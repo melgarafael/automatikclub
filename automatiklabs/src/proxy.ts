@@ -10,6 +10,7 @@ const PUBLIC_ROUTES = [
   "/redefinir-senha",
   "/pricing",
   "/register",
+  "/free-content",
 ];
 
 // Routes that require authentication

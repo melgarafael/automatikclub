@@ -6,7 +6,7 @@ export type ProfileVisibility = "public" | "members" | "private";
 export interface AuthUser {
   id: string;
   email: string;
-  full_name: string;
+  full_name: string | null;
   username: string;
   role: UserRole;
   subscription_level: SubscriptionTier;
@@ -14,6 +14,10 @@ export interface AuthUser {
   bio: string | null;
   whatsapp: string | null;
   instagram: string | null;
+  linkedin: string | null;
+  github: string | null;
+  youtube: string | null;
+  reddit: string | null;
   portfolio_url: string | null;
   stack: string[];
   xp: number;
@@ -25,7 +29,7 @@ export interface AuthUser {
 
 export interface UserProfile {
   id: string;
-  full_name: string;
+  full_name: string | null;
   username: string;
   email: string;
   role: UserRole;
@@ -34,6 +38,10 @@ export interface UserProfile {
   bio: string | null;
   whatsapp: string | null;
   instagram: string | null;
+  linkedin: string | null;
+  github: string | null;
+  youtube: string | null;
+  reddit: string | null;
   portfolio_url: string | null;
   stack: string[];
   xp: number;
