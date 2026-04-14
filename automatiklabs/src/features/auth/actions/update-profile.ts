@@ -114,7 +114,8 @@ export async function uploadAvatar(formData: FormData): Promise<{
     });
 
   if (uploadError) {
-    return { error: "Erro ao fazer upload. Tente novamente." };
+    console.error("[uploadAvatar] Storage error:", uploadError.message);
+    return { error: `Erro ao fazer upload: ${uploadError.message}` };
   }
 
   const {

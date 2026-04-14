@@ -42,18 +42,25 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
     if (!file) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("avatar", file);
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
 
-    const result = await uploadAvatar(formData);
+      const result = await uploadAvatar(formData);
 
-    if (result.error) {
-      toast.error(result.error);
-    } else if (result.url) {
-      setAvatarUrl(result.url);
-      toast.success("Avatar atualizado!");
+      if (result.error) {
+        toast.error(result.error);
+      } else if (result.url) {
+        setAvatarUrl(result.url);
+        toast.success("Avatar atualizado!");
+      } else {
+        toast.error("Erro inesperado ao fazer upload.");
+      }
+    } catch {
+      toast.error("Falha ao conectar com o servidor. Tente novamente.");
+    } finally {
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   const addTag = () => {

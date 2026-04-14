@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { MarkdownRenderer } from "@/shared/components/markdown-renderer";
 import { formatRelativeTime } from "@/shared/utils/format-date";
 import { PostActions } from "./post-actions";
+import { CommentSection } from "@/features/comments/components/comment-section";
 import type { PostWithAuthor } from "../types";
 import type { UserRole } from "@/features/auth/types";
 
@@ -37,6 +39,7 @@ function getInitials(name: string | null | undefined) {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const [showComments, setShowComments] = useState(false);
   const isAiPost = post.author.role === "admin" && post.title?.toLowerCase().includes("ai");
   const isPinned = post.is_pinned;
 
@@ -127,7 +130,19 @@ export function PostCard({ post }: PostCardProps) {
         likesCount={post.likes_count}
         commentsCount={post.comments_count}
         userHasLiked={post.user_has_liked}
+        onCommentClick={() => setShowComments(!showComments)}
       />
+
+      {/* Inline comments */}
+      {showComments && (
+        <div className="mt-3 border-t border-border pt-3">
+          <CommentSection
+            commentableType="post"
+            commentableId={post.id}
+            comments={[]}
+          />
+        </div>
+      )}
     </article>
   );
 }
