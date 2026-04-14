@@ -9,9 +9,12 @@ interface LessonContentProps {
 export function LessonContent({ content }: LessonContentProps) {
   if (!content) return null;
 
+  // Seed data stores literal \n instead of actual newlines — normalize
+  const normalized = content.replace(/\\n/g, "\n");
+
   return (
     <div className="border-t border-border pt-5">
-      <MarkdownRenderer content={content} />
+      <MarkdownRenderer content={normalized} />
     </div>
   );
 }
