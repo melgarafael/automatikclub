@@ -1,11 +1,13 @@
+"use client";
+
 import { LeftSidebar } from "./left-sidebar";
 import { StatusBar } from "./status-bar";
 import { RightPanel } from "./right-panel";
 
 export function TriPanelLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid h-screen grid-cols-[56px_1fr_280px] grid-rows-[1fr_28px] overflow-hidden bg-bg">
-      {/* Rail — 56px icon sidebar, spans both rows */}
+    <div className="grid h-screen grid-cols-[auto_1fr_280px] grid-rows-[1fr_28px] overflow-hidden bg-bg">
+      {/* Rail — expandable sidebar, spans both rows */}
       <LeftSidebar />
 
       {/* Center — main content area */}

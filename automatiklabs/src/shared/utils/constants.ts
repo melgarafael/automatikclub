@@ -4,6 +4,7 @@ export const APP_DESCRIPTION =
 
 export const FEED_MAX_WIDTH = 680;
 export const RAIL_WIDTH = 56;
+export const SIDEBAR_EXPANDED_WIDTH = 220;
 export const RIGHT_PANEL_WIDTH = 280;
 export const STATUS_BAR_HEIGHT = 28;
 
