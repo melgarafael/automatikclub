@@ -57,7 +57,7 @@ export function PostCard({ post }: PostCardProps) {
 
       {/* Head: avatar + meta */}
       <div className="mb-[10px] flex items-center gap-[10px]">
-        <Link href={`/members/${post.author.username}`}>
+        <Link href={post.author.username ? `/members/${post.author.username}` : "/members"}>
           <Avatar>
             {post.author.avatar_url ? (
               <AvatarImage
@@ -74,7 +74,7 @@ export function PostCard({ post }: PostCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <Link
-              href={`/members/${post.author.username}`}
+              href={post.author.username ? `/members/${post.author.username}` : "/members"}
               className="font-display text-[14px] font-semibold text-text-1 hover:underline"
             >
               {post.author.full_name}
@@ -122,6 +122,7 @@ export function PostCard({ post }: PostCardProps) {
       {/* Actions */}
       <PostActions
         postId={post.id}
+        channelSlug={post.channel.slug}
         likesCount={post.likes_count}
         commentsCount={post.comments_count}
         userHasLiked={post.user_has_liked}

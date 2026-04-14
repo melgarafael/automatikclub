@@ -111,6 +111,20 @@ export async function createComment(
     return { error: "Erro ao criar comentario. Tente novamente." };
   }
 
+  // Award XP for commenting (dedup via commentable + timestamp)
+  try {
+    const { awardXP } = await import(
+      "@/features/gamification/services/xp-engine"
+    );
+    await awardXP(
+      user.id,
+      "comment",
+      `comment:${parsed.data.commentable_id}:${Date.now()}`
+    );
+  } catch {
+    // XP award is best-effort — don't block comment creation
+  }
+
   revalidatePath("/feed");
   revalidatePath("/learn", "layout");
   return { success: true };

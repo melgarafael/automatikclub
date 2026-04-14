@@ -61,17 +61,31 @@ export async function createPost(
     }
   }
 
-  const { error } = await supabase.from("posts").insert({
-    content_md: parsed.data.content_md,
-    channel_id: parsed.data.channel_id,
-    tab_id: parsed.data.tab_id ?? null,
-    title: parsed.data.title ?? null,
-    author_id: user.id,
-    status: "published",
-  });
+  const { data: inserted, error } = await supabase
+    .from("posts")
+    .insert({
+      content_md: parsed.data.content_md,
+      channel_id: parsed.data.channel_id,
+      tab_id: parsed.data.tab_id ?? null,
+      title: parsed.data.title ?? null,
+      author_id: user.id,
+      status: "published",
+    })
+    .select("id")
+    .single();
 
-  if (error) {
+  if (error || !inserted) {
     return { error: "Erro ao criar post. Tente novamente." };
+  }
+
+  // Award XP for posting (dedup via post ID)
+  try {
+    const { awardXP } = await import(
+      "@/features/gamification/services/xp-engine"
+    );
+    await awardXP(user.id, "post", inserted.id);
+  } catch {
+    // XP award is best-effort — don't block post creation
   }
 
   revalidatePath("/feed");
