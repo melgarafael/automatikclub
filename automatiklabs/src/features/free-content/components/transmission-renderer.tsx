@@ -108,8 +108,7 @@ export function TransmissionRenderer({
             {item.link && (
               <a
                 href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(item.link.startsWith('/') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                 className="mt-3 block w-full sm:w-auto"
               >
                 <Button
