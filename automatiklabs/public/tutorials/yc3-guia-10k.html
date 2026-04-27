@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do Nicho aos R$10k/mês — Guia YC3 | AutomatikClub</title>
+<meta name="description" content="Os 3 modelos do YC adaptados pro Brasil. Como definir nicho, escolher problema, encontrar leads, precificar e montar um plano para chegar aos R$10k/mês com agentes de IA.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #0A0A0A;
+    color: #E8E8E8;
+    line-height: 1.7;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .gradient-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #5CE0D8, #3B82F6, #A855F7);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 32px 120px;
+  }
+
+  /* Cover */
+  .cover {
+    text-align: center;
+    padding: 40px 0 80px;
+    border-bottom: 1px solid #1F1F1F;
+    margin-bottom: 64px;
+  }
+
+  .cover-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5CE0D8;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border: 1px solid rgba(92, 224, 216, 0.3);
+    display: inline-block;
+    margin-bottom: 28px;
+  }
+
+  .cover h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+
+  .cover h1 span { color: #5CE0D8; }
+
+  .cover .subtitle {
+    font-size: 19px;
+    color: #9CA3AF;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.5;
+  }
+
+  .cover-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #6B7280;
+    letter-spacing: 1px;
+  }
+
+  .cover-meta span { color: #5CE0D8; }
+
+  /* TOC */
+  .toc {
+    background: #111111;
+    border: 1px solid #1F1F1F;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 0 0 80px;
+  }
+
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5CE0D8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .toc ol { list-style: none; counter-reset: toc; }
+  .toc li {
+    counter-increment: toc;
+    padding: 10px 0;
+    border-bottom: 1px solid #1A1A1A;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .toc li:last-child { border-bottom: none; }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: 'JetBrains Mono', monospace;
+    color: #5CE0D8;
+    font-size: 12px;
+    min-width: 24px;
+  }
+  .toc li a {
+    color: #E8E8E8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .toc li a:hover { color: #5CE0D8; }
+
+  /* Typography */
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    margin: 96px 0 14px;
+    color: #FFFFFF;
+    scroll-margin-top: 32px;
+  }
+
+  h2 .num {
+    font-family: 'JetBrains Mono', monospace;
+    color: #5CE0D8;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 40px 0 10px;
+    color: #FFFFFF;
+  }
+
+  h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+  }
+
+  p {
+    margin-bottom: 14px;
+    color: #D1D5DB;
+  }
+
+  strong { color: #FFFFFF; font-weight: 600; }
+  em { color: #5CE0D8; font-style: normal; font-weight: 500; }
+
+  ul, ol { margin: 12px 0 20px 0; padding-left: 24px; }
+  li { color: #D1D5DB; margin-bottom: 8px; }
+  li::marker { color: #5CE0D8; }
+
+  /* Section subtitle */
+  .section-sub {
+    font-size: 17px;
+    color: #9CA3AF;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* Cards / Boxes */
+  .box {
+    background: #111111;
+    border: 1px solid #1F1F1F;
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 22px 0;
+  }
+
+  .box-accent {
+    border-left: 3px solid #5CE0D8;
+  }
+
+  .box-warn {
+    background: rgba(168, 85, 247, 0.06);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-left: 3px solid #A855F7;
+  }
+
+  .box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #5CE0D8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .box-warn .box-label { color: #A855F7; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 28px;
+    font-size: 14px;
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 14px;
+    background: #111111;
+    color: #5CE0D8;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1F1F1F;
+  }
+
+  td {
+    padding: 14px;
+    border-bottom: 1px solid #1A1A1A;
+    color: #D1D5DB;
+    vertical-align: top;
+  }
+
+  td strong { color: #FFFFFF; }
+
+  /* Inline code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #1A1A1A;
+    color: #5CE0D8;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  /* Pull quotes */
+  blockquote {
+    border-left: 3px solid #5CE0D8;
+    padding: 4px 0 4px 20px;
+    margin: 24px 0;
+    color: #E8E8E8;
+    font-size: 17px;
+    font-style: italic;
+  }
+
+  /* CTA Button (the YC3 callback button) */
+  .cta-btn {
+    display: block;
+    background: linear-gradient(135deg, #5CE0D8 0%, #3B82F6 100%);
+    color: #0A0A0A !important;
+    text-decoration: none;
+    padding: 22px 28px;
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    text-align: center;
+    margin: 40px 0;
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(92, 224, 216, 0.15);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(92, 224, 216, 0.3);
+  }
+  .cta-btn .small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    opacity: 0.7;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 120px;
+    padding-top: 40px;
+    border-top: 1px solid #1F1F1F;
+    text-align: center;
+    color: #6B7280;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .footer a { color: #5CE0D8; text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px 80px; }
+    .cover h1 { font-size: 36px; letter-spacing: -1px; }
+    .cover .subtitle { font-size: 16px; }
+    h2 { font-size: 26px; margin-top: 64px; }
+    h3 { font-size: 19px; }
+    .toc { padding: 22px; }
+    .box { padding: 18px 20px; }
+    table { font-size: 13px; }
+    th, td { padding: 10px; }
+    .cta-btn { font-size: 15px; padding: 18px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="gradient-bar"></div>
+
+<div class="container">
+
+  <!-- COVER -->
+  <header class="cover">
+    <div class="cover-badge">// guia yc3 · 2026</div>
+    <h1>Do nicho aos<br><span>R$10k/mês</span></h1>
+    <p class="subtitle">
+      Os 3 modelos do YC adaptados pro Brasil. Como escolher o teu, achar quem paga, precificar e fechar — sem teoria, sem dashboard bonito, só o que faz o boleto entrar.
+    </p>
+    <div class="cover-meta">@melgarafael · <span>5 capítulos</span> · leitura de 18 min</div>
+  </header>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-title">// roadmap</div>
+    <ol>
+      <li><a href="#nicho">Como definir um nicho que paga</a></li>
+      <li><a href="#problema">Como escolher o problema certo pra atacar</a></li>
+      <li><a href="#leads">Como encontrar os primeiros 50 leads</a></li>
+      <li><a href="#preco">Como precificar (outcome &gt; seat)</a></li>
+      <li><a href="#plano">O plano de 90 dias até R$10k/mês</a></li>
+    </ol>
+  </nav>
+
+
+  <!-- 01. NICHO -->
+  <section>
+    <h2 id="nicho"><span class="num">// capítulo 01</span>Como definir um nicho que paga</h2>
+    <p class="section-sub">A escolha do nicho decide 80% do teu resultado antes de você escrever uma linha de código. Não escolhe pelo que você gosta — escolhe pelo que tem dor + dinheiro + acesso.</p>
+
+    <h3>Os 3 vetores que todo nicho viável tem</h3>
+    <p>Faz o teste com qualquer ideia que vier na tua cabeça. Se faltar um dos três, descarta:</p>
+
+    <table>
+      <thead>
+        <tr><th>Vetor</th><th>Pergunta</th><th>Filtro mínimo</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dor</strong></td>
+          <td>O cara perde dinheiro/tempo todo dia com isso?</td>
+          <td>Custa &gt; R$ 3k/mês de dor pra ele</td>
+        </tr>
+        <tr>
+          <td><strong>Dinheiro</strong></td>
+          <td>Ele já paga alguém ou alguma coisa pra resolver isso?</td>
+          <td>Sim — funcionário, agência, software</td>
+        </tr>
+        <tr>
+          <td><strong>Acesso</strong></td>
+          <td>Você consegue chegar nele em 24h sem indicação?</td>
+          <td>WhatsApp/DM/comunidade direta</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box box-accent">
+      <div class="box-label">// exemplo bom</div>
+      <p><strong>Clínica de estética em São Paulo, 5–15 funcionários.</strong> Dor: lead chega no Instagram e ninguém responde sábado/domingo (perde 30% do funil). Dinheiro: paga R$ 4–8k/mês de SDR ou Workana. Acesso: tá no Instagram, dono atende DM.</p>
+    </div>
+
+    <div class="box box-warn">
+      <div class="box-label">// exemplo ruim</div>
+      <p><strong>"Bot pra qualquer empresa que quer automatizar."</strong> Sem dor específica (qual?), sem cliente arquetípico (qual setor?), sem acesso (CNPJ aleatório). Você nunca vai vender isso. <em>Genérico = invisível.</em></p>
+    </div>
+
+    <h3>O atalho: nicho = setor + tamanho + cidade</h3>
+    <p>Em vez de "dentistas", escreve <em>"clínicas odontológicas com 3+ cadeiras em Belo Horizonte"</em>. Em vez de "imobiliárias", escreve <em>"imobiliárias de aluguel residencial em Curitiba que faturam R$ 50–200k/mês"</em>. Quanto mais específico, mais fácil prospectar e mais alto o ticket.</p>
+
+    <blockquote>"Quem fala pra todo mundo não fala pra ninguém. E quem não fala pra ninguém não recebe ninguém."</blockquote>
+
+    <h3>Lista de partida: 8 nichos BR onde já testei e tem dinheiro</h3>
+    <ul>
+      <li>Clínicas de estética/odonto/dermato com volume de lead no Insta</li>
+      <li>Imobiliárias de locação (não venda — locação tem volume e recorrência)</li>
+      <li>Consultórios médicos com agenda particular</li>
+      <li>Escritórios de advocacia tributária ou previdenciária</li>
+      <li>Infoprodutores entre R$ 50k–500k/mês de faturamento</li>
+      <li>Agências digitais que querem terceirizar dev (você vira o "Modelo 1")</li>
+      <li>Operadores logísticos médios (rota + nota + cobrança)</li>
+      <li>Franquias de serviço (ar condicionado, dedetização, manutenção)</li>
+    </ul>
+  </section>
+
+
+  <!-- 02. PROBLEMA -->
+  <section>
+    <h2 id="problema"><span class="num">// capítulo 02</span>Como escolher o problema certo pra atacar</h2>
+    <p class="section-sub">Dentro do nicho tem 50 problemas possíveis. Você só pode resolver 1 por vez. Esse é o critério.</p>
+
+    <h3>Painkiller vs vitamina</h3>
+    <p>Você precisa vender <strong>analgésico</strong>, não <strong>vitamina</strong>. Analgésico é o que tira dor agora. Vitamina é o que <em>seria bom ter</em>. Vitamina não vende no Brasil — empresário daqui não tem caixa pra "seria bom".</p>
+
+    <table>
+      <thead>
+        <tr><th>Painkiller (vende)</th><th>Vitamina (não vende)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lead chega de madrugada e some</td>
+          <td>Dashboard bonito de leads</td>
+        </tr>
+        <tr>
+          <td>Cliente reclama que ninguém responde</td>
+          <td>Análise de sentimento das mensagens</td>
+        </tr>
+        <tr>
+          <td>Cobrança em atraso há 60 dias</td>
+          <td>CRM com kanban customizável</td>
+        </tr>
+        <tr>
+          <td>Funcionário que custa R$ 4k e produz pouco</td>
+          <td>Ferramenta de produtividade pro time</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Faz o teste do "boleto"</h3>
+    <p>Antes de codar qualquer coisa, faz essa pergunta no privado pra 5 pessoas do nicho:</p>
+
+    <div class="box box-accent">
+      <div class="box-label">// script de validação</div>
+      <p>"Cara, se eu te entregasse <strong>[outcome específico]</strong> em <strong>[prazo curto]</strong>, sem você ter que mexer em nada — quanto isso valeria pra ti por mês?"</p>
+      <p style="margin-top: 12px;">Exemplo: "Se eu te entregasse 30 reuniões qualificadas no teu calendário todo mês, sem você precisar de SDR — quanto isso valeria?"</p>
+    </div>
+
+    <p>Se 3 dos 5 dizem um número entre R$ 2k e R$ 8k sem hesitar, validou. Se eles falam "depende", "interessante" ou "vou ver" — não validou. Procura outro problema.</p>
+
+    <h3>O filtro RICE simplificado pra você decidir</h3>
+    <p>Tem 3 problemas na tua frente? Pontua de 1 a 5 cada:</p>
+    <ul>
+      <li><strong>R</strong>each — quantos clientes do nicho têm essa dor? (5 = quase todos)</li>
+      <li><strong>I</strong>mpact — quanto custa por mês pro cliente? (5 = &gt; R$ 10k)</li>
+      <li><strong>C</strong>onfidence — você sabe resolver isso bem com IA? (5 = tenho protótipo rodando)</li>
+      <li><strong>E</strong>ffort — quanto tempo pra entregar a v1? (5 = menos de 1 semana)</li>
+    </ul>
+    <p>Soma e ataca o de maior pontuação. <em>Não otimiza. Decide.</em></p>
+  </section>
+
+  <!-- MID-LIST CTA #1 -->
+  <a href="https://wa.me/?text=YC3" class="cta-btn">
+    <span class="small">// próximo passo</span>
+    Comenta YC3 no Instagram → eu te mando os 3 modelos prontos
+  </a>
+
+
+  <!-- 03. LEADS -->
+  <section>
+    <h2 id="leads"><span class="num">// capítulo 03</span>Como encontrar os primeiros 50 leads</h2>
+    <p class="section-sub">Não precisa de funil pago, não precisa de SEO, não precisa de site. Você precisa de <strong>50 nomes</strong> com WhatsApp ou DM aberta. Isso aqui é prospecção, não marketing.</p>
+
+    <h3>Os 5 canais que funcionam pra começar do zero</h3>
+
+    <ol>
+      <li><strong>Mapa do bairro (Google Maps).</strong> Pesquisa "[nicho] perto de mim", filtra por avaliação 4.0+ e mais de 50 reviews. Cada resultado tem site/instagram/telefone. Bom pra B2B local.</li>
+      <li><strong>Instagram por hashtag de cidade.</strong> #clinicaestéticabh, #imobiliariacuritiba. Olha quem tá ativo (posta toda semana). Manda DM curta e específica.</li>
+      <li><strong>Google Search com operador.</strong> <code>site:instagram.com "WhatsApp" "[setor]" "[cidade]"</code> ou <code>"orçamento" intitle:"[setor]"</code>. Achei muito cliente assim.</li>
+      <li><strong>Comunidades de nicho.</strong> Sympla/Eventbrite, grupos de Facebook, WhatsApp de associações. Não vende ali — escuta. Achou a dor recorrente, abre privado.</li>
+      <li><strong>Sicoob/Sebrae/ACI da cidade.</strong> Lista pública de associados. Filtra por setor. Eles querem que os associados cresçam — barreira de entrada baixíssima.</li>
+    </ol>
+
+    <h3>O DM que funciona (e os que não funcionam)</h3>
+
+    <div class="box box-warn">
+      <div class="box-label">// não faz isso</div>
+      <p>"Olá, tudo bem? Sou especialista em IA e queria te apresentar uma solução inovadora que pode revolucionar o seu negócio. Podemos marcar uma call?"</p>
+    </div>
+
+    <div class="box box-accent">
+      <div class="box-label">// faz isso</div>
+      <p>"Cara, vi que vocês postam bastante no Insta — me chamou atenção que vocês deixam os comentários do final de semana sem resposta. Tenho um agente que responde isso em até 60s mesmo de madrugada e marca o cliente direto na agenda. Quer que eu monte uma versão pra clínica de vocês <strong>de graça por 7 dias</strong> pra ver se faz sentido?"</p>
+    </div>
+
+    <p>3 ingredientes: <em>observação concreta + outcome específico + risco zero pra ele</em>. Esse template fecha entre 5–15% das DMs. Você precisa de 50 pra fechar 3 — faz a conta.</p>
+
+    <h3>Onde guardar isso sem complicar</h3>
+    <p>Planilha do Google. Sério. Colunas: <code>nome | nicho | canal | última msg | status (frio/conversando/proposta/fechado/perdido) | obs</code>. Quando passar de 30 leads ativos aí sim você migra pra Pipedrive ou Kommo. <em>Antes disso é overengineering.</em></p>
+  </section>
+
+
+  <!-- 04. PRECIFICAÇÃO -->
+  <section>
+    <h2 id="preco"><span class="num">// capítulo 04</span>Como precificar (outcome &gt; seat)</h2>
+    <p class="section-sub">A maior cagada de quem começa: vender por hora ou por "licença". Você tá vendendo resultado. Cobre por resultado.</p>
+
+    <h3>O modelo 3 camadas (escada de valor)</h3>
+    <p>Sempre estrutura tua oferta em 3 níveis. Empresário escolhe o do meio em 70% das vezes — e é exatamente o que você quer vender.</p>
+
+    <table>
+      <thead>
+        <tr><th>Camada</th><th>O que entrega</th><th>Faixa BR</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Entrada</strong></td>
+          <td>Setup único + handoff pro cliente</td>
+          <td>R$ 1.5k–4k (one-shot)</td>
+        </tr>
+        <tr>
+          <td><strong>Core <span style="color:#5CE0D8;">★</span></strong></td>
+          <td>Setup + manutenção + ajustes mensais</td>
+          <td>R$ 3k–6k/mês recorrente</td>
+        </tr>
+        <tr>
+          <td><strong>Premium</strong></td>
+          <td>Core + relatórios + SLA + integração extra</td>
+          <td>R$ 6k–12k/mês recorrente</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Como ancorar o preço sem parecer caro</h3>
+    <p>Você nunca vende por R$ 5k. Você vende por <strong>"o equivalente a 1 SDR júnior que não tira férias e não pede aumento"</strong>. Sempre amarra teu preço ao <em>custo da alternativa que ele já tem</em>:</p>
+
+    <ul>
+      <li>Salário de funcionário (CLT custa 1.7x o salário com encargos)</li>
+      <li>Mensalidade de agência terceirizada</li>
+      <li>Custo de oportunidade (lead que escapou no fim de semana)</li>
+    </ul>
+
+    <div class="box box-accent">
+      <div class="box-label">// fala assim</div>
+      <p>"Hoje você gasta R$ 4.5k por mês pagando uma SDR que entrega 12 reuniões. Eu te entrego 25 reuniões qualificadas por R$ 3.8k/mês, e o agente trabalha das 7h às 23h, 7 dias. Quer testar 14 dias sem cobrança?"</p>
+    </div>
+
+    <h3>Regras inegociáveis de cobrança</h3>
+    <ol>
+      <li><strong>Setup separado da mensalidade.</strong> Setup é one-shot, mensal é recorrência. Misturar afunda teu fluxo de caixa.</li>
+      <li><strong>50/50 no projeto.</strong> Metade pra começar, metade no deploy. <em>Nunca</em> 100% no fim — você é dev, não banco.</li>
+      <li><strong>Mensal cobrado dia 1.</strong> Recorrência adiantada. Quem não paga dia 1, agente desliga dia 5. Sem drama.</li>
+      <li><strong>Reajuste automático em 12 meses.</strong> Coloca no contrato: IPCA + 5%. Você reajusta sem pedir desculpa.</li>
+    </ol>
+
+    <h3>O que cobrar por modelo (referência rápida)</h3>
+    <table>
+      <thead>
+        <tr><th>Modelo</th><th>Setup</th><th>Mensal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Agente que codifica</strong> (MVP em 48h)</td><td>R$ 8k–25k</td><td>opcional R$ 1.5k+</td></tr>
+        <tr><td><strong>AI Employee</strong> (SDR/atendimento)</td><td>R$ 1.5k–3k</td><td>R$ 3k–6k</td></tr>
+        <tr><td><strong>Infra/meta-layer</strong> (monitoramento)</td><td>R$ 800–2k</td><td>R$ 500–2k por cliente</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- MID-LIST CTA #2 -->
+  <a href="https://wa.me/?text=YC3" class="cta-btn">
+    <span class="small">// adapta o modelo pro teu caso</span>
+    Comenta YC3 → te mando os scripts e o contrato editável
+  </a>
+
+
+  <!-- 05. PLANO 10K -->
+  <section>
+    <h2 id="plano"><span class="num">// capítulo 05</span>O plano de 90 dias até R$10k/mês</h2>
+    <p class="section-sub">A matemática inversa primeiro. Depois, semana a semana.</p>
+
+    <h3>Quantos clientes você precisa?</h3>
+    <p>Isso aqui é a conta que ninguém faz e por isso a galera sofre. Antes de tudo, define teu mix de clientes. Três cenários realistas:</p>
+
+    <table>
+      <thead>
+        <tr><th>Cenário</th><th>Composição</th><th>Receita</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Caminho A</strong><br>(volume)</td>
+          <td>5 clientes Core de R$ 2k/mês</td>
+          <td>R$ 10k/mês</td>
+        </tr>
+        <tr>
+          <td><strong>Caminho B</strong><br>(equilibrado)</td>
+          <td>3 clientes Core de R$ 3.5k/mês</td>
+          <td>R$ 10.5k/mês</td>
+        </tr>
+        <tr>
+          <td><strong>Caminho C</strong><br>(premium)</td>
+          <td>2 clientes Premium de R$ 5k/mês</td>
+          <td>R$ 10k/mês</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Recomendação:</strong> começa pelo <em>Caminho A</em>. Mais clientes = mais aprendizado, menos risco de concentração. Você migra pro B/C no segundo trimestre, quando já souber o que funciona.</p>
+
+    <h3>Como matar o "10k" semana a semana</h3>
+
+    <h4>Semana 1 — Decidir</h4>
+    <ul>
+      <li>Escolhe 1 dos 3 modelos do YC (não 2, não 3, <strong>1</strong>)</li>
+      <li>Escolhe 1 nicho específico (setor + tamanho + cidade)</li>
+      <li>Lista 50 leads na planilha</li>
+      <li>Constrói o protótipo mínimo (1 dia de trabalho, não 1 semana)</li>
+    </ul>
+
+    <h4>Semana 2 — Validar</h4>
+    <ul>
+      <li>Manda 50 DMs/WhatsApps personalizados</li>
+      <li>Oferece 7 dias grátis pra quem responder</li>
+      <li>Meta: 5 testes ativos rodando até sexta</li>
+    </ul>
+
+    <h4>Semana 3 — Converter</h4>
+    <ul>
+      <li>Roda os testes (entrega o outcome, mostra os números)</li>
+      <li>Apresenta proposta com escada 3 camadas</li>
+      <li>Meta: 1–2 fechamentos no Core (R$ 2k/mês cada)</li>
+    </ul>
+
+    <h4>Semana 4 — Sistematizar</h4>
+    <ul>
+      <li>Documenta o que funcionou (script de DM, fluxo, prompt)</li>
+      <li>Faz checklist de onboarding (1 página, não 30)</li>
+      <li>Meta: cobrar a primeira recorrência no dia 1 do próximo mês</li>
+    </ul>
+
+    <h4>Mês 2 — Repetir + escalar canal</h4>
+    <ul>
+      <li>Mais 100 leads no mesmo nicho (sem trocar antes de fechar 3)</li>
+      <li>Pede 1 indicação por cliente fechado</li>
+      <li>Meta: 4 clientes Core ativos (R$ 8k/mês recorrente)</li>
+    </ul>
+
+    <h4>Mês 3 — Bater os R$ 10k</h4>
+    <ul>
+      <li>Fecha o 5º cliente OU faz upsell de Core → Premium em 1 dos 4</li>
+      <li>Documenta caso de sucesso (case com número)</li>
+      <li>Meta: <strong>R$ 10k/mês recorrente, 5 clientes ativos, churn zero</strong></li>
+    </ul>
+
+    <div class="box box-warn">
+      <div class="box-label">// erro mais comum</div>
+      <p>Tentar mudar de nicho/modelo na semana 3 porque "não tá fechando ainda". Não muda. Manda mais 50 DMs no <em>mesmo</em> nicho. Quem muda nas semanas 2/3 nunca chega no mês 3.</p>
+    </div>
+
+    <h3>O que fazer depois dos 10k</h3>
+    <ol>
+      <li><strong>Não contrata.</strong> 10k não paga CLT. Continua sozinho até 25k.</li>
+      <li><strong>Sobe ticket antes de subir volume.</strong> Vai pro Caminho C: 2 Premium de R$ 5k é melhor que 5 de R$ 2k.</li>
+      <li><strong>Reaproveita o playbook.</strong> Mesmo modelo, mesmo nicho, mesma proposta — só mais leads.</li>
+      <li><strong>Documenta tudo em 1 doc.</strong> Quando você for delegar (entre 30k–50k), esse doc vira o treinamento do primeiro funcionário.</li>
+    </ol>
+
+    <blockquote>"Não escala o que ainda não funciona. Faz funcionar primeiro, depois copia."</blockquote>
+  </section>
+
+
+  <!-- FINAL CTA -->
+  <a href="https://wa.me/?text=YC3" class="cta-btn">
+    <span class="small">// pronto pra começar?</span>
+    Comenta YC3 no Instagram → te mando o pacote completo (modelos + scripts + contrato)
+  </a>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>// guia yc3 · construído por <a href="https://instagram.com/melgarafael">@melgarafael</a> · <a href="https://automatikclub.vercel.app">automatikclub</a></p>
+    <p style="margin-top: 8px; opacity: 0.6;">2026 · "não escala o que ainda não funciona"</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
