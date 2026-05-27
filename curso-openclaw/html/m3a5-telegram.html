@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectando ao Telegram — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; } .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; } .content h1 { font-size: 28px; } .breadcrumb { display: none; } .footer-nav { flex-direction: column; } .nav-btn { max-width: 100%; } .nav-btn.next { align-items: flex-start; text-align: left; } }
+    </style>
+</head>
+<body>
+    <header class="header"><div class="header-inner"><a href="#" class="logo"><div class="logo-icon">A</div>AutomatikLabs</a><nav class="breadcrumb"><a href="#">Agents OpenClaw</a><span class="sep">/</span><a href="#">Modulo 3</a><span class="sep">/</span><span class="current">Aula 5</span></nav></div></header>
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 3 &middot; Aula 5</div>
+            <h1>Conectando ao Telegram</h1>
+            <div class="lesson-meta"><span>15 min de leitura</span><span>Nivel: Intermediario</span></div>
+
+            <p>Telegram e o canal operacional mais poderoso para agentes OpenClaw — suporta grupos, topicos e bots nativos. Voce envia comandos, o agente executa e devolve resultados. Gratuito, sem limites de mensagens, e com uma API robusta para integracao.</p>
+
+            <h2>Criando o Bot</h2>
+            <div class="step-card"><div class="step-number">1</div><h4>Abra o @BotFather no Telegram</h4><p>Procure por <strong>@BotFather</strong> no Telegram e inicie uma conversa. Ele e o bot oficial do Telegram para criar e gerenciar bots.</p></div>
+            <div class="step-card"><div class="step-number">2</div><h4>Envie /newbot</h4><p>Digite o comando <strong>/newbot</strong> e siga as instrucoes. O BotFather vai pedir um nome e um username para o seu bot.</p></div>
+            <div class="step-card"><div class="step-number">3</div><h4>Escolha nome e username</h4><p>O <strong>nome</strong> e o que aparece na conversa (ex: "Operador Financeiro X"). O <strong>username</strong> precisa terminar em "bot" (ex: @financeiro_x_bot).</p></div>
+            <div class="step-card"><div class="step-number">4</div><h4>Copie o token gerado</h4><p>O BotFather vai gerar um token no formato <strong>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</strong>. Copie e guarde em lugar seguro.</p></div>
+
+            <h2>Criando o Grupo Operacional</h2>
+            <div class="step-card"><div class="step-number">1</div><h4>Crie um grupo no Telegram</h4><p>Abra o Telegram, toque em "Novo Grupo" e de um nome (ex: "Operacoes Empresa X").</p></div>
+            <div class="step-card"><div class="step-number">2</div><h4>Adicione o bot como admin</h4><p>Adicione o bot que voce criou ao grupo e promova para <strong>administrador</strong>. Ele precisa de permissao para ler comandos e enviar resultados.</p></div>
+            <div class="step-card"><div class="step-number">3</div><h4>Ative Topicos (Topics)</h4><p>Nas configuracoes do grupo, ative <strong>Topicos</strong>. Isso permite organizar os canais operacionais dentro do mesmo grupo.</p></div>
+            <div class="step-card"><div class="step-number">4</div><h4>Crie topicos: Tarefas, Relatorios, Alertas, Logs</h4><p><strong>Tarefas</strong> para enviar comandos ao agente. <strong>Relatorios</strong> para receber outputs gerados. <strong>Alertas</strong> para notificacoes automaticas. <strong>Logs</strong> para registro de operacoes executadas.</p></div>
+
+            <h2>Conectando ao OpenClaw</h2>
+            <div class="code-block">
+<span class="comment"># No arquivo .env, adicione:</span>
+<span class="keyword">TELEGRAM_TOKEN</span>=<span class="string">seu_token_aqui</span>
+<span class="keyword">TELEGRAM_GROUP_ID</span>=<span class="string">-100xxxxxxxxxx</span>
+
+<span class="comment"># Ative a integracao:</span>
+<span class="keyword">npm run</span> <span class="function">connect</span> telegram
+            </div>
+
+            <h2>Testando</h2>
+            <p>Envie um comando no topico Tarefas e veja se o agente executa e devolve o resultado:</p>
+            <div class="code-block">
+<span class="comment"># Teste rapido via terminal:</span>
+<span class="keyword">npm run</span> <span class="function">test-connection</span> telegram
+
+<span class="comment"># Resposta esperada:</span>
+<span class="string">✓ Telegram conectado com sucesso</span>
+<span class="string">✓ Bot operacional no grupo</span>
+<span class="string">✓ Topicos detectados: Tarefas, Relatorios, Alertas, Logs</span>
+            </div>
+
+            <p>Agora teste um comando real no topico <strong>Tarefas</strong>:</p>
+            <div class="code-block">
+<span class="comment"># Envie no topico Tarefas:</span>
+<span class="keyword">/relatorio</span> vendas hoje
+
+<span class="comment"># O agente processa e envia no topico Relatorios:</span>
+<span class="string">📊 Relatorio de Vendas — 25/05/2026</span>
+<span class="string">Total: R$12.450,00 | Pedidos: 23 | Ticket medio: R$541,30</span>
+<span class="string">Top produto: Kit Premium (8 un)</span>
+            </div>
+
+            <div class="success-box"><div class="box-title">Sucesso</div><p>Se o agente executou o comando e entregou o resultado, parabens! Seu agente agora tem um canal operacional. Voce delega tarefas pelo Telegram e recebe os resultados automaticamente.</p></div>
+            <div class="tip-box"><div class="box-title">Dica</div><p>Topicos no Telegram sao perfeitos para separar fluxos operacionais. O topico Tarefas recebe comandos, Relatorios recebe outputs, Alertas notifica anomalias e Logs registra tudo que foi executado.</p></div>
+            <div class="warning-box"><div class="box-title">Atencao</div><p>Nunca compartilhe o token do bot publicamente — e como uma senha. Se vazar, qualquer pessoa pode enviar comandos ao seu agente. Revogue imediatamente pelo @BotFather se isso acontecer.</p></div>
+
+            <h2>Checklist da Aula</h2>
+            <ul class="checklist">
+                <li><input type="checkbox"><span class="check-label"><strong>Bot criado no BotFather</strong> — nome e username definidos</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Token copiado</strong> — armazenado no .env</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Grupo operacional criado</strong> — com nome profissional</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Bot adicionado como admin</strong> — permissoes configuradas</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Topicos ativados</strong> — Tarefas, Relatorios, Alertas, Logs</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Comando testado</strong> — agente executou e devolveu resultado</span></li>
+            </ul>
+
+            <div class="footer-nav">
+                <a href="m3a4-user-config.html" class="nav-btn"><span class="nav-label">Aula anterior</span><span class="nav-title">Configurando Usuarios e Permissoes</span></a>
+                <a href="m3a6-workspace.html" class="nav-btn next"><span class="nav-label">Proxima aula</span><span class="nav-title">Organizando seu Workspace</span></a>
+            </div>
+        </main>
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 3 — Identidade</h3>
+                <div class="progress-bar"><div class="progress-fill" style="width: 71%"></div></div>
+                <ul class="lesson-list">
+                    <li><a href="m3a1-starter-kit.html"><span class="lesson-num">1</span> Instalando o Starter Kit</a></li>
+                    <li><a href="m3a2-soul.html"><span class="lesson-num">2</span> Definindo a Soul</a></li>
+                    <li><a href="m3a3-agents-md.html"><span class="lesson-num">3</span> O Arquivo Agents.md</a></li>
+                    <li><a href="m3a4-user-config.html"><span class="lesson-num">4</span> Usuarios e Permissoes</a></li>
+                    <li><a href="m3a5-telegram.html" class="active"><span class="lesson-num">5</span> Conectando ao Telegram</a></li>
+                    <li><a href="m3a6-workspace.html"><span class="lesson-num">6</span> Organizando seu Workspace</a></li>
+                    <li><a href="m3a7-memoria.html"><span class="lesson-num">7</span> Memoria do Agente</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

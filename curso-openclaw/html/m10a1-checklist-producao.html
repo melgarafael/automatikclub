@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Final: Seu Agente Está Pronto? — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .block-header { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 20px 24px; margin: 32px 0 8px; display: flex; align-items: center; gap: 12px; }
+        .block-header .block-icon { font-size: 24px; }
+        .block-header h3 { margin: 0; font-size: 18px; }
+        .block-header .block-count { margin-left: auto; font-size: 13px; color: var(--text-dim); font-weight: 600; }
+
+        .progress-overview { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 32px; margin: 32px 0; text-align: center; }
+        .progress-overview h3 { margin-bottom: 8px; }
+        .progress-overview .big-number { font-size: 64px; font-weight: 800; color: var(--cta); line-height: 1; }
+        .progress-overview .big-label { font-size: 14px; color: var(--text-dim); margin-top: 8px; }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><div class="logo-icon">A</div> AutomatikLabs</a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Módulo 10</a>
+                <span class="sep">/</span>
+                <span class="current">Checklist Final</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Módulo 10 — Aula 1</div>
+            <h1>Checklist Final: Seu Agente Está Pronto?</h1>
+            <div class="lesson-meta">
+                <span>15 min de leitura</span>
+                <span>Nível: Todos</span>
+            </div>
+
+            <p>Antes de colocar seu agente em produção, passe por cada item desta checklist. São <strong>25 verificações em 5 blocos</strong> que cobrem tudo o que você aprendeu no curso. Marque cada item conforme confirmar.</p>
+
+            <div class="progress-overview">
+                <h3>Total de verificações</h3>
+                <div class="big-number" id="score">0/25</div>
+                <div class="big-label">Marque os itens abaixo conforme verificar</div>
+            </div>
+
+            <!-- BLOCO 1: INFRAESTRUTURA -->
+            <div class="block-header">
+                <span class="block-icon">&#9881;</span>
+                <h3>Bloco 1 — Infraestrutura</h3>
+                <span class="block-count">0/5</span>
+            </div>
+            <ul class="checklist" data-block="1">
+                <li><input type="checkbox"><span class="check-label"><strong>VPS/servidor rodando</strong> — Servidor ativo, acessível via SSH, processo do agente estável</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Backup configurado</strong> — Rotina de backup semanal + snapshot mensal no lugar</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Monitoramento ativo</strong> — Alertas configurados para queda ou anomalias</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Domínio configurado</strong> — DNS apontando corretamente, subdomínio se necessário</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>SSL ativo</strong> — Certificado HTTPS válido e renovação automática</span></li>
+            </ul>
+
+            <!-- BLOCO 2: IDENTIDADE -->
+            <div class="block-header">
+                <span class="block-icon">&#129302;</span>
+                <h3>Bloco 2 — Identidade do Agente</h3>
+                <span class="block-count">0/5</span>
+            </div>
+            <ul class="checklist" data-block="2">
+                <li><input type="checkbox"><span class="check-label"><strong>Soul definido com foco em execução de processos</strong> — Personalidade, tom e limites claros, orientado a executar tarefas operacionais</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Agents.md com workflows documentados</strong> — Cada processo automatizado descrito com inputs, outputs e regras</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Operador config</strong> — Configurações do operador (quem supervisiona o agente) preenchidas</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Canal de comando conectado</strong> — Canal onde o operador dá tarefas ao agente ativo e respondendo</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>SOPs e workflows organizados no Notion</strong> — Procedimentos operacionais documentados e acessíveis</span></li>
+            </ul>
+
+            <!-- BLOCO 3: SEGURANÇA -->
+            <div class="block-header">
+                <span class="block-icon">&#128274;</span>
+                <h3>Bloco 3 — Segurança</h3>
+                <span class="block-count">0/5</span>
+            </div>
+            <ul class="checklist" data-block="3">
+                <li><input type="checkbox"><span class="check-label"><strong>1Password configurado</strong> — Todas as credenciais em vault criptografado</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>.env configurado</strong> — Variáveis de ambiente no lugar, zero keys hardcoded</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Anti-injection em processos críticos</strong> — System prompt defensivo em cobranças, relatórios e ações financeiras</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Thresholds operacionais definidos</strong> — Limite de cobrança, aprovação humana para ações críticas configurados</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Snapshot criado</strong> — Pelo menos um snapshot recente do servidor salvo</span></li>
+            </ul>
+
+            <!-- BLOCO 4: FUNCIONALIDADE -->
+            <div class="block-header">
+                <span class="block-icon">&#9889;</span>
+                <h3>Bloco 4 — Funcionalidade</h3>
+                <span class="block-count">0/5</span>
+            </div>
+            <ul class="checklist" data-block="4">
+                <li><input type="checkbox"><span class="check-label"><strong>Workflows testados</strong> — Cada processo automatizado executado em sandbox com cenários reais</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Crons de execução rodando</strong> — Cobranças, relatórios e monitoramento agendados e funcionando</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Heartbeats ativos</strong> — Verificações periódicas de saúde configuradas</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Estado operacional persistente</strong> — Agente lembra resultados anteriores e mantém contexto entre execuções</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Log de auditoria funcionando</strong> — Cada ação registrada com timestamp, acessível para revisão</span></li>
+            </ul>
+
+            <!-- BLOCO 5: INTEGRAÇÕES -->
+            <div class="block-header">
+                <span class="block-icon">&#128279;</span>
+                <h3>Bloco 5 — Integrações</h3>
+                <span class="block-count">0/5</span>
+            </div>
+            <ul class="checklist" data-block="5">
+                <li><input type="checkbox"><span class="check-label"><strong>Sistemas conectados</strong> — ERPs, planilhas e gateways de pagamento integrados e respondendo</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Integrações de sistemas testadas</strong> — Cada integração verificada com request de teste end-to-end</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Backup no GitHub</strong> — Repositório privado com prompts e configs versionados</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>SOPs no Notion sincronizados</strong> — Procedimentos operacionais conectados e acessíveis pelo agente</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Coleta de dados externa configurada</strong> — Scraping e navegação web ativa com limites definidos</span></li>
+            </ul>
+
+            <div class="warning-box">
+                <div class="box-title">&#9888; Antes de publicar</div>
+                <p>Se algum item ficou desmarcado, não entre em pânico — volte à aula correspondente e resolva. É melhor atrasar o lançamento em um dia do que lidar com um problema em produção.</p>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">&#128161; Dica final</div>
+                <p>Salve esta página nos favoritos. Toda vez que fizer uma mudança significativa no agente, passe pela checklist novamente. É seu "pre-flight check" antes de cada decolagem.</p>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">&#10003; Tudo marcado?</div>
+                <p>Se você chegou aqui com 25/25, seu agente está pronto para produção. Na última aula, vamos falar sobre seus próximos passos e como continuar evoluindo.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m9a6-suporte.html" class="nav-btn prev">
+                    <span class="nav-label">Módulo anterior</span>
+                    <span class="nav-title">Suporte e Manutenção</span>
+                </a>
+                <a href="m10a2-proximos-passos.html" class="nav-btn next">
+                    <span class="nav-label">Próxima</span>
+                    <span class="nav-title">Próximos Passos</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Módulo 10 — Encerramento</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m10a1-checklist-producao.html" class="active"><span class="lesson-num">1</span> Checklist Final</a></li>
+                    <li><a href="m10a2-proximos-passos.html"><span class="lesson-num">2</span> Próximos Passos</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+
+    <script>
+        document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const total = document.querySelectorAll('.checklist input[type="checkbox"]').length;
+                const checked = document.querySelectorAll('.checklist input[type="checkbox"]:checked').length;
+                document.getElementById('score').textContent = checked + '/' + total;
+
+                document.querySelectorAll('.checklist').forEach(list => {
+                    const block = list.dataset.block;
+                    if (!block) return;
+                    const blockTotal = list.querySelectorAll('input[type="checkbox"]').length;
+                    const blockChecked = list.querySelectorAll('input[type="checkbox"]:checked').length;
+                    const header = list.previousElementSibling;
+                    if (header && header.querySelector('.block-count')) {
+                        header.querySelector('.block-count').textContent = blockChecked + '/' + blockTotal;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

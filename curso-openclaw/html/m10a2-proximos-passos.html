@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Próximos Passos — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .roadmap { position: relative; padding-left: 32px; margin: 24px 0; }
+        .roadmap::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--cta), var(--success)); }
+        .roadmap-item { position: relative; padding: 16px 0 32px 24px; }
+        .roadmap-item::before { content: ''; position: absolute; left: -26px; top: 22px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg-dark); border: 3px solid var(--cta); }
+        .roadmap-item.completed::before { background: var(--success); border-color: var(--success); }
+        .roadmap-item.active::before { background: var(--cta); box-shadow: 0 0 0 4px rgba(233,69,96,0.2); }
+        .roadmap-item h4 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .roadmap-item .level-tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px; }
+        .roadmap-item .level-tag.basic { background: rgba(72,187,120,0.15); color: var(--success); }
+        .roadmap-item .level-tag.intermediate { background: rgba(66,153,225,0.15); color: var(--info); }
+        .roadmap-item .level-tag.advanced { background: rgba(236,201,75,0.15); color: var(--warning); }
+        .roadmap-item .level-tag.expert { background: rgba(233,69,96,0.15); color: var(--cta); }
+        .roadmap-item p { font-size: 15px; margin: 0; }
+
+        .cta-final { background: linear-gradient(135deg, rgba(233,69,96,0.15), rgba(233,69,96,0.05)); border: 2px solid rgba(233,69,96,0.3); border-radius: var(--radius); padding: 48px 40px; margin: 48px 0; text-align: center; }
+        .cta-final h2 { border: none; padding: 0; margin: 0 0 16px; font-size: 28px; }
+        .cta-final p { font-size: 18px; max-width: 600px; margin: 0 auto 24px; }
+        .cta-final .cta-tagline { font-size: 14px; color: var(--text-dim); font-style: italic; }
+
+        .community-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+        .community-link { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; display: flex; align-items: center; gap: 16px; transition: border-color 0.2s, transform 0.2s; cursor: pointer; text-decoration: none; color: var(--white); }
+        .community-link:hover { border-color: rgba(233,69,96,0.3); transform: translateY(-2px); }
+        .community-link .link-icon { font-size: 32px; min-width: 40px; text-align: center; }
+        .community-link h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+        .community-link p { font-size: 13px; margin: 0; color: var(--text-dim); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .cta-final { padding: 32px 24px; }
+            .cta-final h2 { font-size: 24px; }
+            .community-links { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) { .feature-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><div class="logo-icon">A</div> AutomatikLabs</a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Módulo 10</a>
+                <span class="sep">/</span>
+                <span class="current">Próximos Passos</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Módulo 10 — Aula 2</div>
+            <h1>Próximos Passos</h1>
+            <div class="lesson-meta">
+                <span>10 min de leitura</span>
+                <span>Nível: Todos</span>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">&#127942; Parabéns!</div>
+                <p>Você completou o curso <strong>Agents OpenClaw</strong>. Agora você sabe criar agentes que executam processos reais, automatizam operações, e geram resultados mensuráveis para negócios. Isso te coloca à frente de 99% das pessoas que só "ouviram falar" de IA.</p>
+            </div>
+
+            <h2>Roadmap de evolução</h2>
+            <p>O curso te trouxe até aqui. O que vem depois depende de você — mas aqui está um mapa para guiar sua jornada.</p>
+
+            <div class="roadmap">
+                <div class="roadmap-item completed">
+                    <span class="level-tag basic">Concluído</span>
+                    <h4>Nível Básico — Criador de Agentes Executores</h4>
+                    <p>Você sabe criar um agente que executa processos simples: cobranças, relatórios, monitoramento de dados. Pode automatizar operações para uso próprio e pequenos projetos.</p>
+                </div>
+
+                <div class="roadmap-item active">
+                    <span class="level-tag intermediate">Seu próximo passo</span>
+                    <h4>Nível Intermediário — Construtor de Automações</h4>
+                    <p>Domine workflows complexos com múltiplas etapas, integrações cruzadas entre sistemas, e decisões condicionais. Meta: <strong>seu primeiro processo end-to-end automatizado para um cliente</strong>.</p>
+                </div>
+
+                <div class="roadmap-item">
+                    <span class="level-tag advanced">3-6 meses</span>
+                    <h4>Nível Avançado — Especialista em Nichos Operacionais</h4>
+                    <p>Especialize-se em nichos operacionais (financeiro, logística, RH). Crie templates de processos replicáveis. Comece a escalar com automações que você configura uma vez e vende várias vezes.</p>
+                </div>
+
+                <div class="roadmap-item">
+                    <span class="level-tag expert">6-12 meses</span>
+                    <h4>Nível Especialista — Arquiteto de Soluções IA</h4>
+                    <p>Orquestre múltiplos agentes executando processos em paralelo. Crie soluções enterprise. Forme uma equipe ou agência. Faturamento consistente de R$10k-50k/mês.</p>
+                </div>
+            </div>
+
+            <h2>Recursos adicionais</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128218;</div>
+                    <h4>Documentação de processos</h4>
+                    <p>Referência oficial com todos os workflows e APIs disponíveis</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#127891;</div>
+                    <h4>Cursos avançados</h4>
+                    <p>Formações complementares disponíveis na plataforma AutomatikLabs</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128640;</div>
+                    <h4>Templates de workflows</h4>
+                    <p>Workflows pré-configurados para diferentes operações e nichos</p>
+                </div>
+            </div>
+
+            <h2>Comunidade AutomatikLabs</h2>
+            <p>Você não está sozinho nessa jornada. A comunidade AutomatikLabs é onde criadores de agentes compartilham experiências, tiram dúvidas e encontram oportunidades.</p>
+
+            <div class="community-links">
+                <div class="community-link">
+                    <span class="link-icon">&#128172;</span>
+                    <div>
+                        <h4>Comunidade Discord</h4>
+                        <p>Chat ao vivo, canais por nicho, feedback entre membros</p>
+                    </div>
+                </div>
+                <div class="community-link">
+                    <span class="link-icon">&#128250;</span>
+                    <div>
+                        <h4>Lives semanais</h4>
+                        <p>Toda semana, cases reais e Q&A ao vivo com a equipe</p>
+                    </div>
+                </div>
+                <div class="community-link">
+                    <span class="link-icon">&#128188;</span>
+                    <div>
+                        <h4>Marketplace de agentes</h4>
+                        <p>Compre, venda e troque templates de agentes com outros membros</p>
+                    </div>
+                </div>
+                <div class="community-link">
+                    <span class="link-icon">&#127942;</span>
+                    <div>
+                        <h4>Certificado</h4>
+                        <p>Seu certificado de conclusão estará disponível na plataforma</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">&#128161; Conselho final</div>
+                <p>A diferença entre quem "sabe sobre IA" e quem <strong>ganha dinheiro com IA</strong> é uma só: ação. Não espere o momento perfeito. Crie seu primeiro agente para um caso real e itere a partir do feedback. O mercado paga por quem resolve problemas, não por quem sabe teoria.</p>
+            </div>
+
+            <div class="cta-final">
+                <h2>Agora vai automatizar processos reais.</h2>
+                <p>Você tem o conhecimento, as ferramentas e a comunidade. O próximo passo é seu.</p>
+                <div class="cta-tagline">Obrigado por fazer parte do AutomatikLabs. Nos vemos na comunidade.</div>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m10a1-checklist-producao.html" class="nav-btn prev">
+                    <span class="nav-label">Anterior</span>
+                    <span class="nav-title">Checklist Final</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Módulo 10 — Encerramento</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m10a1-checklist-producao.html"><span class="lesson-num">1</span> Checklist Final</a></li>
+                    <li><a href="m10a2-proximos-passos.html" class="active"><span class="lesson-num">2</span> Próximos Passos</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>
