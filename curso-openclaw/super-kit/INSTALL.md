@@ -31,7 +31,8 @@ Pergunte ao usuario:
 3. Imobiliaria
 4. Consultoria ou agencia B2B
 5. Escritorio de contabilidade
-6. Outro (vou usar o template generico)"
+6. Infoprodutor (cursos online, comunidade, lancamentos)
+7. Outro (vou usar o template generico)"
 
 Aguarde a resposta antes de continuar.
 
@@ -43,7 +44,8 @@ Com base na resposta do usuario:
 - Se escolheu 3: copie os arquivos de templates/imobiliaria/ para o workspace raiz
 - Se escolheu 4: copie os arquivos de templates/consultoria-b2b/ para o workspace raiz
 - Se escolheu 5: copie os arquivos de templates/contabilidade/ para o workspace raiz
-- Se escolheu 6: mantenha os arquivos AGENTS.md, SOUL.md e HEARTBEAT.md genericos da raiz do kit
+- Se escolheu 6: copie os arquivos de templates/infoprodutor/ para o workspace raiz
+- Se escolheu 7: mantenha os arquivos AGENTS.md, SOUL.md e HEARTBEAT.md genericos da raiz do kit
 
 Os arquivos do template (AGENTS.md, SOUL.md, HEARTBEAT.md) devem SUBSTITUIR os genericos no workspace.
 
