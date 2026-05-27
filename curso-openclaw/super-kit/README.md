@@ -17,7 +17,7 @@ O agente vai ler os arquivos automaticamente e se auto-configurar.
 | Pasta | Conteudo |
 |-------|----------|
 | `/` (raiz) | Arquivos core: AGENTS.md, SOUL.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md |
-| `templates/` | 5 templates prontos por setor (e-commerce, clinica, imobiliaria, B2B, contabilidade) |
+| `templates/` | 6 templates por setor (e-commerce, clinica, imobiliaria, B2B, contabilidade, infoprodutor) |
 | `memory-system/` | Sistema de memoria em 3 camadas (episodica, semantica, procedural) |
 | `guardrails/` | Regras de seguranca, escalacao e auditoria |
 | `cron-recipes/` | 6 receitas de cron prontas para copiar e usar |
