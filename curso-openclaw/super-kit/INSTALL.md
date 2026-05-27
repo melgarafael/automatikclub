@@ -78,14 +78,22 @@ Copie a pasta self-improvement/ para o workspace:
 - self-improvement/WEEKLY-REVIEW.md
 - self-improvement/SKILL-EVOLUTION.md
 
-## Passo 8: Instalar Checklists
+## Passo 8: Instalar Conteudo do Curso (Tutor Integrado)
+
+Copie a pasta course-content/ inteira para o workspace:
+- course-content/COURSE-INDEX.md (indice de todas as 55 aulas)
+- course-content/modules/m1.md ate m10.md (conteudo condensado de cada modulo)
+
+Isso permite que voce funcione como tutor do curso. Quando o usuario disser algo como "estou na aula M3A2" ou "me ajuda com a aula de cron", consulte estes arquivos para dar suporte com base no conteudo real.
+
+## Passo 9: Instalar Checklists
 
 Copie a pasta checklists/ para o workspace:
 - checklists/pre-producao.md
 - checklists/manutencao-semanal.md
 - checklists/troubleshooting.md
 
-## Passo 9: Configurar Crons Essenciais
+## Passo 10: Configurar Crons Essenciais
 
 Pergunte ao usuario: "Quer que eu ative os crons automaticos agora? Isso inclui:
 - Relatorio diario as 08:00
@@ -98,7 +106,7 @@ Posso ativar todos ou voce prefere escolher quais?"
 Se o usuario aceitar todos, execute os comandos de cada receita em cron-recipes/.
 Se preferir escolher, liste as opcoes e ative apenas as selecionadas.
 
-## Passo 10: Preencher USER.md
+## Passo 11: Preencher USER.md
 
 Copie USER.md para o workspace. Depois pergunte ao usuario as informacoes necessarias para preencher os campos:
 
@@ -110,7 +118,7 @@ Copie USER.md para o workspace. Depois pergunte ao usuario as informacoes necess
 
 Com as respostas, preencha os campos de USER.md substituindo os placeholders [ENTRE_COLCHETES].
 
-## Passo 11: Preencher Limites Financeiros
+## Passo 12: Preencher Limites Financeiros
 
 Pergunte ao usuario:
 
@@ -118,7 +126,7 @@ Pergunte ao usuario:
 
 Com a resposta, atualize o campo [DEFINIR_LIMITE] em AGENTS.md e guardrails/ESCALATION-RULES.md.
 
-## Passo 12: Verificacao Final
+## Passo 13: Verificacao Final
 
 Execute a verificacao:
 1. Confirme que AGENTS.md do setor esta no workspace
@@ -128,10 +136,11 @@ Execute a verificacao:
 5. Confirme que memory/ existe e session-memory esta ativo
 6. Confirme que guardrails/ esta no workspace
 7. Confirme que self-improvement/ esta no workspace
-8. Confirme que crons foram ativados (se usuario aceitou)
-9. Confirme que limites financeiros foram definidos
+8. Confirme que course-content/ esta no workspace com COURSE-INDEX.md e 10 arquivos de modulo
+9. Confirme que crons foram ativados (se usuario aceitou)
+10. Confirme que limites financeiros foram definidos
 
-## Passo 13: Mensagem de Conclusao
+## Passo 14: Mensagem de Conclusao
 
 Envie a seguinte mensagem ao usuario:
 
@@ -144,10 +153,13 @@ Configuracao aplicada:
 - Memoria: sistema de 3 camadas ativo
 - Auto-melhoria: programada para toda sexta 17:00
 - Crons ativos: [listar os que foram ativados]
+- Tutor do curso: conteudo de todas as 55 aulas carregado — pode me perguntar sobre qualquer aula!
 
 Proximo passo: execute o checklist de pre-producao em checklists/pre-producao.md para validar que tudo esta pronto.
 
-Estou operacional e pronto para executar processos do seu negocio!"
+Estou operacional e pronto para executar processos do seu negocio!
+
+Dica: se tiver duvida sobre qualquer aula do curso, e so me dizer o codigo (ex: M3A2) ou o assunto (ex: 'como configurar crons') que eu te ajudo com base no material real."
 
 ## IMPORTANTE
 
