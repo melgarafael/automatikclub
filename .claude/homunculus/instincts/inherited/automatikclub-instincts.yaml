@@ -1,0 +1,451 @@
+# Instincts generated from https://github.com/melgarafael/automatikclub
+# Generated: 2026-05-27T16:07:07.293Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: automatikclub-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: feat, docs
+
+## Evidence
+
+- 5 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs(curso-openclaw): add course planning docs — structure, scripts, OpenClaw knowledge base, feat(curso-openclaw): add 55 lesson HTML materials + bonus Super Kit page + template
+
+---
+id: automatikclub-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Commit Length
+
+## Action
+
+Write moderate-length commit messages (~90 characters)
+
+## Evidence
+
+- Average commit message length: 90 chars
+- Based on 5 commits
+
+---
+id: automatikclub-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Naming Files
+
+## Action
+
+Use kebab-case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: kebab-case
+
+---
+id: automatikclub-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: automatikclub-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: automatikclub-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: automatikclub-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~30x per month
+- Files: **/*.test.*, **/api/**
+
+---
+id: automatikclub-workflow-add-course-materials-and-publish
+trigger: "when doing add course materials and publish"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Workflow Add Course Materials And Publish
+
+## Action
+
+Follow the add-course-materials-and-publish workflow:
+1. Create or update lesson files in curso-openclaw/html/ or curso-openclaw/super-kit/
+2. Optionally update or add supporting documentation in curso-openclaw/
+3. Copy or move finalized HTML and package files to automatiklabs/public/curso-openclaw/ and automatiklabs/public/downloads/ for public access
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: curso-openclaw/html/*.html, curso-openclaw/super-kit/**/*, automatiklabs/public/curso-openclaw/*.html
+
+---
+id: automatikclub-workflow-add-research-or-planning-docs
+trigger: "when doing add research or planning docs"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/melgarafael/automatikclub
+---
+
+# Automatikclub Workflow Add Research Or Planning Docs
+
+## Action
+
+Follow the add-research-or-planning-docs workflow:
+1. Write or update Markdown files in curso-openclaw/ or curso-openclaw/pesquisa/
+2. Commit with docs(curso-openclaw): message prefix
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: curso-openclaw/*.md, curso-openclaw/pesquisa/*.md
+
+---
+id: automatikclub-instinct-file-naming
+trigger: "When creating or renaming a file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct File Naming
+
+## Action
+
+Use kebab-case for file names (e.g., my-file.ts)
+
+## Evidence
+
+- Pattern in namingConventions.files
+- curso-openclaw/html/bonus-super-kit.html
+
+---
+id: automatikclub-instinct-function-naming
+trigger: "When defining a function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Function Naming
+
+## Action
+
+Use camelCase for function names
+
+## Evidence
+
+- Pattern in namingConventions.functions
+
+---
+id: automatikclub-instinct-class-naming
+trigger: "When defining a class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Class Naming
+
+## Action
+
+Use PascalCase for class names
+
+## Evidence
+
+- Pattern in namingConventions.classes
+
+---
+id: automatikclub-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Constant Naming
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for constant names
+
+## Evidence
+
+- Pattern in namingConventions.constants
+
+---
+id: automatikclub-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Pattern in importStyle
+
+---
+id: automatikclub-instinct-export-style
+trigger: "When exporting modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle
+
+---
+id: automatikclub-instinct-test-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Test Location
+
+## Action
+
+Place test files in a separate directory from source code
+
+## Evidence
+
+- architecture.testLocation is 'separate'
+- feature-development workflow files: **/*.test.*
+
+---
+id: automatikclub-instinct-test-sequence
+trigger: "When developing a new feature"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Test Sequence
+
+## Action
+
+Add or update tests for the feature after implementation
+
+## Evidence
+
+- feature-development workflow commitSequence includes 'Add tests for feature' after 'Add feature implementation'
+
+---
+id: automatikclub-instinct-commit-format
+trigger: "When writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Commit Format
+
+## Action
+
+Use the conventional commit format: <type>(<scope>): <message>, with type 'feat' or 'docs' and scope matching the folder (e.g., curso-openclaw)
+
+## Evidence
+
+- docs(curso-openclaw): add course planning docs — structure, scripts, OpenClaw knowledge base
+- feat(curso-openclaw): add 55 lesson HTML materials + bonus Super Kit page + template
+
+---
+id: automatikclub-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Commit Length
+
+## Action
+
+Write descriptive commit messages averaging around 90 characters
+
+## Evidence
+
+- commits.averageLength is 90
+
+---
+id: automatikclub-instinct-add-course-materials-and-publish
+trigger: "When someone wants to add new course content and make it live for users"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Add Course Materials And Publish
+
+## Action
+
+Create or update lesson files in curso-openclaw/html/ or curso-openclaw/super-kit/, optionally update supporting docs, then copy/move finalized files to automatiklabs/public/curso-openclaw/ and automatiklabs/public/downloads/
+
+## Evidence
+
+- Workflow 'add-course-materials-and-publish' steps and files
+- feat(public): deploy curso-openclaw HTMLs + Super Kit zip to public for Vercel serving
+
+---
+id: automatikclub-instinct-add-research-or-planning-docs
+trigger: "When someone wants to document research, planning, blueprints, or best practices"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Add Research Or Planning Docs
+
+## Action
+
+Write or update Markdown files in curso-openclaw/ or curso-openclaw/pesquisa/ and commit with docs(curso-openclaw): message prefix
+
+## Evidence
+
+- Workflow 'add-research-or-planning-docs' steps and files
+- docs(curso-openclaw): add deep research — 7 docs covering OpenClaw ecosystem, cases, best practices
+
+---
+id: automatikclub-instinct-feature-development-sequence
+trigger: "When developing a new feature"
+confidence: 0.8
+domain: workflow
+source: repo-analysis
+source_repo: melgarafael/automatikclub
+---
+
+# Automatikclub Instinct Feature Development Sequence
+
+## Action
+
+Follow the sequence: implement feature → add tests → update documentation
+
+## Evidence
+
+- feature-development workflow commitSequence
+- Example commits: feat(curso-openclaw): add Super Kit — 40 files, 5 sector templates, self-improving agent
+
