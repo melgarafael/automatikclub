@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROI: Horas Eliminadas, Erros Evitados, Velocidade — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .infographic { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 40px; margin: 32px 0; text-align: center; }
+        .infographic h3 { margin-bottom: 32px; }
+        .infographic-pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .pillar { background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); padding: 20px 16px; }
+        .pillar .pillar-icon { font-size: 24px; margin-bottom: 8px; }
+        .pillar h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .pillar p { font-size: 12px; color: var(--text-dim); margin: 0; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+
+        .calc-breakdown { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+        .calc-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); }
+        .calc-row .calc-icon { font-size: 24px; min-width: 36px; text-align: center; }
+        .calc-row .calc-label { flex: 1; color: var(--text-muted); font-size: 15px; }
+        .calc-row .calc-value { font-weight: 700; font-size: 16px; color: var(--white); white-space: nowrap; }
+        .calc-total { display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-radius: var(--radius); }
+        .calc-total .calc-label { flex: 1; font-size: 16px; font-weight: 700; color: var(--white); }
+        .calc-total .calc-value { font-size: 20px; font-weight: 800; }
+        .calc-total.red { background: linear-gradient(135deg, rgba(233,69,96,0.15), rgba(255,107,129,0.1)); border: 2px solid var(--cta); }
+        .calc-total.red .calc-value { color: var(--cta); }
+        .calc-total.green { background: linear-gradient(135deg, rgba(72,187,120,0.15), rgba(72,187,120,0.05)); border: 2px solid var(--success); }
+        .calc-total.green .calc-value { color: var(--success); }
+
+        .bar-chart { margin: 24px 0; }
+        .bar-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .bar-label { width: 160px; font-size: 14px; font-weight: 600; color: var(--text-muted); text-align: right; flex-shrink: 0; }
+        .bar-track { flex: 1; height: 40px; background: rgba(255,255,255,0.04); border-radius: var(--radius-sm); overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: var(--radius-sm); display: flex; align-items: center; padding: 0 16px; font-size: 14px; font-weight: 700; color: var(--white); }
+        .bar-fill.before { background: linear-gradient(90deg, rgba(233,69,96,0.6), rgba(233,69,96,0.3)); }
+        .bar-fill.after { background: linear-gradient(90deg, rgba(72,187,120,0.6), rgba(72,187,120,0.3)); }
+        .bar-savings { width: 100px; font-size: 14px; font-weight: 700; color: var(--success); text-align: left; flex-shrink: 0; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .infographic-pillars { grid-template-columns: 1fr 1fr; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+            .bar-label { width: 100px; font-size: 12px; }
+            .bar-savings { width: 80px; font-size: 12px; }
+        }
+        @media (max-width: 480px) {
+            .infographic-pillars { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .bar-row { flex-wrap: wrap; }
+            .bar-label { width: 100%; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 9</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 4</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 9 &middot; Aula 4</div>
+            <h1>ROI: Horas Eliminadas, Erros Evitados, Velocidade</h1>
+            <div class="lesson-meta">
+                <span>10 min de leitura</span>
+                <span>Nivel: Intermediario</span>
+            </div>
+
+            <p>O cliente nao quer saber de IA. Quer saber quantas <strong>HORAS GANHA DE VOLTA</strong> e quantos <strong>ERROS DESAPARECEM</strong>. O ROI de um agente autonomo nao e "economiza um salario". E uma combinacao de tres dimensoes que, juntas, mudam completamente a operacao do negocio.</p>
+
+            <div class="tip-box">
+                <div class="box-title">Regra de ouro</div>
+                <p>Nunca venda "IA". Venda <strong>horas devolvidas, erros eliminados e velocidade multiplicada</strong>. O cliente precisa enxergar o impacto na operacao dele — nao na tecnologia que voce usa.</p>
+            </div>
+
+            <h2>As 3 Dimensoes do ROI</h2>
+
+            <div class="infographic">
+                <h3>Todo Processo Automatizado Gera Valor em 3 Eixos</h3>
+                <div class="infographic-pillars">
+                    <div class="pillar">
+                        <div class="pillar-icon">&#9201;</div>
+                        <h4>Horas Eliminadas</h4>
+                        <p>Processos que tomavam horas por dia passam a rodar sozinhos</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">&#10060;</div>
+                        <h4>Erros Evitados</h4>
+                        <p>Digitacao manual tem ~3% de erro. Agente tem ~0%</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">&#9889;</div>
+                        <h4>Velocidade</h4>
+                        <p>Processo que esperava 2 dias por alguem fazer, roda em 5 minutos</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">&#128200;</div>
+                        <h4>Efeito Composto</h4>
+                        <p>As 3 dimensoes se multiplicam — o impacto real e maior que a soma</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Dimensao 1: Horas Eliminadas</h3>
+
+            <p>Processos manuais consomem horas todos os dias. O agente autonomo executa esses processos <strong>sem intervencao humana</strong>. Nao e "ajudar o funcionario a ser mais rapido" — e <strong>eliminar a tarefa inteira</strong>.</p>
+
+            <ul>
+                <li>Cobrancas que levavam 3h/dia para fazer manualmente — agente faz automaticamente</li>
+                <li>Emissao de relatorios que consumia uma manha inteira — pronto em segundos</li>
+                <li>Follow-up com leads que ninguem tinha tempo de fazer — agente faz na hora certa</li>
+                <li>Organizacao de dados entre sistemas — zero copy-paste humano</li>
+            </ul>
+
+            <h3>Dimensao 2: Erros Evitados</h3>
+
+            <p>Digitacao manual tem uma taxa de erro de aproximadamente <strong>3%</strong>. Parece pouco, ate voce calcular o custo real dos erros:</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128260;</div>
+                    <h4>Retrabalho</h4>
+                    <p>Cada erro precisa ser encontrado, corrigido e verificado. Tempo dobrado.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128176;</div>
+                    <h4>Receita Perdida</h4>
+                    <p>Cobranca errada, nota fiscal com valor errado, pedido duplicado — dinheiro que vai embora</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128100;</div>
+                    <h4>Cliente Perdido</h4>
+                    <p>Erros repetidos destroem confianca. O cliente vai pro concorrente silenciosamente.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128203;</div>
+                    <h4>Risco Legal</h4>
+                    <p>Erro em contrato, em nota fiscal, em relatorio regulatorio — consequencias serias</p>
+                </div>
+            </div>
+
+            <p>O agente autonomo executa o processo da mesma forma, todas as vezes. <strong>Taxa de erro: ~0%.</strong></p>
+
+            <h3>Dimensao 3: Velocidade</h3>
+
+            <p>Muitos processos nao sao lentos por serem complexos. Sao lentos porque <strong>ficam esperando alguem ter tempo de fazer</strong>. Uma cobranca que deveria sair no dia seguinte ao vencimento so sai 5 dias depois porque ninguem priorizou. Um relatorio que o gerente precisa segunda de manha so fica pronto quarta.</p>
+
+            <p>O agente nao tem "agenda cheia". Ele executa <strong>no momento exato em que o processo precisa acontecer</strong>.</p>
+
+            <h2>Caso Concreto: Cobranca de Inadimplentes</h2>
+
+            <p>Vamos destrinchar um caso real para voce ver como as 3 dimensoes se combinam:</p>
+
+            <h3>ANTES: Processo Manual</h3>
+
+            <div class="calc-breakdown">
+                <div class="calc-row">
+                    <span class="calc-icon">&#9201;</span>
+                    <span class="calc-label">Tempo gasto por dia checando inadimplentes e cobrando</span>
+                    <span class="calc-value">3h/dia</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-icon">&#10060;</span>
+                    <span class="calc-label">Inadimplentes esquecidos (ninguem cobrou)</span>
+                    <span class="calc-value">15% esquecidos</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-icon">&#128260;</span>
+                    <span class="calc-label">Atraso medio entre vencimento e primeira cobranca</span>
+                    <span class="calc-value">5 dias</span>
+                </div>
+                <div class="calc-total red">
+                    <span class="calc-label">Custo mensal do processo manual</span>
+                    <span class="calc-value">R$ 5.300/mes</span>
+                </div>
+            </div>
+
+            <h3>DEPOIS: Agente Autonomo</h3>
+
+            <div class="calc-breakdown">
+                <div class="calc-row">
+                    <span class="calc-icon">&#9201;</span>
+                    <span class="calc-label">Tempo humano gasto por dia</span>
+                    <span class="calc-value">0h/dia</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-icon">&#10060;</span>
+                    <span class="calc-label">Inadimplentes esquecidos</span>
+                    <span class="calc-value">0%</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-icon">&#9889;</span>
+                    <span class="calc-label">Tempo entre vencimento e cobranca automatica</span>
+                    <span class="calc-value">1 dia</span>
+                </div>
+                <div class="calc-total green">
+                    <span class="calc-label">Custo mensal com agente</span>
+                    <span class="calc-value">R$ 0/mes</span>
+                </div>
+            </div>
+
+            <h2>Grafico Visual: O Impacto nas 3 Dimensoes</h2>
+
+            <div class="bar-chart">
+                <div class="bar-row">
+                    <span class="bar-label">Horas manuais/dia</span>
+                    <div class="bar-track">
+                        <div class="bar-fill before" style="width: 100%;">3h/dia</div>
+                    </div>
+                    <span class="bar-savings"></span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Com agente</span>
+                    <div class="bar-track">
+                        <div class="bar-fill after" style="width: 3%;">0h</div>
+                    </div>
+                    <span class="bar-savings">-100%</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Taxa de esquecimento</span>
+                    <div class="bar-track">
+                        <div class="bar-fill before" style="width: 60%;">15%</div>
+                    </div>
+                    <span class="bar-savings"></span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Com agente</span>
+                    <div class="bar-track">
+                        <div class="bar-fill after" style="width: 3%;">0%</div>
+                    </div>
+                    <span class="bar-savings">-100%</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Atraso na cobranca</span>
+                    <div class="bar-track">
+                        <div class="bar-fill before" style="width: 80%;">5 dias</div>
+                    </div>
+                    <span class="bar-savings"></span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Com agente</span>
+                    <div class="bar-track">
+                        <div class="bar-fill after" style="width: 16%;">1 dia</div>
+                    </div>
+                    <span class="bar-savings">-80%</span>
+                </div>
+            </div>
+
+            <h2>A Conta que Fecha o Negocio</h2>
+
+            <div class="calc-breakdown">
+                <div class="calc-row">
+                    <span class="calc-icon">&#9201;</span>
+                    <span class="calc-label">Economia em horas eliminadas (3h/dia x R$ 25/h x 22 dias)</span>
+                    <span class="calc-value">R$ 3.300/mes</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-icon">&#128176;</span>
+                    <span class="calc-label">Receita recuperada (inadimplentes que antes eram esquecidos)</span>
+                    <span class="calc-value">R$ 2.000/mes</span>
+                </div>
+                <div class="calc-total green">
+                    <span class="calc-label">Valor total gerado pelo agente</span>
+                    <span class="calc-value">R$ 5.300/mes</span>
+                </div>
+            </div>
+
+            <div class="calc-breakdown" style="margin-top: 16px;">
+                <div class="calc-row">
+                    <span class="calc-icon">&#128179;</span>
+                    <span class="calc-label">Investimento unico no setup do agente</span>
+                    <span class="calc-value">R$ 5.000</span>
+                </div>
+                <div class="calc-total green">
+                    <span class="calc-label">Payback</span>
+                    <span class="calc-value">&lt; 1 mes</span>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">Resultado</div>
+                <p>O cliente investe R$ 5.000 uma vez e recupera <strong>R$ 5.300 todo mes</strong>. Payback em menos de 1 mes. Economia anual projetada: <strong>R$ 63.600</strong>. E isso e so UM processo automatizado.</p>
+            </div>
+
+            <h2>Template: 3 Slides Para Apresentar ao Cliente</h2>
+
+            <p>Use esta estrutura na sua proposta. Tres slides simples que mostram o valor sem enrolacao:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Slide 1: Processo Atual</h4>
+                <p>Mostre como o processo funciona hoje. Quantas horas consome, quantos erros acontecem, quanto tempo leva. <strong>Use numeros reais do cliente</strong> — pergunte durante a reuniao de diagnostico. Exemplo: "Hoje sua equipe gasta 3h/dia em cobrancas manuais, esquece 15% dos inadimplentes, e a cobranca sai em media 5 dias atrasada."</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Slide 2: Processo com Agente</h4>
+                <p>Mostre o mesmo processo rodando com o agente autonomo. Zero horas manuais, zero esquecimentos, execucao automatica no momento certo. <strong>Nao fale de tecnologia</strong> — fale do resultado. "Com o agente, a cobranca sai automaticamente no dia seguinte ao vencimento, sem ninguem precisar fazer nada."</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Slide 3: Economia</h4>
+                <p>A conta simples: quanto economiza em horas + quanto recupera em receita = valor mensal. Investimento dividido pelo valor mensal = payback. <strong>Esse slide vende sozinho</strong>. "Investimento de R$ 5.000, retorno de R$ 5.300/mes. Payback em menos de 30 dias."</p>
+            </div>
+
+            <h2>Template de Business Case</h2>
+
+            <p>Copie esta tabela e preencha com os dados reais do processo do cliente:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Dimensao</th>
+                        <th>Antes (Manual)</th>
+                        <th>Depois (Agente)</th>
+                        <th>Economia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Horas gastas/dia</strong></td>
+                        <td>____h/dia</td>
+                        <td>0h/dia</td>
+                        <td><span class="tag-yes">R$ ______/mes</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Taxa de erros</strong></td>
+                        <td>____%</td>
+                        <td>~0%</td>
+                        <td><span class="tag-yes">R$ ______/mes</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tempo de execucao</strong></td>
+                        <td>____ dias</td>
+                        <td>Automatico</td>
+                        <td><span class="tag-yes">R$ ______/mes</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="comparison-table" style="margin-top: 16px;">
+                <thead>
+                    <tr>
+                        <th>Metrica de Retorno</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Economia mensal total</strong></td>
+                        <td><span class="tag-yes">R$ ______/mes</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Investimento (setup)</strong></td>
+                        <td>R$ ______</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payback</strong></td>
+                        <td><span class="tag-yes">______ meses</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Economia anual projetada</strong></td>
+                        <td><span class="tag-yes">R$ ______/ano</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <div class="box-title">Seja conservador nos numeros</div>
+                <p>Sub-prometa e sobre-entregue. Se voce estima economia de R$ 5k/mes, apresente R$ 4k. Cliente que percebe exagero <strong>desconfia de tudo</strong>. Numeros conservadores que se confirmam geram confianca, renovacao e indicacoes.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m9a3-precificacao.html" class="nav-btn">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">Precificacao: Quanto Cobrar</span>
+                </a>
+                <a href="m9a5-primeiros-clientes.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Encontrando Primeiros Clientes</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 9 — Monetizacao</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 67%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m9a1-mercado.html"><span class="lesson-num">1</span> O Mercado de Agentes de IA</a></li>
+                    <li><a href="m9a2-empacotando.html"><span class="lesson-num">2</span> Empacotando seu Servico</a></li>
+                    <li><a href="m9a3-precificacao.html"><span class="lesson-num">3</span> Precificacao: Quanto Cobrar</a></li>
+                    <li><a href="m9a4-roi.html" class="active"><span class="lesson-num">4</span> ROI: Provando o Valor</a></li>
+                    <li><a href="m9a5-primeiros-clientes.html"><span class="lesson-num">5</span> Conquistando Primeiros Clientes</a></li>
+                    <li><a href="m9a6-suporte.html"><span class="lesson-num">6</span> Suporte e Manutencao</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

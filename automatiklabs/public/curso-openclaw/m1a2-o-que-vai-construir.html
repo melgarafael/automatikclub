@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Que Voce Vai Construir Neste Curso — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .preview-box { background: var(--bg-card); border: 2px solid rgba(233,69,96,0.2); border-radius: var(--radius); overflow: hidden; margin: 32px 0; }
+        .preview-header { background: rgba(233,69,96,0.1); padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+        .preview-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .preview-header .dot.r { background: #ff5f56; }
+        .preview-header .dot.y { background: #ffbd2e; }
+        .preview-header .dot.g { background: #27c93f; }
+        .preview-header .title { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-left: 8px; }
+        .preview-body { padding: 32px; }
+        .preview-chat { max-width: 500px; }
+        .chat-msg { display: flex; gap: 12px; margin-bottom: 16px; }
+        .chat-msg.user { flex-direction: row-reverse; }
+        .chat-avatar { width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+        .chat-msg.bot .chat-avatar { background: linear-gradient(135deg, var(--cta), #ff6b81); }
+        .chat-msg.user .chat-avatar { background: var(--accent); }
+        .chat-bubble { max-width: 360px; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+        .chat-msg.bot .chat-bubble { background: rgba(255,255,255,0.04); border-bottom-left-radius: 4px; }
+        .chat-msg.user .chat-bubble { background: rgba(233,69,96,0.12); border-bottom-right-radius: 4px; color: var(--white); }
+
+        .capability-list { list-style: none; margin: 24px 0; padding: 0; }
+        .capability-list li { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); margin-bottom: 8px; transition: border-color 0.2s; }
+        .capability-list li:hover { border-color: rgba(233,69,96,0.3); }
+        .capability-list .cap-icon { font-size: 22px; min-width: 28px; text-align: center; }
+        .capability-list .cap-text h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .capability-list .cap-text p { font-size: 14px; margin: 0; color: var(--text-muted); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list a.completed { color: var(--success); }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .lesson-list a.completed .lesson-num { background: var(--success); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .feature-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) { .feature-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><div class="logo-icon">A</div> AutomatikLabs</a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a><span class="sep">/</span>
+                <a href="#">Modulo 1</a><span class="sep">/</span>
+                <span class="current">Aula 2</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 1 &middot; Aula 2</div>
+            <h1>O Que Voce Vai Construir Neste Curso</h1>
+            <div class="lesson-meta">
+                <span>12 min de leitura</span>
+                <span>Nivel: Iniciante</span>
+            </div>
+
+            <p>Nesta aula voce vai ver <strong>exatamente</strong> o que vai sair do outro lado deste curso. Nada de promessas vagas — aqui voce ve o resultado concreto.</p>
+
+            <h2>Preview do Agente Final</h2>
+
+            <p>Ao final do curso, voce tera um agente executor <strong>completo e funcional</strong> rodando em producao, integrado ao seu negocio, executando processos 24/7.</p>
+
+            <div class="preview-box">
+                <div class="preview-header">
+                    <div class="dot r"></div>
+                    <div class="dot y"></div>
+                    <div class="dot g"></div>
+                    <span class="title">Telegram — Notificacao do Agente Executor</span>
+                </div>
+                <div class="preview-body">
+                    <div class="preview-chat">
+                        <div class="chat-msg bot">
+                            <div class="chat-avatar">🤖</div>
+                            <div class="chat-bubble">📊 Relatorio Diario — 15/06/2026<br><br>Vendas: R$ 4.230 (↑12% vs ontem)<br>Consultas agendadas: 8<br>Inadimplentes notificados: 3<br>Estoque baixo: 2 produtos (pedidos gerados)<br><br>Proxima acao: enviar cobranca lote 2 as 14h</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>O Que o Agente Vai Saber Fazer</h2>
+
+            <ul class="capability-list">
+                <li>
+                    <div class="cap-icon">📊</div>
+                    <div class="cap-text">
+                        <h4>Relatorios Automaticos</h4>
+                        <p>Gera e envia resumos diarios de vendas, operacoes e metricas</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">📅</div>
+                    <div class="cap-text">
+                        <h4>Gestao de Agenda</h4>
+                        <p>Confirma consultas, reagenda no-shows, organiza escala da equipe</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">💰</div>
+                    <div class="cap-text">
+                        <h4>Cobranca Inteligente</h4>
+                        <p>Identifica inadimplentes, envia lembretes progressivos, escala quando necessario</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">📦</div>
+                    <div class="cap-text">
+                        <h4>Monitoramento de Estoque</h4>
+                        <p>Monitora niveis, gera pedidos automaticos ao fornecedor</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">🔔</div>
+                    <div class="cap-text">
+                        <h4>Alertas Proativos</h4>
+                        <p>Notifica o dono sobre desvios, oportunidades e acoes pendentes</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">📋</div>
+                    <div class="cap-text">
+                        <h4>Execucao de Workflows</h4>
+                        <p>Processa etapas de contratos, documentacao e aprovacoes</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">🛡️</div>
+                    <div class="cap-text">
+                        <h4>Guardrails Operacionais</h4>
+                        <p>Sabe o que fazer sozinho e quando pedir aprovacao humana</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="cap-icon">⚡</div>
+                    <div class="cap-text">
+                        <h4>Skills Customizadas</h4>
+                        <p>Capacidades especificas para o seu nicho</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2>Tecnologias que Voce Vai Usar</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">🤖</div>
+                    <h4>OpenClaw</h4>
+                    <p>Plataforma de agents sem codigo</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🧠</div>
+                    <h4>ChatGPT / OpenAI</h4>
+                    <p>Motor de inteligencia do agente</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">✈️</div>
+                    <h4>Telegram</h4>
+                    <p>Canal de comunicacao com clientes</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🌐</div>
+                    <h4>HostGator</h4>
+                    <p>Hospedagem do agente</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">Resultado Final</div>
+                <p>Ao terminar o curso, voce tera um agente <strong>OPERACIONAL em producao</strong>, executando processos reais do negocio, 24/7 — sem precisar escrever uma unica linha de codigo.</p>
+            </div>
+
+            <h2>Para Quem e Este Agente</h2>
+
+            <p>O agente que voce vai construir serve para <strong>qualquer negocio</strong> que tem processos operacionais. Alguns exemplos:</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">🏥</div>
+                    <h4>Clinicas</h4>
+                    <p>Gestao de agenda e confirmacoes</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🏪</div>
+                    <h4>E-commerce</h4>
+                    <p>Estoque e pedidos automaticos</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📊</div>
+                    <h4>Consultorias</h4>
+                    <p>Relatorios e monitoramento de KPIs</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🏢</div>
+                    <h4>Escritorios</h4>
+                    <p>Cobranca e documentacao</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">Dica</div>
+                <p>Voce nao precisa ter um negocio proprio para fazer o curso. Muitos alunos constroem agents como <strong>servico para outros negocios</strong> — e cobram de R$ 1.500 a R$ 5.000 por implementacao.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m1a1-o-que-e-agente.html" class="nav-btn prev">
+                    <span class="nav-label">Anterior</span>
+                    <span class="nav-title">O Que e um Agente de IA</span>
+                </a>
+                <a href="m1a3-pre-requisitos.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Pre-requisitos</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 1 — Fundamentos</h3>
+                <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+                <ul class="lesson-list">
+                    <li><a href="m1a1-o-que-e-agente.html" class="completed"><span class="lesson-num">1</span> O Que e um Agente de IA</a></li>
+                    <li><a href="m1a2-o-que-vai-construir.html" class="active"><span class="lesson-num">2</span> O Que Voce Vai Construir</a></li>
+                    <li><a href="m1a3-pre-requisitos.html"><span class="lesson-num">3</span> Pre-requisitos</a></li>
+                    <li><a href="m1a4-cases-reais.html"><span class="lesson-num">4</span> Cases Reais</a></li>
+                    <li><a href="m1a5-mapa-do-curso.html"><span class="lesson-num">5</span> Mapa do Curso</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

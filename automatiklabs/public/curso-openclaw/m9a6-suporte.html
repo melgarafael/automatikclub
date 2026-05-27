@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recorrencia: Monitorar + Adicionar Processos + Otimizar — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; white-space: pre-wrap; }
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; } .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; } .content h1 { font-size: 28px; } .breadcrumb { display: none; } .footer-nav { flex-direction: column; } .nav-btn { max-width: 100%; } .comparison-table { font-size: 13px; } .comparison-table th, .comparison-table td { padding: 10px 12px; } }
+    </style>
+</head>
+<body>
+    <header class="header"><div class="header-inner"><a href="#" class="logo"><div class="logo-icon">A</div> AutomatikLabs</a><nav class="breadcrumb"><a href="#">Agents OpenClaw</a><span class="sep">/</span><a href="#">Modulo 9</a><span class="sep">/</span><span class="current">Aula 6</span></nav></div></header>
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 9 &middot; Aula 6</div>
+            <h1>Recorrencia: Monitorar + Adicionar Processos + Otimizar</h1>
+            <div class="lesson-meta"><span>12 min de leitura</span><span>Nivel: Intermediario</span></div>
+
+            <p>Setup e projeto. Recorrencia e negocio. E o melhor: <strong>todo mes o cliente descobre MAIS processos que quer automatizar</strong>. Quando voce automatiza a cobranca e o cliente ve funcionando, ele pensa: "sera que da pra automatizar os relatorios tambem?". E da. E voce cobra por isso.</p>
+
+            <div class="tip-box">
+                <div class="box-title">Por que recorrencia muda tudo</div>
+                <p>Setup paga suas contas. Recorrencia constroi seu negocio. <strong>10 clientes no plano Profissional = R$ 15.000/mes previsivel</strong>, sem precisar vender nada novo. E cada cliente tende a pedir mais processos com o tempo — sua receita por cliente cresce naturalmente.</p>
+            </div>
+
+            <h2>O Que a Recorrencia Inclui</h2>
+
+            <p>Diferente de "suporte de chatbot" onde voce so atualiza FAQ, a recorrencia de automacao de processos tem <strong>4 pilares</strong> que geram valor real todo mes:</p>
+
+            <ul>
+                <li><strong>Monitorar processos automatizados</strong> — Estao rodando? Sem erros? Algum processo falhou ou ficou travado? O cliente precisa ter certeza de que tudo funciona sem ele olhar.</li>
+                <li><strong>Otimizar processos existentes</strong> — Reduzir tempo de execucao, melhorar a qualidade do output, ajustar regras de negocio conforme o cliente aprende mais sobre o que precisa.</li>
+                <li><strong>Adicionar novos processos</strong> — Todo mes o cliente identifica mais tarefas manuais que quer automatizar. Cada novo processo e receita adicional ou esta incluso no plano (dependendo do tier).</li>
+                <li><strong>Suporte quando algo muda</strong> — API atualizou, processo do cliente mudou, nova regra de negocio, novo sistema integrado. Voce adapta o agente.</li>
+            </ul>
+
+            <h2>3 Pacotes de Recorrencia</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Pacote</th>
+                        <th>O Que Inclui</th>
+                        <th>Preco</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Basico — R$ 500/mes</strong></td>
+                        <td>Monitoramento semanal dos processos, suporte com resposta em ate 24h uteis, ate 1 ajuste por mes em processos existentes</td>
+                        <td>R$ 500/mes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profissional — R$ 1.500/mes</strong></td>
+                        <td>Monitoramento 3x por semana, ate 5 ajustes por mes, relatorio mensal de performance dos processos, 1 novo processo por mes incluso</td>
+                        <td>R$ 1.500/mes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Enterprise — R$ 3.000/mes</strong></td>
+                        <td>Monitoramento diario, ajustes ilimitados, 2 novos processos por mes inclusos, reuniao mensal de revisao e planejamento</td>
+                        <td>R$ 3.000/mes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>O Que Nao Esta Incluso (Cobrar Separado)</h3>
+
+            <ul>
+                <li>Integracoes com novos sistemas (nova API, novo ERP, nova plataforma)</li>
+                <li>Redesign completo de um processo existente</li>
+                <li>Treinamento presencial da equipe do cliente</li>
+                <li>Processos que exigem setup complexo (acima do incluso no plano)</li>
+            </ul>
+
+            <h2>Checklist Mensal de Manutencao</h2>
+
+            <ul class="checklist">
+                <li><input type="checkbox"><span class="check-label"><strong>Verificar execucao dos processos</strong> — Todos rodaram sem erros essa semana?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Revisar logs de erro</strong> — Algum processo falhou ou ficou travado?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Checar performance</strong> — Tempo de execucao esta dentro do esperado?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Verificar custos de API</strong> — Uso dentro do orcamento?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Testar integracoes</strong> — Todas as conexoes com sistemas externos funcionando?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Identificar oportunidades</strong> — Cliente mencionou algum processo manual novo?</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Relatorio ao cliente</strong> — Metricas enviadas: processos executados, horas economizadas, erros evitados</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Backup de configuracoes</strong> — Prompts, regras e configs salvos no repositorio</span></li>
+            </ul>
+
+            <h2>O Insight-Chave: Receita Que Cresce Sozinha</h2>
+
+            <p>Todo mes o cliente descobre mais coisas manuais que quer automatizar. No mes 1, voce automatiza cobrancas. No mes 2, ele pede relatorios automaticos. No mes 3, quer follow-up de leads. <strong>Cada novo processo e receita adicional.</strong></p>
+
+            <p>No plano Basico, cada novo processo e cobrado separado (setup + incluso na recorrencia). No Profissional e Enterprise, processos menores ja estao inclusos — o que aumenta o valor percebido e reduz o atrito para o cliente pedir mais.</p>
+
+            <div class="success-box">
+                <div class="box-title">O efeito composto</div>
+                <p>Cliente que comeca com 1 processo automatizado por R$ 500/mes tende a migrar para 3-5 processos em 6 meses, subindo naturalmente para o plano Profissional ou Enterprise. <strong>Sua receita por cliente cresce sem voce precisar prospectar.</strong></p>
+            </div>
+
+            <h2>Escalando: De 1 a 10 Clientes</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Fase</th>
+                        <th>Clientes</th>
+                        <th>Foco</th>
+                        <th>Receita Estimada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Manual</strong></td>
+                        <td>1-3 clientes</td>
+                        <td>Entregar bem, colecionar cases, aprender os padroes. Faca tudo manualmente para entender o que funciona.</td>
+                        <td>R$ 1.500 - R$ 4.500/mes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Padronizar</strong></td>
+                        <td>3-5 clientes</td>
+                        <td>Criar templates de processos, checklists padronizados, relatorios automaticos. Reduzir tempo por cliente.</td>
+                        <td>R$ 4.500 - R$ 7.500/mes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Automatizar</strong></td>
+                        <td>5-10 clientes</td>
+                        <td>Criar seus proprios agentes para monitorar os agentes dos clientes. Automacao da automacao. Dashboard de status.</td>
+                        <td>R$ 7.500 - R$ 15.000/mes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>A Matematica da Recorrencia</h2>
+
+            <div class="code-block">Cenario: 10 clientes no plano Profissional
+
+Receita mensal:  10 x R$ 1.500 = R$ 15.000/mes
+Receita anual:   R$ 15.000 x 12 = R$ 180.000/ano
+
+Tempo por cliente: ~3h/semana (com processos padronizados)
+Tempo total:       30h/semana
+
+Receita por hora:  R$ 15.000 / 120h = R$ 125/hora
+
+E isso SEM contar setups novos (R$ 3k-10k cada)
+e novos processos avulsos que os clientes pedem.</div>
+
+            <div class="tip-box">
+                <div class="box-title">Automatize sua propria manutencao</div>
+                <p>Crie um agente para monitorar os agentes dos seus clientes. Alertas automaticos quando algo falha, relatorios gerados automaticamente, dashboard de status. <strong>Meta: manutencao mensal em menos de 2h por cliente.</strong></p>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">Modulo completo!</div>
+                <p>Voce completou o modulo de Monetizacao. Agora sabe entender o mercado, empacotar seu servico, precificar, calcular ROI, encontrar clientes com processos manuais caros, e construir receita recorrente que cresce todo mes. <strong>Hora de executar.</strong></p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m9a5-primeiros-clientes.html" class="nav-btn prev"><span class="nav-label">Anterior</span><span class="nav-title">Encontrando Primeiros Clientes</span></a>
+                <a href="m10a1-checklist-producao.html" class="nav-btn next"><span class="nav-label">Proximo Modulo</span><span class="nav-title">Checklist Final</span></a>
+            </div>
+        </main>
+        <aside class="sidebar"><div class="progress-card"><h3>Modulo 9 — Monetizacao</h3><div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div><ul class="lesson-list"><li><a href="m9a1-mercado.html"><span class="lesson-num">1</span> Mercado</a></li><li><a href="m9a2-empacotando.html"><span class="lesson-num">2</span> Empacotando</a></li><li><a href="m9a3-precificacao.html"><span class="lesson-num">3</span> Precificacao</a></li><li><a href="m9a4-roi.html"><span class="lesson-num">4</span> ROI</a></li><li><a href="m9a5-primeiros-clientes.html"><span class="lesson-num">5</span> Primeiros Clientes</a></li><li><a href="m9a6-suporte.html" class="active"><span class="lesson-num">6</span> Recorrencia</a></li></ul></div></aside>
+    </div>
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

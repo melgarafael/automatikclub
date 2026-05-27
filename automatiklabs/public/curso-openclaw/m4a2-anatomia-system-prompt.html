@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomia de um Bom System Prompt — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list a.completed { color: var(--success); }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .lesson-list a.completed .lesson-num { background: var(--success); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 4</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 2</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 4 &middot; Aula 2</div>
+            <h1>Anatomia de um Bom System Prompt</h1>
+            <div class="lesson-meta">
+                <span>20 min de leitura</span>
+                <span>Nivel: Intermediario</span>
+            </div>
+
+            <p>Um system prompt operacional e como o manual de procedimentos de uma empresa. Voce ate pode operar sem manual — mas o resultado vai ser uma bagunca. Processos inconsistentes, decisoes erradas, e resultados imprevisiveis. Com um agente executor e a mesma coisa: <strong>sem estrutura operacional, a execucao e caotica</strong>.</p>
+
+            <p>Nesta aula, voce vai aprender os <strong>5 blocos operacionais</strong> que todo prompt de agente executor precisa ter. Pense neles como os departamentos de uma empresa — se faltar um, a operacao fica fragil.</p>
+
+            <h2>Os 5 Blocos Operacionais</h2>
+
+            <p>Todo prompt operacional bem construido segue uma anatomia clara. Sao 5 blocos que, juntos, transformam uma IA generica em um operador digital especializado para o seu negocio:</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">🎭</div>
+                    <h4>1. Papel Operacional</h4>
+                    <p>Quem o agente e e qual seu papel no negocio.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📋</div>
+                    <h4>2. Contexto do Negocio</h4>
+                    <p>Informacoes operacionais: servicos, equipe, regras, processos.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">⚙️</div>
+                    <h4>3. Processos que Executa</h4>
+                    <p>Lista detalhada de cada processo com triggers e passos.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">✅</div>
+                    <h4>4. Criterios de Sucesso</h4>
+                    <p>Como medir se o processo foi executado corretamente.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🚨</div>
+                    <h4>5. Tratamento de Excecoes</h4>
+                    <p>O que fazer quando algo sai do esperado.</p>
+                </div>
+            </div>
+
+            <p>Vamos mergulhar em cada um deles.</p>
+
+            <h2>Bloco 1 — PAPEL OPERACIONAL</h2>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Quem o agente e e qual seu papel no negocio</h4>
+                <p>O bloco de papel operacional define a <strong>funcao</strong> do seu agente na operacao. Nao e sobre personalidade de conversa — e sobre <strong>qual cargo ele ocupa</strong> e quais responsabilidades ele tem. Sem isso, a IA nao sabe o que deve executar.</p>
+            </div>
+
+            <p>Quando voce define um papel operacional claro, a IA ancora toda execucao nessa funcao. Ela vai operar de forma consistente porque sabe <strong>qual posicao ela ocupa no negocio</strong>.</p>
+
+            <div class="code-block">
+<span class="comment"># PAPEL OPERACIONAL</span>
+Voce e o <span class="string">gerente de operacoes digital</span> da <span class="string">Clinica Sorriso</span>.
+Responsavel por <span class="string">gestao de agenda, confirmacoes de consultas,
+controle de no-shows e geracao de relatorios diarios</span>.
+Voce opera de forma autonoma dentro dos limites definidos
+e escala para humano quando necessario.
+            </div>
+
+            <p>Perceba como esse bloco responde a tres perguntas fundamentais: <strong>qual seu cargo</strong> (gerente de operacoes digital), <strong>onde voce opera</strong> (Clinica Sorriso), e <strong>quais suas responsabilidades</strong> (agenda, confirmacoes, no-shows, relatorios).</p>
+
+            <div class="tip-box">
+                <div class="box-title">Dica pratica</div>
+                <p>Definir o papel como um <strong>cargo operacional</strong> faz diferenca. "Gerente de operacoes" executa processos melhor que "assistente virtual". A IA trata o cargo como ancora de comportamento — um gerente toma decisoes, um assistente espera instrucoes.</p>
+            </div>
+
+            <h2>Bloco 2 — CONTEXTO DO NEGOCIO</h2>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Informacoes operacionais do negocio</h4>
+                <p>O bloco de contexto e a <strong>base de dados operacional</strong> do agente. Aqui voce coloca todas as informacoes que ele precisa para executar processos com precisao: servicos, equipe, horarios, precos, fornecedores, regras operacionais e fluxos de trabalho.</p>
+            </div>
+
+            <p>Sem contexto operacional, o agente vai improvisar. Ele nao tem como saber que a Dra. Maria atende so de manha ou que o fornecedor Y tem prazo de 3 dias se voce nao informar. E decisao baseada em dados errados e pior que nenhuma decisao.</p>
+
+            <div class="code-block">
+<span class="comment"># CONTEXTO DO NEGOCIO</span>
+A Clinica Sorriso e uma clinica odontologica em <span class="string">Sao Paulo, Moema</span>.
+
+<span class="keyword">Equipe e horarios:</span>
+- Dra. Maria: segunda a quarta, 8h-17h (ortodontia)
+- Dr. Carlos: terca a sexta, 9h-18h (implantes e geral)
+- Dra. Julia: segunda a sexta, 8h-13h (pediatria)
+
+<span class="keyword">Servicos e precos:</span>
+- Limpeza: R$ 120 (40 min)
+- Clareamento a laser: R$ 350 (1h)
+- Consulta de avaliacao: R$ 150 (inclui raio-x)
+- Ortodontia: a partir de R$ 250/mes
+
+<span class="keyword">Regras operacionais:</span>
+- Confirmacoes devem ser feitas 24h antes da consulta
+- Tolerancia de atraso: 15 minutos
+- No-show sem aviso: cobrar taxa de R$ 50 no retorno
+- Lista de espera ativa para horarios concorridos
+            </div>
+
+            <p>Quanto mais especifico o contexto operacional, mais precisa a execucao. Nao tenha medo de colocar detalhes — <strong>dados operacionais detalhados sao o combustivel de processos bem executados</strong>.</p>
+
+            <h2>Bloco 3 — PROCESSOS QUE EXECUTA</h2>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Lista detalhada de cada processo</h4>
+                <p>O bloco de processos e o <strong>coracao do agente executor</strong>. Aqui voce descreve cada processo com trigger (o que dispara), passos (o que fazer) e resultado esperado. Sem processos definidos, o agente e um operador sem manual — vai improvisar, e improviso em operacoes e perigoso.</p>
+            </div>
+
+            <p>Cada processo deve ser descrito como uma <strong>receita passo a passo</strong>. O agente precisa saber exatamente o que fazer em cada etapa, sem ambiguidade.</p>
+
+            <div class="code-block">
+<span class="comment"># PROCESSOS QUE EXECUTA</span>
+
+<span class="keyword">Processo 1: Confirmacao de Consultas</span>
+- <span class="string">Trigger:</span> 24h antes da consulta agendada
+- Passo 1: Enviar mensagem via Telegram com data, hora e dentista
+- Passo 2: Se nao responder em 4h, ligar para o paciente
+- Passo 3: Se confirmar, atualizar status na agenda para "Confirmado"
+- Passo 4: Se cancelar, ativar lista de espera para aquele horario
+- Passo 5: Se nao responder, marcar como "Pendente" e notificar recepcionista
+
+<span class="keyword">Processo 2: Controle de No-Shows</span>
+- <span class="string">Trigger:</span> Paciente nao compareceu a consulta confirmada
+- Passo 1: Registrar no-show no historico do paciente
+- Passo 2: Enviar mensagem de remarcacao com 3 opcoes de horario
+- Passo 3: Informar sobre taxa de no-show (R$ 50) no proximo retorno
+- Passo 4: Se 2o no-show consecutivo, escalar para gerente
+
+<span class="keyword">Processo 3: Relatorio Diario</span>
+- <span class="string">Trigger:</span> Todo dia as 8h da manha
+- Gerar relatorio com: consultas do dia, confirmacoes pendentes,
+  no-shows do dia anterior, taxa de ocupacao da semana
+            </div>
+
+            <p>Pense nos processos como o <strong>manual de procedimentos operacionais</strong>. Cada situacao que o agente vai encontrar deve ter um processo definido com passos claros.</p>
+
+            <div class="warning-box">
+                <div class="box-title">Atencao</div>
+                <p>Processos vagos geram execucao vaga. "Confirme as consultas" nao e um processo — e uma ideia. <strong>"24h antes, enviar msg via Telegram. Se nao responder em 4h, ligar. Se confirmar, atualizar agenda."</strong> — isso e um processo. Seja especifico.</p>
+            </div>
+
+            <h2>Bloco 4 — CRITERIOS DE SUCESSO</h2>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Como medir se executou corretamente</h4>
+                <p>O bloco de criterios de sucesso define <strong>o que significa "processo bem executado"</strong>. Sem metricas, voce nao sabe se o agente esta performando bem ou apenas parecendo ocupado. Criterios claros permitem avaliar e melhorar.</p>
+            </div>
+
+            <p>Cada processo precisa de um criterio mensuravel. Se voce nao consegue medir, nao consegue melhorar.</p>
+
+            <div class="code-block">
+<span class="comment"># CRITERIOS DE SUCESSO</span>
+
+<span class="keyword">Confirmacao de Consultas:</span>
+- <span class="string">Sucesso:</span> Consulta confirmada com pelo menos 12h de antecedencia
+- <span class="string">Falha:</span> No-show sem tentativa de contato registrada
+- <span class="string">Meta:</span> 85% de confirmacao antes das 18h do dia anterior
+
+<span class="keyword">Controle de No-Shows:</span>
+- <span class="string">Sucesso:</span> Paciente remarcado em ate 48h apos no-show
+- <span class="string">Falha:</span> Paciente sem contato apos 48h
+- <span class="string">Meta:</span> Reducao de 30% nos no-shows recorrentes
+
+<span class="keyword">Relatorio Diario:</span>
+- <span class="string">Sucesso:</span> Relatorio entregue ate 8h30 com todos os KPIs
+- <span class="string">Falha:</span> Relatorio atrasado ou com dados incompletos
+- <span class="string">Meta:</span> 100% dos relatorios entregues no prazo
+            </div>
+
+            <p>A regra de ouro dos criterios: <strong>se nao esta mensuravel, nao e um criterio — e uma esperanca</strong>. Numeros, prazos e porcentagens sao seus aliados.</p>
+
+            <h2>Bloco 5 — TRATAMENTO DE EXCECOES</h2>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h4>O que fazer quando algo sai do esperado</h4>
+                <p>O bloco de excecoes e o <strong>plano B</strong> do seu agente. Processos vao falhar. Dados vao estar inconsistentes. Situacoes imprevistas vao surgir. Sem tratamento de excecoes, o agente trava ou toma decisoes erradas.</p>
+            </div>
+
+            <p>Sem excecoes definidas, o agente vai improvisar em situacoes criticas. Com excecoes claras, ele tem um <strong>protocolo de contingencia</strong> para cada cenario de falha.</p>
+
+            <div class="code-block">
+<span class="comment"># TRATAMENTO DE EXCECOES</span>
+
+<span class="keyword">Paciente pede remarcacao para horario lotado:</span>
+- Oferecer 3 horarios alternativos na mesma semana
+- Se todos recusados, oferecer lista de espera
+- Se recusar lista de espera, escalar para recepcionista
+
+<span class="keyword">Dados inconsistentes (ex: horario conflitante):</span>
+- PARAR o processo imediatamente
+- Notificar admin com detalhes do conflito
+- NAO processar com dados errados
+
+<span class="keyword">Processo falha 2x consecutivas:</span>
+- Registrar log detalhado das tentativas
+- Escalar para humano com relatorio do que tentou
+- Marcar processo como "Bloqueado — aguardando intervencao"
+
+<span class="keyword">Paciente em situacao de urgencia:</span>
+- Prioridade maxima — encaixar no proximo horario disponivel
+- Notificar dentista de plantao imediatamente
+- Ignorar regras normais de agendamento
+            </div>
+
+            <p>Perceba como cada excecao tem uma <strong>acao concreta</strong>. O agente nunca fica parado sem saber o que fazer — sempre tem um proximo passo definido.</p>
+
+            <h2>O Template Operacional Completo</h2>
+
+            <p>Agora que voce entende cada bloco, aqui esta o template completo que voce pode copiar e adaptar para qualquer negocio:</p>
+
+            <div class="code-block">
+<span class="comment"># PAPEL OPERACIONAL</span>
+Voce e o <span class="string">[cargo]</span> digital da <span class="string">[empresa]</span>.
+Responsavel por <span class="string">[lista de responsabilidades]</span>.
+
+<span class="comment"># CONTEXTO DO NEGOCIO</span>
+<span class="string">[Descricao da empresa]</span>
+Equipe: <span class="string">[quem faz o que e quando]</span>
+Servicos e precos: <span class="string">[lista]</span>
+Regras operacionais: <span class="string">[politicas internas]</span>
+
+<span class="comment"># PROCESSOS QUE EXECUTA</span>
+Processo 1: <span class="string">[nome]</span>
+- Trigger: <span class="string">[o que dispara]</span>
+- Passos: <span class="string">[1, 2, 3...]</span>
+
+Processo 2: <span class="string">[nome]</span>
+- Trigger: <span class="string">[o que dispara]</span>
+- Passos: <span class="string">[1, 2, 3...]</span>
+
+<span class="comment"># CRITERIOS DE SUCESSO</span>
+- Processo 1: Sucesso = <span class="string">[metrica mensuravel]</span>
+- Processo 2: Sucesso = <span class="string">[metrica mensuravel]</span>
+
+<span class="comment"># TRATAMENTO DE EXCECOES</span>
+- Se <span class="string">[situacao X]</span>, fazer <span class="string">[acao Y]</span>
+- Se processo falhar 2x, escalar para humano
+- Se dados inconsistentes, PARAR e notificar admin
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">Dica pratica</div>
+                <p><strong>Copie este template e preencha com os processos do SEU negocio.</strong> Nao precisa inventar nada — so substituir os campos entre colchetes. Em 30 minutos voce tem um prompt operacional profissional pronto para o seu agente executor.</p>
+            </div>
+
+            <h2>O Erro #1: Instrucoes de Conversa em Vez de Processos</h2>
+
+            <p>O erro mais comum que iniciantes cometem e escrever instrucoes de conversa quando deveriam escrever processos operacionais. Parece assim:</p>
+
+            <div class="warning-box">
+                <div class="box-title">Nao faca isso</div>
+                <p>"Voce e um assistente da minha clinica. Ajude com agendamentos. Seja educado. Confirme consultas. Cuide dos no-shows. Faca relatorios."</p>
+            </div>
+
+            <p>O problema? A IA nao sabe COMO confirmar, QUANDO fazer o relatorio, ou O QUE fazer com um no-show. Instrucoes vagas geram execucao <strong>inconsistente e imprevisivel</strong>.</p>
+
+            <p>Quando voce separa em blocos operacionais com processos detalhados, a IA trata cada processo como um fluxo de trabalho definido e executa com muito mais precisao.</p>
+
+            <h2>Comparacao: Prompt Conversacional vs Prompt Operacional</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>Prompt Conversacional</th>
+                        <th>Prompt Operacional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Estrutura</strong></td>
+                        <td><span class="tag-no">Instrucoes de como conversar</span></td>
+                        <td><span class="tag-yes">Processos detalhados com triggers e passos</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Papel</strong></td>
+                        <td>"Seja um assistente educado"</td>
+                        <td>"Voce e o gerente de operacoes responsavel por agenda e no-shows"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contexto</strong></td>
+                        <td><span class="tag-no">Nenhum dado operacional</span></td>
+                        <td><span class="tag-yes">Equipe, horarios, regras, fornecedores, politicas</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Acoes</strong></td>
+                        <td>"Responda sobre agendamentos"</td>
+                        <td>"24h antes, enviar msg. Se nao responder em 4h, ligar. Se cancelar, ativar lista de espera."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Metricas</strong></td>
+                        <td><span class="tag-no">Nenhuma forma de medir</span></td>
+                        <td><span class="tag-yes">Criterios de sucesso mensuraveis por processo</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Excecoes</strong></td>
+                        <td><span class="tag-no">Nao previstas</span></td>
+                        <td><span class="tag-yes">Protocolo definido para cada cenario de falha</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resultado</strong></td>
+                        <td>Respostas bonitas mas sem execucao</td>
+                        <td>Processos executados com resultado mensuravel</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Checklist da Aula</h2>
+
+            <ul class="checklist">
+                <li>
+                    <input type="checkbox" id="c1">
+                    <label class="check-label" for="c1"><strong>Entendi os 5 blocos operacionais</strong> — Papel, Contexto, Processos, Criterios, Excecoes</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="c2">
+                    <label class="check-label" for="c2"><strong>Copiei o template operacional</strong> e comecei a preencher com processos do meu negocio</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="c3">
+                    <label class="check-label" for="c3"><strong>Evitei o erro #1</strong> — meu prompt tem processos detalhados, nao instrucoes de conversa</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="c4">
+                    <label class="check-label" for="c4"><strong>Defini criterios de sucesso</strong> mensuraveis para cada processo</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="c5">
+                    <label class="check-label" for="c5"><strong>Mapeei excecoes</strong> — o que o agente faz quando algo sai do esperado</label>
+                </li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">Proximo passo</div>
+                <p>Agora que voce conhece a anatomia operacional, a proxima aula vai mergulhar em <strong>Few-Shot e Exemplos</strong>. Voce vai aprender como ensinar seu agente a executar processos pelo exemplo — mostrando o resultado certo e o resultado errado para cada tipo de tarefa.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m4a1-prompt-engineering-diferente.html" class="nav-btn">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">Prompt Engineering Diferente</span>
+                </a>
+                <a href="m4a3-few-shot-exemplos.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Few-Shot e Exemplos</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 4 — Prompt Engineering</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m4a1-prompt-engineering-diferente.html" class="completed"><span class="lesson-num">1</span> Prompt Engineering Diferente</a></li>
+                    <li><a href="m4a2-anatomia-system-prompt.html" class="active"><span class="lesson-num">2</span> Anatomia do System Prompt</a></li>
+                    <li><a href="m4a3-few-shot-exemplos.html"><span class="lesson-num">3</span> Few-Shot e Exemplos</a></li>
+                    <li><a href="m4a4-guardrails.html"><span class="lesson-num">4</span> Guardrails</a></li>
+                    <li><a href="m4a5-testando-iterando.html"><span class="lesson-num">5</span> Testando e Iterando</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>
