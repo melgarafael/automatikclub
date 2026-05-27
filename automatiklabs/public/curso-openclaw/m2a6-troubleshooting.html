@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting: Os 5 Erros Mais Comuns — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+        .code-block .error { color: #FF7B72; font-weight: 600; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+        .step-card .code-block { margin: 12px 0 0; }
+
+        .error-section { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 32px; margin: 28px 0; border-left: 4px solid var(--cta); }
+        .error-section h3 { font-size: 20px; font-weight: 700; margin: 0 0 8px; color: var(--white); }
+        .error-section .error-subtitle { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; }
+        .error-section .code-block { margin: 16px 0; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 2</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 6</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 2 &middot; Aula 6</div>
+            <h1>Troubleshooting: Os 5 Erros Mais Comuns</h1>
+            <div class="lesson-meta">
+                <span>15 min de leitura</span>
+                <span>Nivel: Referencia</span>
+            </div>
+
+            <p>Esta aula e um <strong>guia de referencia</strong>. Nao precisa ler tudo agora — mas quando algo der errado (e vai dar), volte aqui. Estes sao os 5 erros mais comuns que alunos encontram durante a instalacao do agente executor e como resolve-los.</p>
+
+            <div class="tip-box">
+                <div class="box-title">Dica</div>
+                <p>Salve esta pagina nos favoritos — voce vai precisar dela mais de uma vez. Problemas tecnicos fazem parte do processo, e a diferenca entre quem desiste e quem avanca e saber como resolver.</p>
+            </div>
+
+            <!-- ERROR 1 -->
+            <h2>Erro 1: ECONNREFUSED</h2>
+
+            <div class="error-section">
+                <h3>connect ECONNREFUSED 127.0.0.1:3000</h3>
+                <div class="error-subtitle">O servico nao esta rodando ou nao esta escutando na porta correta</div>
+
+                <p><strong>Quando acontece:</strong> Voce tenta enviar uma tarefa com curl, mas recebe "Connection refused". Isso significa que nao tem nada escutando na porta 3000.</p>
+
+                <div class="code-block">
+<span class="comment"># O erro aparece assim:</span>
+<span class="error">curl: (7) Failed to connect to localhost port 3000: Connection refused</span>
+                </div>
+
+                <p><strong>Como resolver:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># 1. Verifique se o processo esta rodando</span>
+<span class="keyword">pm2</span> list          <span class="comment"># Se usa PM2</span>
+<span class="keyword">ps</span> aux | grep node <span class="comment"># Procura processos Node.js</span>
+
+<span class="comment"># 2. Reinicie o agente</span>
+<span class="keyword">cd</span> /home/openclaw/openclaw
+<span class="keyword">npm</span> run start
+
+<span class="comment"># 3. Verifique se a porta esta em uso</span>
+<span class="keyword">sudo</span> lsof -i :3000
+
+<span class="comment"># 4. Se outra coisa esta usando a porta, mate o processo</span>
+<span class="keyword">sudo</span> kill -9 $(sudo lsof -t -i:3000)
+<span class="keyword">npm</span> run start
+                </div>
+            </div>
+
+            <!-- ERROR 2 -->
+            <h2>Erro 2: 401 Unauthorized</h2>
+
+            <div class="error-section">
+                <h3>Error: Request failed with status code 401</h3>
+                <div class="error-subtitle">Problemas com a conexao do ChatGPT Plus</div>
+
+                <p><strong>Quando acontece:</strong> O agente inicia, mas quando tenta executar uma tarefa, a conexao com o ChatGPT falha. Sua assinatura Plus pode estar inativa, as credenciais incorretas ou a sessao expirada.</p>
+
+                <div class="code-block">
+<span class="comment"># O erro aparece assim nos logs:</span>
+<span class="error">[OpenClaw] ChatGPT Connection Error: 401 Unauthorized</span>
+<span class="error">[OpenClaw] Message: Authentication failed</span>
+                </div>
+
+                <p><strong>Como resolver:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># 1. Verifique se sua assinatura ChatGPT Plus esta ativa</span>
+<span class="comment"># Acesse chat.openai.com > Settings > Subscription</span>
+
+<span class="comment"># 2. Reconecte sua conta no painel do OpenClaw</span>
+<span class="comment"># Va em Configuracoes > LLM > Reconectar</span>
+
+<span class="comment"># 3. Faca login novamente com email e senha do ChatGPT</span>
+
+<span class="comment"># 4. Teste a conexao:</span>
+<span class="keyword">openclaw</span> test-llm
+                </div>
+            </div>
+
+            <!-- ERROR 3 -->
+            <h2>Erro 3: ENOMEM</h2>
+
+            <div class="error-section">
+                <h3>FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory</h3>
+                <div class="error-subtitle">A VPS ficou sem memoria RAM</div>
+
+                <p><strong>Quando acontece:</strong> Geralmente em VPS com apenas 1-2 GB de RAM, especialmente quando o npm install esta rodando ou o agente executa muitas tarefas simultaneas.</p>
+
+                <div class="code-block">
+<span class="comment"># O erro aparece assim:</span>
+<span class="error">FATAL ERROR: Reached heap limit Allocation failed</span>
+<span class="error">- JavaScript heap out of memory</span>
+                </div>
+
+                <p><strong>Como resolver:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># 1. Verifique a memoria disponivel</span>
+<span class="keyword">free</span> -h
+
+<span class="comment"># 2. Criar um arquivo de swap (memoria virtual)</span>
+<span class="keyword">sudo</span> fallocate -l 2G /swapfile
+<span class="keyword">sudo</span> chmod 600 /swapfile
+<span class="keyword">sudo</span> mkswap /swapfile
+<span class="keyword">sudo</span> swapon /swapfile
+
+<span class="comment"># 3. Tornar permanente (sobrevive reboot)</span>
+<span class="keyword">echo</span> <span class="string">'/swapfile none swap sw 0 0'</span> | <span class="keyword">sudo</span> tee -a /etc/fstab
+
+<span class="comment"># 4. Aumentar o limite de memoria do Node.js</span>
+<span class="keyword">export</span> NODE_OPTIONS=<span class="string">"--max-old-space-size=1024"</span>
+<span class="keyword">npm</span> run start
+
+<span class="comment"># 5. Se persistir, considere upgrade da VPS para 4 GB</span>
+                </div>
+            </div>
+
+            <!-- ERROR 4 -->
+            <h2>Erro 4: ETIMEDOUT</h2>
+
+            <div class="error-section">
+                <h3>Error: connect ETIMEDOUT</h3>
+                <div class="error-subtitle">Timeout de rede — firewall ou DNS bloqueando a conexao</div>
+
+                <p><strong>Quando acontece:</strong> O agente tenta acessar a API da OpenAI (ou qualquer servico externo) mas a requisicao nunca chega. Geralmente e o firewall da VPS bloqueando conexoes de saida, ou problemas de DNS.</p>
+
+                <div class="code-block">
+<span class="comment"># O erro aparece assim:</span>
+<span class="error">[OpenClaw] Error: connect ETIMEDOUT 104.18.7.192:443</span>
+<span class="error">[OpenClaw] Unable to reach OpenAI API</span>
+                </div>
+
+                <p><strong>Como resolver:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># 1. Teste se o servidor tem acesso a internet</span>
+<span class="keyword">ping</span> -c 3 google.com
+
+<span class="comment"># 2. Teste acesso direto a API da OpenAI</span>
+<span class="keyword">curl</span> -I https://api.openai.com
+
+<span class="comment"># 3. Se nao funcionar, verifique o DNS</span>
+<span class="keyword">cat</span> /etc/resolv.conf
+<span class="comment"># Deve conter nameserver 8.8.8.8 ou similar</span>
+
+<span class="comment"># 4. Configurar DNS do Google</span>
+<span class="keyword">echo</span> <span class="string">"nameserver 8.8.8.8"</span> | <span class="keyword">sudo</span> tee /etc/resolv.conf
+<span class="keyword">echo</span> <span class="string">"nameserver 8.8.4.4"</span> | <span class="keyword">sudo</span> tee -a /etc/resolv.conf
+
+<span class="comment"># 5. Verifique se o firewall nao bloqueia conexoes de saida</span>
+<span class="keyword">sudo</span> ufw status
+<span class="keyword">sudo</span> ufw default allow outgoing
+                </div>
+            </div>
+
+            <!-- ERROR 5 -->
+            <h2>Erro 5: Module not found</h2>
+
+            <div class="error-section">
+                <h3>Error: Cannot find module 'express'</h3>
+                <div class="error-subtitle">Dependencias faltando — npm install incompleto</div>
+
+                <p><strong>Quando acontece:</strong> O npm install nao terminou corretamente, ou voce esta rodando o projeto de um diretorio errado. Pode acontecer com qualquer modulo (express, dotenv, openai, etc.).</p>
+
+                <div class="code-block">
+<span class="comment"># O erro aparece assim:</span>
+<span class="error">Error: Cannot find module 'express'</span>
+<span class="error">Require stack:</span>
+<span class="error">- /home/openclaw/openclaw/src/index.js</span>
+                </div>
+
+                <p><strong>Como resolver:</strong></p>
+
+                <div class="code-block">
+<span class="comment"># 1. Certifique-se de estar na pasta correta</span>
+<span class="keyword">cd</span> /home/openclaw/openclaw
+<span class="keyword">ls</span> package.json  <span class="comment"># Deve existir</span>
+
+<span class="comment"># 2. Limpe o cache e reinstale</span>
+<span class="keyword">rm</span> -rf node_modules
+<span class="keyword">rm</span> package-lock.json
+<span class="keyword">npm</span> cache clean --force
+<span class="keyword">npm</span> install
+
+<span class="comment"># 3. Se der erro de dependencia</span>
+<span class="keyword">npm</span> install --legacy-peer-deps
+
+<span class="comment"># 4. Verifique que o Node.js esta atualizado</span>
+<span class="keyword">node</span> --version  <span class="comment"># Precisa ser v18+</span>
+
+<span class="comment"># 5. Se o Node estiver desatualizado</span>
+<span class="keyword">curl</span> -fsSL https://deb.nodesource.com/setup_18.x | <span class="keyword">sudo</span> -E bash -
+<span class="keyword">sudo</span> apt install -y nodejs
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Atencao</div>
+                <p>Se nenhuma solucao acima funcionar, verifique se sua VPS tem os <strong>requisitos minimos</strong>: <strong>2 GB de RAM</strong>, <strong>Ubuntu 22.04+</strong>, e pelo menos <strong>10 GB de disco livre</strong>. VPS muito pequenas podem causar problemas intermitentes dificeis de diagnosticar.</p>
+            </div>
+
+            <h2>Comando de Diagnostico Universal</h2>
+
+            <p>Quando nada parece funcionar, rode este script que verifica <strong>tudo de uma vez</strong>. Copie e cole no terminal:</p>
+
+            <div class="code-block">
+<span class="comment">#!/bin/bash</span>
+<span class="comment"># Script de diagnostico universal do OpenClaw</span>
+<span class="keyword">echo</span> <span class="string">"================================"</span>
+<span class="keyword">echo</span> <span class="string">"OpenClaw - Diagnostico Completo"</span>
+<span class="keyword">echo</span> <span class="string">"================================"</span>
+<span class="keyword">echo</span> ""
+
+<span class="keyword">echo</span> <span class="string">"[1/8] Sistema Operacional:"</span>
+<span class="keyword">lsb_release</span> -d 2>/dev/null || <span class="keyword">cat</span> /etc/os-release | head -1
+
+<span class="keyword">echo</span> <span class="string">"[2/8] Memoria:"</span>
+<span class="keyword">free</span> -h | grep Mem
+
+<span class="keyword">echo</span> <span class="string">"[3/8] Disco:"</span>
+<span class="keyword">df</span> -h / | tail -1
+
+<span class="keyword">echo</span> <span class="string">"[4/8] Node.js:"</span>
+<span class="keyword">node</span> --version 2>/dev/null || <span class="keyword">echo</span> <span class="error">"NAO INSTALADO"</span>
+
+<span class="keyword">echo</span> <span class="string">"[5/8] npm:"</span>
+<span class="keyword">npm</span> --version 2>/dev/null || <span class="keyword">echo</span> <span class="error">"NAO INSTALADO"</span>
+
+<span class="keyword">echo</span> <span class="string">"[6/8] Porta 3000:"</span>
+<span class="keyword">sudo</span> lsof -i :3000 2>/dev/null || <span class="keyword">echo</span> <span class="string">"Nenhum servico na porta 3000"</span>
+
+<span class="keyword">echo</span> <span class="string">"[7/8] Conectividade OpenAI:"</span>
+<span class="keyword">curl</span> -s -o /dev/null -w <span class="string">"%{http_code}"</span> https://api.openai.com 2>/dev/null || <span class="keyword">echo</span> <span class="error">"SEM ACESSO"</span>
+
+<span class="keyword">echo</span> <span class="string">"[8/8] Arquivo .env:"</span>
+<span class="keyword">test</span> -f .env && <span class="keyword">echo</span> <span class="string">"Existe"</span> || <span class="keyword">echo</span> <span class="error">"NAO ENCONTRADO"</span>
+
+<span class="keyword">echo</span> ""
+<span class="keyword">echo</span> <span class="string">"================================"</span>
+<span class="keyword">echo</span> <span class="string">"Diagnostico completo."</span>
+<span class="keyword">echo</span> <span class="string">"================================"</span>
+            </div>
+
+            <p>Copie a saida desse script e compartilhe no grupo de suporte caso precise de ajuda — com essas informacoes, conseguimos diagnosticar qualquer problema rapidamente.</p>
+
+            <h2>Checklist da Aula</h2>
+
+            <ul class="checklist">
+                <li>
+                    <input type="checkbox" id="check1">
+                    <label class="check-label" for="check1"><strong>Bookmark desta pagina</strong> salvo no navegador</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check2">
+                    <label class="check-label" for="check2"><strong>Script de diagnostico salvo</strong> no servidor</label>
+                </li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">Modulo 2 completo!</div>
+                <p>Se voce chegou ate aqui, <strong>parabens</strong>! Voce tem um agente executor de IA operando no seu proprio servidor, conectado ao ChatGPT, acessivel de qualquer lugar do mundo e sabe resolver os problemas mais comuns. No <strong>Modulo 3</strong> vamos configurar esse agente para executar os processos especificos do seu negocio.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m2a5-acesso-total.html" class="nav-btn prev">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">Liberando Acesso Total</span>
+                </a>
+                <div></div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 2 — Instalacao</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m2a1-vps-hostgator.html"><span class="lesson-num">1</span> Contratando sua VPS</a></li>
+                    <li><a href="m2a2-instalando-openclaw.html"><span class="lesson-num">2</span> Instalando o OpenClaw</a></li>
+                    <li><a href="m2a3-conectando-chatgpt.html"><span class="lesson-num">3</span> Conectando ao ChatGPT</a></li>
+                    <li><a href="m2a4-primeiro-teste.html"><span class="lesson-num">4</span> Seu Primeiro Teste</a></li>
+                    <li><a href="m2a5-acesso-total.html"><span class="lesson-num">5</span> Liberando Acesso Total</a></li>
+                    <li><a href="m2a6-troubleshooting.html" class="active"><span class="lesson-num">6</span> Troubleshooting</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizando seu Workspace — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460; --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0; --text-dim: #718096; --success: #48BB78; --warning: #ECC94B; --info: #4299E1; --radius: 12px; --radius-sm: 8px; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+        .flow-diagram { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 32px 0; }
+        .flow-box { padding: 16px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; text-align: center; min-width: 120px; }
+        .flow-arrow { font-size: 20px; color: var(--text-dim); }
+        .flow-soul { background: rgba(233,69,96,0.15); color: var(--cta); border: 1px solid rgba(233,69,96,0.3); }
+        .flow-agent { background: rgba(66,153,225,0.15); color: var(--info); border: 1px solid rgba(66,153,225,0.3); }
+        .flow-skills { background: rgba(236,201,75,0.15); color: var(--warning); border: 1px solid rgba(236,201,75,0.3); }
+        .flow-integrations { background: rgba(72,187,120,0.15); color: var(--success); border: 1px solid rgba(72,187,120,0.3); }
+        .flow-user { background: rgba(255,255,255,0.08); color: var(--white); border: 1px solid rgba(255,255,255,0.15); }
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; } .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; } .content h1 { font-size: 28px; } .breadcrumb { display: none; } .footer-nav { flex-direction: column; } .nav-btn { max-width: 100%; } .nav-btn.next { align-items: flex-start; text-align: left; } .comparison-table { font-size: 13px; } .comparison-table th, .comparison-table td { padding: 10px 12px; } .flow-diagram { flex-direction: column; } .flow-arrow { transform: rotate(90deg); } }
+    </style>
+</head>
+<body>
+    <header class="header"><div class="header-inner"><a href="#" class="logo"><div class="logo-icon">A</div>AutomatikLabs</a><nav class="breadcrumb"><a href="#">Agents OpenClaw</a><span class="sep">/</span><a href="#">Modulo 3</a><span class="sep">/</span><span class="current">Aula 6</span></nav></div></header>
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 3 &middot; Aula 6</div>
+            <h1>Organizando seu Workspace</h1>
+            <div class="lesson-meta"><span>10 min de leitura</span><span>Nivel: Iniciante</span></div>
+
+            <p>Organizacao desde o inicio evita dor de cabeca quando o agente ganha mais processos. Um workspace bem estruturado e a diferenca entre escalar operacoes com tranquilidade e perder horas procurando arquivos de configuracao.</p>
+
+            <h2>Estrutura Ideal</h2>
+            <div class="code-block">
+meu-agente/
+├── 📁 soul/
+│   └── soul.md              <span class="comment">← Papel operacional</span>
+├── 📁 agents/
+│   ├── agents.md             <span class="comment">← Processos e regras</span>
+│   └── prompts/
+│       ├── relatorio.md      <span class="comment">← Template de relatorios</span>
+│       └── alerta.md         <span class="comment">← Template de alertas</span>
+├── 📁 config/
+│   ├── users.json            <span class="comment">← Permissoes de delegacao</span>
+│   ├── settings.json         <span class="comment">← Configuracoes gerais</span>
+│   └── channels.json         <span class="comment">← Canais operacionais</span>
+├── 📁 skills/
+│   ├── financeiro/           <span class="comment">← Skills de processos financeiros</span>
+│   ├── estoque/              <span class="comment">← Skills de controle de estoque</span>
+│   └── relatorios/           <span class="comment">← Skills de geracao de relatorios</span>
+├── 📁 memory/
+│   ├── short-term/           <span class="comment">← Contexto da tarefa atual</span>
+│   └── long-term/            <span class="comment">← Padroes operacionais aprendidos</span>
+├── 📁 integrations/
+│   ├── telegram/             <span class="comment">← Canal de comandos/resultados</span>
+│   ├── database/             <span class="comment">← Conexoes com bancos de dados</span>
+│   └── api/                  <span class="comment">← APIs externas (ERPs, CRMs, etc)</span>
+├── 📁 logs/
+│   └── <span class="comment">(logs de execucao automaticos)</span>
+├── .env
+└── package.json
+            </div>
+
+            <h2>Convencoes de Nomes</h2>
+            <table class="comparison-table">
+                <thead><tr><th>O Que</th><th>Convencao</th><th>Exemplo Bom</th><th>Exemplo Ruim</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Pastas</strong></td><td>kebab-case</td><td><span class="tag-yes">fluxo-caixa</span></td><td><span class="tag-no">FluxoCaixa</span></td></tr>
+                    <tr><td><strong>Arquivos</strong></td><td>kebab-case</td><td><span class="tag-yes">relatorio-diario.md</span></td><td><span class="tag-no">RelatorioDiario.md</span></td></tr>
+                    <tr><td><strong>Variaveis</strong></td><td>SCREAMING_SNAKE</td><td><span class="tag-yes">API_KEY</span></td><td><span class="tag-no">apikey</span></td></tr>
+                </tbody>
+            </table>
+
+            <h2>Diagrama de Execucao</h2>
+            <p>Veja como os dados fluem durante a execucao de um processo:</p>
+            <div class="flow-diagram">
+                <div class="flow-box flow-user">Comando</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box flow-soul">Soul</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box flow-agent">Processos</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box flow-skills">Skills</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-box flow-integrations">Sistemas</div>
+            </div>
+            <p>O <strong>Comando</strong> chega pelo canal operacional. A <strong>Soul</strong> define o papel. Os <strong>Processos</strong> aplicam as regras. As <strong>Skills</strong> executam as acoes. Os <strong>Sistemas</strong> conectados recebem e entregam dados.</p>
+
+            <div class="tip-box"><div class="box-title">Dica</div><p>Crie a estrutura agora, mesmo que muitas pastas fiquem vazias. Voce vai agradecer depois quando precisar adicionar uma nova skill operacional ou conectar um novo sistema e ja tiver o lugar certo para colocar.</p></div>
+
+            <h2>Checklist da Aula</h2>
+            <ul class="checklist">
+                <li><input type="checkbox"><span class="check-label"><strong>Estrutura de pastas criada</strong> — todas as pastas no lugar</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Convencoes seguidas</strong> — kebab-case, SCREAMING_SNAKE</span></li>
+                <li><input type="checkbox"><span class="check-label"><strong>Diagrama entendido</strong> — fluxo Comando → Soul → Processos → Skills → Sistemas</span></li>
+            </ul>
+
+            <div class="footer-nav">
+                <a href="m3a5-telegram.html" class="nav-btn"><span class="nav-label">Aula anterior</span><span class="nav-title">Conectando ao Telegram</span></a>
+                <a href="m3a7-memoria.html" class="nav-btn next"><span class="nav-label">Proxima aula</span><span class="nav-title">Memoria do Agente</span></a>
+            </div>
+        </main>
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 3 — Identidade</h3>
+                <div class="progress-bar"><div class="progress-fill" style="width: 86%"></div></div>
+                <ul class="lesson-list">
+                    <li><a href="m3a1-starter-kit.html"><span class="lesson-num">1</span> Instalando o Starter Kit</a></li>
+                    <li><a href="m3a2-soul.html"><span class="lesson-num">2</span> Definindo a Soul</a></li>
+                    <li><a href="m3a3-agents-md.html"><span class="lesson-num">3</span> O Arquivo Agents.md</a></li>
+                    <li><a href="m3a4-user-config.html"><span class="lesson-num">4</span> Usuarios e Permissoes</a></li>
+                    <li><a href="m3a5-telegram.html"><span class="lesson-num">5</span> Conectando ao Telegram</a></li>
+                    <li><a href="m3a6-workspace.html" class="active"><span class="lesson-num">6</span> Organizando seu Workspace</a></li>
+                    <li><a href="m3a7-memoria.html"><span class="lesson-num">7</span> Memoria do Agente</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

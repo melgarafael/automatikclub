@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontrando Negocios com Processos Manuais Caros — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; white-space: pre-wrap; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .highlight { color: #FFA657; font-weight: 600; }
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><div class="logo-icon">A</div>AutomatikLabs</a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a><span class="sep">/</span>
+                <a href="#">Modulo 9</a><span class="sep">/</span>
+                <span class="current">Aula 5</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 9 &middot; Aula 5</div>
+            <h1>Encontrando Negocios com Processos Manuais Caros</h1>
+            <div class="lesson-meta">
+                <span>10 min de leitura</span>
+                <span>Nivel: Intermediario</span>
+            </div>
+
+            <p>Seu cliente ideal nao e quem quer "IA". E quem reclama que <strong>GASTA TEMPO DEMAIS fazendo coisas manuais</strong>. Todo negocio que cresce esbarra em processos que nao escalam: cobrar inadimplentes, emitir notas, organizar pedidos, fazer follow-up com leads. Seu trabalho e encontrar essas empresas e mostrar que o gargalo tem solucao.</p>
+
+            <div class="tip-box">
+                <div class="box-title">Mentalidade certa</div>
+                <p>Nao espere estar pronto. O primeiro projeto real ensina mais que 10 horas de estudo. Comece imperfeito, entregue valor real, e melhore rapido. <strong>Transparencia gera confianca.</strong></p>
+            </div>
+
+            <h2>5 Estrategias Para Encontrar Clientes</h2>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>E-commerces Crescendo</h4>
+                <p>Lojas online em fase de crescimento estao afogadas em processos operacionais: controle de estoque, gestao de pedidos, emissao de notas fiscais, respostas a clientes. <strong>Sinais de que precisam de voce:</strong> equipe pequena, crescimento rapido, muitos erros operacionais, reclamacoes de atraso.</p>
+            </div>
+
+            <div class="code-block"><span class="comment">// Mensagem para dono de e-commerce (WhatsApp/Instagram)</span>
+
+<span class="string">Oi [Nome]! Vi que a [loja] esta crescendo bastante
+— parabens pelo trabalho.
+
+Normalmente nesse momento, processos como
+<span class="highlight">controle de estoque, emissao de notas e follow-up
+de pedidos</span> viram gargalo e comecam a gerar erros.
+
+Trabalho com automacao de processos usando agentes
+de IA — basicamente, o processo roda sozinho,
+sem ninguem precisar fazer manualmente.
+
+Posso te mostrar um caso real de um e-commerce
+que eliminou 4h/dia de trabalho manual?</span></div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Clinicas Lotadas</h4>
+                <p>Clinicas com fila de espera tem um problema classico: agenda caotica, no-shows frequentes, lembretes manuais que ninguem faz. <strong>Procure clinicas com boa reputacao mas muita reclamacao sobre organizacao.</strong> O agente pode automatizar confirmacao de consulta, lembretes, reagendamento e gestao de lista de espera.</p>
+            </div>
+
+            <div class="code-block"><span class="comment">// Mensagem para gestor de clinica</span>
+
+<span class="string">Oi [Nome], vi que a [clinica] tem otimas avaliacoes
+mas notei que alguns pacientes reclamam de
+dificuldade para agendar e de esquecimentos.
+
+Isso e super comum em clinicas que crescem rapido.
+Trabalho com <span class="highlight">automacao de processos — o agente
+confirma consultas, envia lembretes, reagenda
+no-shows e gerencia lista de espera</span>,
+tudo automatico.
+
+Uma clinica parecida com a sua reduziu no-shows
+em 70% e eliminou 2h/dia de trabalho manual.
+
+Posso te mostrar como funcionaria pra voces?</span></div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Imobiliarias com Pipeline Grande</h4>
+                <p>Imobiliarias captam muitos leads mas perdem a maioria por falta de follow-up. Processos de documentacao sao quase todos manuais: contratos, vistorias, cobranças de aluguel. <strong>Quanto maior o pipeline, maior a dor.</strong> O agente pode automatizar follow-up de leads, cobranca de alugueis, organizacao de documentos e lembretes de vencimento.</p>
+            </div>
+
+            <div class="code-block"><span class="comment">// Mensagem para imobiliaria</span>
+
+<span class="string">Oi [Nome], vi que a [imobiliaria] tem um portfolio
+grande de imoveis. Normalmente, quando o pipeline
+cresce, processos como <span class="highlight">follow-up de leads, cobranca
+de alugueis e gestao de contratos</span> comecam a
+engargalar a operacao.
+
+Trabalho com agentes autonomos que executam esses
+processos automaticamente — sem ninguem precisar
+lembrar ou fazer manualmente.
+
+Uma imobiliaria que atendi recuperou R$ 3.000/mes
+so em alugueis que estavam sendo cobrados com atraso.
+
+Posso te mostrar em 5 minutos como funcionaria?</span></div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Empresas de Servicos B2B</h4>
+                <p>Consultorias, agencias, escritorios de contabilidade, empresas de TI — todas tem processos repetitivos caros: <strong>relatorios mensais para clientes, gestao de contratos, cobranças, onboarding de novos clientes</strong>. Tudo manual, tudo consumindo horas de profissionais caros. Cada hora que um consultor gasta fazendo relatorio e uma hora que nao esta gerando receita.</p>
+            </div>
+
+            <div class="code-block"><span class="comment">// Mensagem para empresa de servicos B2B</span>
+
+<span class="string">Oi [Nome], vi que a [empresa] atende varios clientes
+corporativos. Imagino que processos como
+<span class="highlight">relatorios mensais, gestao de contratos e cobrancas</span>
+consumam bastante tempo da equipe.
+
+Trabalho com automacao desses processos usando
+agentes de IA. O resultado: o processo roda sozinho,
+no prazo certo, sem erros, e sua equipe foca
+no que realmente gera receita.
+
+Posso te mostrar um caso real onde eliminamos
+15h/semana de trabalho administrativo?</span></div>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h4>Parcerias com Contabilidades</h4>
+                <p>Contadores sabem EXATAMENTE quais clientes gastam mais com processos manuais. Eles veem as folhas de pagamento, as horas extras, os custos operacionais. <strong>Uma parceria com um escritorio de contabilidade e uma maquina de indicacoes qualificadas.</strong> O contador indica, voce automatiza, todo mundo ganha.</p>
+            </div>
+
+            <div class="code-block"><span class="comment">// Mensagem para escritorio de contabilidade</span>
+
+<span class="string">Oi [Nome], trabalho com automacao de processos
+para empresas — agentes de IA que executam
+cobranças, relatorios, gestao de documentos,
+tudo automatico.
+
+Voces atendem dezenas de empresas e provavelmente
+sabem <span class="highlight">quais delas gastam demais com processos
+manuais que poderiam ser automatizados</span>.
+
+Minha proposta: voces indicam clientes com essa dor,
+eu resolvo o problema, e voces ganham uma comissao
+recorrente por cada indicacao.
+
+Sem custo pra voces, sem risco pro cliente.
+Posso te explicar o modelo em 10 minutos?</span></div>
+
+            <h2>Resumo: Onde Procurar e O Que Esperar</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr><th>Estrategia</th><th>Sinal de Dor</th><th>Tempo</th><th>Potencial</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>E-commerces crescendo</strong></td><td>Erros operacionais, atrasos, equipe sobrecarregada</td><td>1-3 semanas</td><td><span class="tag-yes">Alto</span></td></tr>
+                    <tr><td><strong>Clinicas lotadas</strong></td><td>No-shows, agenda caotica, lembretes manuais</td><td>2-3 semanas</td><td><span class="tag-yes">Alto</span></td></tr>
+                    <tr><td><strong>Imobiliarias</strong></td><td>Leads sem follow-up, cobranças atrasadas</td><td>2-4 semanas</td><td><span class="tag-yes">Alto</span></td></tr>
+                    <tr><td><strong>Servicos B2B</strong></td><td>Relatorios manuais, horas administrativas altas</td><td>2-4 semanas</td><td><span class="tag-partial">Medio-Alto</span></td></tr>
+                    <tr><td><strong>Parcerias contabilidades</strong></td><td>Eles sabem quem tem a dor</td><td>3-4 semanas</td><td><span class="tag-yes">Alto (volume)</span></td></tr>
+                </tbody>
+            </table>
+
+            <div class="success-box">
+                <div class="box-title">Meta realista</div>
+                <p><strong>Primeiro cliente em 2-4 semanas.</strong> Mande mensagens essa semana. Nao precisa de 50 leads — precisa de 5 conversas certas. Com 1 cliente voce tem: receita, case real, confianca e momentum para o proximo.</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">O erro mais comum</div>
+                <p>Ficar estudando mais um curso, mais uma ferramenta, mais um framework — em vez de <strong>mandar a primeira mensagem</strong>. Nenhum estudo substitui o primeiro cliente real. Comece imperfeito, melhore rapido.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m9a4-roi.html" class="nav-btn">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">ROI: Horas Eliminadas, Erros Evitados, Velocidade</span>
+                </a>
+                <a href="m9a6-suporte.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Recorrencia: Monitorar + Adicionar + Otimizar</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 9 — Monetizacao</h3>
+                <div class="progress-bar"><div class="progress-fill" style="width: 83%"></div></div>
+                <ul class="lesson-list">
+                    <li><a href="m9a1-mercado.html"><span class="lesson-num">1</span> O Mercado de Agentes de IA</a></li>
+                    <li><a href="m9a2-empacotando.html"><span class="lesson-num">2</span> Empacotando seu Servico</a></li>
+                    <li><a href="m9a3-precificacao.html"><span class="lesson-num">3</span> Precificacao: Quanto Cobrar</a></li>
+                    <li><a href="m9a4-roi.html"><span class="lesson-num">4</span> ROI: Provando o Valor</a></li>
+                    <li><a href="m9a5-primeiros-clientes.html" class="active"><span class="lesson-num">5</span> Conquistando Primeiros Clientes</a></li>
+                    <li><a href="m9a6-suporte.html"><span class="lesson-num">6</span> Recorrencia e Processos</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

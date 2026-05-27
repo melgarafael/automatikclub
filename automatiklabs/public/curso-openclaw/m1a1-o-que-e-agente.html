@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Que é um Agente de IA (e o que NÃO é) — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .infographic { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 40px; margin: 32px 0; text-align: center; }
+        .infographic h3 { margin-bottom: 32px; }
+        .infographic-core { display: inline-flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, var(--cta), #ff6b81); font-size: 18px; font-weight: 800; margin-bottom: 32px; box-shadow: 0 0 60px rgba(233,69,96,0.3); }
+        .infographic-pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .pillar { background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); padding: 20px 16px; }
+        .pillar .pillar-icon { font-size: 24px; margin-bottom: 8px; }
+        .pillar h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+        .pillar p { font-size: 12px; color: var(--text-dim); margin: 0; }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .infographic-pillars { grid-template-columns: 1fr 1fr; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .infographic-pillars { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 1</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 1</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 1 &middot; Aula 1</div>
+            <h1>O Que e um Agente de IA (e o que NAO e)</h1>
+            <div class="lesson-meta">
+                <span>15 min de leitura</span>
+                <span>Nivel: Iniciante</span>
+            </div>
+
+            <p>Antes de colocar a mao na massa, voce precisa entender <strong>exatamente</strong> o que e um Agente de IA — e, tao importante quanto, o que ele <strong>nao</strong> e. Essa clareza vai evitar frustracao e garantir que voce construa algo realmente poderoso.</p>
+
+            <h2>O Que a Maioria das Pessoas Pensa que e IA</h2>
+
+            <p>Quando as pessoas ouvem "inteligencia artificial", normalmente pensam em uma dessas tres coisas:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Chatbot</h4>
+                <p>Um campo de texto onde voce digita uma pergunta e recebe uma resposta. <strong>NAO executa nada. So conversa.</strong> Pense no ChatGPT basico: voce pergunta, ele responde. Sem acoes reais, sem integracoes, sem impacto no negocio.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Automacao (Zapier/Make)</h4>
+                <p>Um fluxo rigido do tipo "SE isso acontecer, ENTAO faca aquilo". Executa tarefas simples mas <strong>NAO pensa, NAO decide, NAO se adapta</strong>. Quebra quando o cenario muda.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Agente Executor</h4>
+                <p>Uma entidade autonoma que <strong>ENTENDE contexto, TOMA decisoes, EXECUTA processos completos e APRENDE com o resultado</strong>. Nao espera instrucoes — ele <strong>DESCOBRE</strong> o proximo passo.</p>
+            </div>
+
+            <h2>Tabela Comparativa</h2>
+
+            <p>Veja as diferencas lado a lado:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Caracteristica</th>
+                        <th>Chatbot</th>
+                        <th>Automacao</th>
+                        <th>Agente Executor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Executa processos</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-partial">Sim (rigido)</span></td>
+                        <td><span class="tag-yes">Sim (flexivel)</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Toma decisoes</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-yes">Sim</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Se adapta a excecoes</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-yes">Sim</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memoria operacional</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-yes">Sim</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integra com sistemas</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-partial">Pre-definido</span></td>
+                        <td><span class="tag-yes">Dinamico</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Autonomia</strong></td>
+                        <td><span class="tag-no">Zero</span></td>
+                        <td><span class="tag-partial">Parcial</span></td>
+                        <td><span class="tag-yes">Alta</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monitora e age proativamente</strong></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-no">Nao</span></td>
+                        <td><span class="tag-yes">Sim</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Anatomia de um Agente de IA</h2>
+
+            <p>Um agente de verdade e composto por <strong>4 pilares fundamentais</strong>. Pense neles como os orgaos vitais do seu agente:</p>
+
+            <div class="infographic">
+                <div class="infographic-core">AGENTE</div>
+                <div class="infographic-pillars">
+                    <div class="pillar">
+                        <div class="pillar-icon">⚡</div>
+                        <h4>Execucao Autonoma</h4>
+                        <p>Executa processos completos sem intervencao: gera relatorios, processa cobrancas, organiza agendas</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">🧠</div>
+                        <h4>Memoria Operacional</h4>
+                        <p>Lembra estado dos processos, historico de execucoes e contexto do negocio</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">🛠️</div>
+                        <h4>Skills de Processo</h4>
+                        <p>Capacidades especificas: monitorar estoque, gerar pedidos, processar pagamentos, enviar notificacoes</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">🔗</div>
+                        <h4>Integracoes com Sistemas</h4>
+                        <p>Conecta com ERPs, planilhas, APIs, bancos de dados, calendarios e mais</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Exemplo Pratico: Execucao Real</h2>
+
+            <p>Imagine o seguinte cenario no seu e-commerce:</p>
+
+            <div class="step-card">
+                <div class="step-number">📦</div>
+                <h4>O estoque do Produto X cai abaixo de 10 unidades</h4>
+                <p>O agente monitora o estoque em tempo real. Quando detecta o nivel critico, ele automaticamente gera um pedido ao fornecedor, envia o pedido por email, atualiza a planilha de compras e notifica o gerente no Telegram: <strong>"Pedido #1234 gerado — 50 unidades de Produto X — entrega prevista em 3 dias."</strong></p>
+            </div>
+
+            <p>Veja como cada "tecnologia" lidaria com isso:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Chatbot:</h4>
+                <p>Nao faria nada. Chatbot so responde quando alguem pergunta. Ninguem perguntou, entao o estoque acaba e voce perde vendas.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Automacao:</h4>
+                <p>Enviaria um email padrao ao fornecedor. Se o fornecedor mudou o formato do pedido, o email do contato ou a tabela de precos — <strong>quebra</strong>. Sem fallback, sem adaptacao.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Agente Executor:</h4>
+                <p>Detecta o nivel critico, verifica qual fornecedor tem melhor preco atual, gera o pedido no formato correto, envia por email, atualiza a planilha, notifica o gerente. Se o fornecedor principal nao responde em 24h, <strong>busca alternativa automaticamente</strong> e avisa o gerente da mudanca.</p>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">Conceito-chave</div>
+                <p>Um agente de IA nao e "uma IA que responde perguntas". E um <strong>operador digital que EXECUTA processos de negocio</strong> — monitora dados, toma decisoes, executa acoes e se adapta quando algo sai do plano. E isso que voce vai aprender a construir neste curso.</p>
+            </div>
+
+            <h2>O Que Voce NAO Vai Construir</h2>
+
+            <p>Para ficar claro desde o inicio:</p>
+
+            <ul>
+                <li><strong>NAO</strong> e um chatbot que so responde perguntas</li>
+                <li><strong>NAO</strong> e uma automacao rigida que quebra com qualquer excecao</li>
+                <li><strong>NAO</strong> e um brinquedo tech — e um operador de negocio real</li>
+                <li><strong>NAO</strong> precisa de programacao — mas o resultado e de nivel profissional</li>
+            </ul>
+
+            <div class="warning-box">
+                <div class="box-title">Atencao</div>
+                <p>Se voce veio procurando "como fazer um chatbot simples", este curso vai te entregar <strong>muito mais</strong> do que isso. Voce vai construir um agente que <strong>executa processos reais</strong> e transforma a operacao de um negocio.</p>
+            </div>
+
+            <div class="footer-nav">
+                <div></div>
+                <a href="m1a2-o-que-vai-construir.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">O Que Voce Vai Construir Neste Curso</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 1 — Fundamentos</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m1a1-o-que-e-agente.html" class="active"><span class="lesson-num">1</span> O Que e um Agente de IA</a></li>
+                    <li><a href="m1a2-o-que-vai-construir.html"><span class="lesson-num">2</span> O Que Voce Vai Construir</a></li>
+                    <li><a href="m1a3-pre-requisitos.html"><span class="lesson-num">3</span> Pre-requisitos</a></li>
+                    <li><a href="m1a4-cases-reais.html"><span class="lesson-num">4</span> Cases Reais</a></li>
+                    <li><a href="m1a5-mapa-do-curso.html"><span class="lesson-num">5</span> Mapa do Curso</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

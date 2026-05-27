@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto: Criando seu 2o Agente — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .infographic { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 40px; margin: 32px 0; text-align: center; }
+        .infographic h3 { margin-bottom: 32px; }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; white-space: pre; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 8</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 5</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 8 &middot; Aula 5</div>
+            <h1>Projeto: Criando seu 2o Agente</h1>
+            <div class="lesson-meta">
+                <span>25 min de leitura</span>
+                <span>Nivel: Avancado</span>
+            </div>
+
+            <p>Hora de colocar a mao na massa. Nesta aula, vamos criar um <strong>Agente Financeiro</strong> como subagent executor do seu agente principal. Ao final, voce tera um sistema multiagente funcionando com delegacao automatica de tarefas operacionais.</p>
+
+            <h2>Passo 1: Criar Estrutura</h2>
+
+            <p>Primeiro, vamos criar a estrutura de pastas para o agente financeiro:</p>
+
+            <div class="code-block"><span class="comment"># Navegar ate o projeto</span>
+<span class="keyword">cd</span> ~/openclaw
+
+<span class="comment"># Criar pasta do agente financeiro</span>
+<span class="keyword">mkdir</span> -p agents/financeiro
+
+<span class="comment"># Criar arquivos base</span>
+<span class="keyword">touch</span> agents/financeiro/soul.md
+<span class="keyword">touch</span> agents/financeiro/agents.md</div>
+
+            <h2>Passo 2: Definir Soul</h2>
+
+            <p>O Soul do agente financeiro define sua funcao operacional e seus limites:</p>
+
+            <div class="code-block"><span class="comment"># agents/financeiro/soul.md</span>
+
+<span class="keyword">Voce e o operador financeiro.</span>
+
+<span class="string">## Funcao</span>
+- Processar cobranças e faturas
+- Gerar relatorios financeiros (diarios, semanais, mensais)
+- Monitorar inadimplencia e fluxo de caixa
+- Executar conciliacao bancaria
+
+<span class="string">## Modo de Operacao</span>
+- Preciso e objetivo — numeros nao mentem
+- Sempre inclua periodo de referencia nos relatorios
+- Compare com periodo anterior automaticamente
+- Destaque anomalias e valores fora do padrao
+
+<span class="string">## Limites</span>
+- NUNCA processe transacoes acima de R$50k sem aprovacao humana
+- NAO acesse sistemas fora da area financeira
+- Se a tarefa nao for financeira, devolva ao orquestrador
+- Se nao conseguir executar apos 3 tentativas, escale para humano</div>
+
+            <h2>Passo 3: Definir Agents.md</h2>
+
+            <p>O Agents.md do financeiro define processos operacionais e regras de execucao:</p>
+
+            <div class="code-block"><span class="comment"># agents/financeiro/agents.md</span>
+
+<span class="keyword">## Agente Financeiro</span>
+
+<span class="string">Papel:</span> Executar processos financeiros autonomamente
+<span class="string">Escopo:</span> Cobranças, relatorios, fluxo de caixa, conciliacao
+
+<span class="string">Processos:</span>
+1. Receber tarefa do orquestrador com parametros
+2. Validar se a tarefa esta dentro do escopo financeiro
+3. Executar usando os sistemas autorizados (ERP, gateway)
+4. Retornar resultado com status (sucesso/falha/escalado)
+5. Registrar execucao nos logs
+
+<span class="string">Escalacao:</span>
+- Transacoes > R$50k sem aprovacao → humano
+- Tarefas operacionais → Agente Operacional
+- Tarefas fora do escopo → Orquestrador</div>
+
+            <h2>Passo 4: Criar uma Skill</h2>
+
+            <p>Crie a skill <code>gerar_relatorio</code> para o agente financeiro:</p>
+
+            <div class="code-block"><span class="comment">// skills/gerar_relatorio.json</span>
+{
+  <span class="string">"name"</span>: <span class="string">"gerar_relatorio"</span>,
+  <span class="string">"description"</span>: <span class="string">"Gera relatorio financeiro do periodo solicitado"</span>,
+  <span class="string">"parameters"</span>: {
+    <span class="string">"periodo"</span>: <span class="string">"string (ex: 2026-05)"</span>,
+    <span class="string">"tipo"</span>: <span class="string">"vendas | despesas | fluxo_caixa | inadimplencia"</span>,
+    <span class="string">"formato"</span>: <span class="string">"pdf | csv | json"</span>
+  },
+  <span class="string">"systems"</span>: [<span class="string">"erp"</span>, <span class="string">"banco_dados_financeiro"</span>]
+}</div>
+
+            <h2>Passo 5: Registrar no Orquestrador</h2>
+
+            <p>Registre o agente financeiro com seus triggers operacionais:</p>
+
+            <div class="code-block"><span class="comment">// config/triggers.json</span>
+{
+  <span class="string">"financeiro"</span>: {
+    <span class="string">"keywords"</span>: [
+      <span class="string">"cobranca"</span>, <span class="string">"fatura"</span>, <span class="string">"pagamento"</span>,
+      <span class="string">"relatorio financeiro"</span>, <span class="string">"fluxo de caixa"</span>,
+      <span class="string">"inadimplencia"</span>, <span class="string">"conciliacao"</span>,
+      <span class="string">"receita"</span>, <span class="string">"despesa"</span>, <span class="string">"saldo"</span>
+    ],
+    <span class="string">"priority"</span>: <span class="keyword">1</span>,
+    <span class="string">"fallback"</span>: <span class="string">"main-agent"</span>
+  }
+}</div>
+
+            <h2>Passo 6: Testar Delegacao</h2>
+
+            <p>Envie estas tarefas de teste e confira se cada uma vai para o agente correto:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Teste: "gerar relatorio de vendas do mes"</h4>
+                <p><strong>Esperado:</strong> deve ir para o <span class="tag-yes">Agente Financeiro</span>. Contem "relatorio" e "vendas" — gatilhos financeiros.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Teste: "verificar estoque do produto X"</h4>
+                <p><strong>Esperado:</strong> deve ir para o <span class="tag-yes">Agente Operacional</span>. Contem "estoque" e "produto" — gatilhos operacionais.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Teste: "qual o status da tarefa #123?"</h4>
+                <p><strong>Esperado:</strong> deve ficar no <span class="tag-partial">Orquestrador</span>. Nenhum gatilho especifico ativado — tarefa generica de status.</p>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">Validacao</div>
+                <p>Se os 3 testes passaram, <strong>seu sistema multiagente operacional esta funcionando!</strong> O orquestrador classifica corretamente e delega para o agente executor certo baseado no tipo de tarefa.</p>
+            </div>
+
+            <h2>Passo 7: Verificar Logs de Execucao</h2>
+
+            <p>Confirme que as execucoes estao registradas nos logs:</p>
+
+            <div class="code-block"><span class="comment"># Ver logs do agente financeiro</span>
+<span class="keyword">npm run</span> logs --agent=financeiro
+
+<span class="comment"># Saida esperada:</span>
+<span class="string">[2026-05-25 10:32:15] TASK_RECEIVED orchestrator → financeiro</span>
+<span class="string">[2026-05-25 10:32:15] TASK: {type: "gerar_relatorio", periodo: "2026-05"}</span>
+<span class="string">[2026-05-25 10:32:18] EXECUTING: consultando ERP...</span>
+<span class="string">[2026-05-25 10:32:22] COMPLETED: relatorio gerado com sucesso</span>
+<span class="string">[2026-05-25 10:32:22] RESULT: {status: "success", output: "relatorio_vendas_2026-05.pdf"}</span></div>
+
+            <h2>Checklist da Aula</h2>
+
+            <ul class="checklist">
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Estrutura criada</strong> — pasta agents/financeiro com soul.md e agents.md</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Soul definido</strong> — funcao operacional, modo de operacao e limites do agente financeiro</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Agents.md escrito</strong> — processos de execucao e regras de escalacao</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Skill criada</strong> — gerar_relatorio configurado com parametros</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Triggers configurados</strong> — palavras-chave financeiras no config/triggers.json</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>3 testes passando</strong> — financeiro, operacional e orquestrador corretos</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Logs verificados</strong> — execucoes de tarefas aparecendo com status correto</span>
+                </li>
+            </ul>
+
+            <div class="footer-nav">
+                <a href="m8a4-agents-md-multi.html" class="nav-btn">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">Agents.md para Multiagentes</span>
+                </a>
+                <a href="m8a6-mission-control.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Mission Control: Painel de Controle</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 8 — Multiagentes</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 71%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m8a1-quando-multiagentes.html"><span class="lesson-num">1</span> Quando Criar Multiplos Agentes</a></li>
+                    <li><a href="m8a2-subagents.html"><span class="lesson-num">2</span> Subagents: Delegando Tarefas</a></li>
+                    <li><a href="m8a3-comunicacao.html"><span class="lesson-num">3</span> Comunicacao Entre Agentes</a></li>
+                    <li><a href="m8a4-agents-md-multi.html"><span class="lesson-num">4</span> Agents.md para Multiagentes</a></li>
+                    <li><a href="m8a5-projeto-pratico.html" class="active"><span class="lesson-num">5</span> Projeto: Criando seu 2o Agente</a></li>
+                    <li><a href="m8a6-mission-control.html"><span class="lesson-num">6</span> Mission Control: Painel de Controle</a></li>
+                    <li><a href="m8a7-mission-control-pratica.html"><span class="lesson-num">7</span> Mission Control na Pratica</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs
+    </footer>
+
+</body>
+</html>

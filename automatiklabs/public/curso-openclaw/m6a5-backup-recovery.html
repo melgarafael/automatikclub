@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup e Recovery — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Módulo 6</a>
+                <span class="sep">/</span>
+                <span class="current">Backup e Recovery</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <main class="content">
+            <div class="lesson-badge">Módulo 6 — Aula 5</div>
+            <h1>Backup e Recovery</h1>
+            <div class="lesson-meta">
+                <span>20 min de leitura</span>
+                <span>Nível: Iniciante</span>
+            </div>
+
+            <h2>Por que backup importa?</h2>
+            <p>Seu agente funciona graças a um conjunto de configurações, prompts, integrações e dados. Se algo quebra — uma atualização errada, um hack, um problema no servidor — você precisa <strong>voltar ao estado funcional rapidamente</strong>.</p>
+
+            <div class="warning-box">
+                <div class="box-title">&#9888; Cenário real</div>
+                <p>Você edita o system prompt do agente, algo dá errado, e ele começa a responder de forma estranha. Sem backup, você tenta reescrever o prompt de memória — e o resultado nunca é igual ao original.</p>
+            </div>
+
+            <h2>O que fazer backup</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128196;</div>
+                    <h4>System Prompts</h4>
+                    <p>Todos os prompts e instruções do agente</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#9881;</div>
+                    <h4>Configurações</h4>
+                    <p>Settings do OpenClaw, integrações, webhooks</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128274;</div>
+                    <h4>Credenciais</h4>
+                    <p>Lista de quais keys estão em uso (não as keys em si)</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128450;</div>
+                    <h4>Dados Operacionais</h4>
+                    <p>Workflows, SOPs, e dados de processos</p>
+                </div>
+            </div>
+
+            <h2>Rotina de backup recomendada</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Frequência</th>
+                        <th>O que</th>
+                        <th>Como</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Antes de cada mudança</strong></td>
+                        <td>System prompt atual</td>
+                        <td>Copie para arquivo .txt com data</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semanal</strong></td>
+                        <td>Configurações completas</td>
+                        <td>Export do OpenClaw + screenshot</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semanal</strong></td>
+                        <td>Workflows e SOPs</td>
+                        <td>Download dos documentos operacionais</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mensal</strong></td>
+                        <td>Snapshot do servidor</td>
+                        <td>HostGator cPanel ou VPS snapshot</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Criando snapshot na HostGator</h2>
+            <p>Um snapshot é uma "foto" completa do seu servidor em um momento específico. Se algo der errado, você restaura o snapshot e volta exatamente ao estado anterior.</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Acesse o cPanel da HostGator</h4>
+                <p>Faça login no painel de controle da sua hospedagem. O endereço geralmente é <code>seudominio.com/cpanel</code> ou pelo painel da HostGator.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Localize "Backup" ou "Backup Wizard"</h4>
+                <p>Na seção <strong>"Arquivos"</strong> do cPanel, clique em <strong>"Assistente de Backup"</strong> (ou "Backup Wizard").</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Gere o backup completo</h4>
+                <p>Selecione <strong>"Backup Completo"</strong> (Full Backup). Escolha o destino: <strong>Diretório Inicial</strong> para salvar no próprio servidor, ou insira um e-mail para receber notificação quando o backup estiver pronto.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Faça download do arquivo</h4>
+                <p>Quando o backup estiver pronto, baixe o arquivo <code>.tar.gz</code> para seu computador. Guarde em local seguro — HD externo ou Google Drive.</p>
+            </div>
+
+            <div class="tip-box">
+                <div class="box-title">&#128161; VPS (servidor virtual)</div>
+                <p>Se você usa VPS ao invés de hospedagem compartilhada, o snapshot é feito pelo painel do provedor (ex: DigitalOcean, Vultr, AWS). O processo é mais simples: geralmente um botão "Create Snapshot" no painel.</p>
+            </div>
+
+            <h2>Como restaurar um backup</h2>
+
+            <h3>Restauração no cPanel (HostGator)</h3>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Acesse o Backup Wizard</h4>
+                <p>No cPanel, vá em <strong>"Assistente de Backup"</strong> e selecione <strong>"Restaurar"</strong>.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Escolha o tipo de restauração</h4>
+                <p>Selecione o que deseja restaurar: <strong>Diretório Inicial</strong> (arquivos), <strong>Bancos de Dados MySQL</strong>, ou ambos.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Faça upload do backup</h4>
+                <p>Selecione o arquivo <code>.tar.gz</code> do backup e clique em <strong>"Restaurar"</strong>. Aguarde — pode levar alguns minutos dependendo do tamanho.</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">&#9888; Cuidado</div>
+                <p>A restauração <strong>sobrescreve</strong> os dados atuais. Se você fez mudanças após o backup que deseja manter, faça um novo backup antes de restaurar o antigo.</p>
+            </div>
+
+            <h2>Backup local do system prompt</h2>
+            <p>A forma mais simples e importante de backup: salvar seus prompts como arquivos de texto com data.</p>
+
+            <div class="code-block">
+<span class="comment"># Estrutura de pasta recomendada</span>
+backups/
+  prompts/
+    agente-financeiro-2026-05-01.txt
+    agente-financeiro-2026-05-15.txt
+    agente-vendas-2026-05-01.txt
+  configs/
+    openclaw-export-2026-05-01.json
+    integrações-2026-05-01.txt
+  operacional/
+    workflow-cobranca-2026-05-01.pdf
+    sop-financeiro-2026-05-01.pdf
+            </div>
+
+            <h2>Checklist de backup</h2>
+
+            <ul class="checklist">
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Pasta de backups criada</strong> — Estrutura organizada por tipo e data</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>System prompt salvo</strong> — Cópia atual em arquivo .txt</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Configurações exportadas</strong> — Export do OpenClaw salvo</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Snapshot do servidor</strong> — Pelo menos um snapshot recente</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Backup off-site</strong> — Cópia em local diferente do servidor (HD, nuvem)</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Teste de restauração</strong> — Já testou restaurar pelo menos uma vez</span>
+                </li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">&#10003; Módulo completo!</div>
+                <p>Parabéns! Você completou o módulo de Segurança e Blindagem. Seu agente agora tem senhas gerenciadas, credenciais protegidas, defesas contra injection, permissões e escopo definidos, e rotina de backup. Está pronto para o Módulo 7: Integrações.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m6a4-canais-publicos.html" class="nav-btn prev">
+                    <span class="nav-label">Anterior</span>
+                    <span class="nav-title">Permissões e Escopo</span>
+                </a>
+                <a href="m7a1-visao-geral.html" class="nav-btn next">
+                    <span class="nav-label">Próximo Módulo</span>
+                    <span class="nav-title">Integrações — Visão Geral</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Módulo 6 — Segurança</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m6a1-1password.html"><span class="lesson-num">1</span> 1Password</a></li>
+                    <li><a href="m6a2-apis-seguras.html"><span class="lesson-num">2</span> APIs Seguras</a></li>
+                    <li><a href="m6a3-prompt-injection.html"><span class="lesson-num">3</span> Prompt Injection</a></li>
+                    <li><a href="m6a4-canais-publicos.html"><span class="lesson-num">4</span> Permissões e Escopo</a></li>
+                    <li><a href="m6a5-backup-recovery.html" class="active"><span class="lesson-num">5</span> Backup e Recovery</a></li>
+                </ul>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Few-Shot e Exemplos: Ensinando Pelo Exemplo — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list a.completed { color: var(--success); }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .lesson-list a.completed .lesson-num { background: var(--success); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 4</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 3</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 4 &middot; Aula 3</div>
+            <h1>Few-Shot e Exemplos: Ensinando Pelo Exemplo</h1>
+            <div class="lesson-meta">
+                <span>15 min de leitura</span>
+                <span>Nivel: Intermediario</span>
+            </div>
+
+            <p>Imagine que voce contratou um operador novo para o seu negocio. Voce tem duas opcoes: entregar um manual de 50 paginas e torcer para ele ler tudo, ou sentar do lado dele e mostrar como executar cada processo. <strong>Qual das duas funciona melhor?</strong></p>
+
+            <p>Com agentes executores e a mesma coisa. Voce pode escrever processos detalhados (e deve), mas nada ensina melhor do que <strong>mostrar exemplos concretos de execucao correta vs execucao errada</strong>. Isso se chama <strong>few-shot learning</strong> — ensinar como executar processos pelo exemplo.</p>
+
+            <h2>O Que e Few-Shot Learning para Agentes Executores</h2>
+
+            <p>Few-shot learning e uma tecnica onde voce mostra para a IA exemplos de como ela deve <strong>executar processos</strong> antes dela receber a tarefa real. A IA analisa esses exemplos, identifica o padrao de execucao, e replica.</p>
+
+            <p>E como mostrar para o operador novo: "quando gerar um relatorio, ele deve sair assim. Quando cobrar um inadimplente, a mensagem deve ter esses elementos. Quando o estoque estiver baixo, o pedido deve conter essas informacoes." Depois de ver 3-5 exemplos, ele ja entende o padrao.</p>
+
+            <p>Existem tres niveis de exemplos que voce pode usar:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Zero-Shot — Sem Exemplos</h4>
+                <p>Voce da apenas instrucoes textuais, sem nenhum exemplo de execucao. A IA interpreta como quiser. E o jeito mais arriscado — funciona para tarefas triviais, mas falha quando a qualidade do output importa (relatorios, cobrancas, pedidos).</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>One-Shot — Um Unico Exemplo</h4>
+                <p>Voce da um unico exemplo de processo executado corretamente. Ja melhora bastante o resultado, mas a IA pode nao generalizar bem para processos diferentes do exemplo que voce deu. E um bom comeco, mas nao e suficiente para um agente em producao.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Few-Shot — 3 a 5 Exemplos</h4>
+                <p>Voce da multiplos exemplos cobrindo processos diferentes: relatorios, cobrancas, monitoramento, escalacao. A IA identifica o padrao geral de execucao e aplica em situacoes novas. <strong>Este e o nivel profissional.</strong></p>
+            </div>
+
+            <h2>Exemplo 1 — Geracao de Relatorio</h2>
+
+            <h3>ANTES: Sem exemplos (zero-shot)</h3>
+
+            <p>O agente recebeu instrucoes de "gerar relatorio diario", mas sem um exemplo concreto do formato. Veja o que acontece:</p>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Gerar relatorio diario da clinica
+
+<span class="function">Agente gerou:</span> Hoje foi um dia normal na clinica.
+Tivemos alguns pacientes e algumas consultas foram
+canceladas. No geral, as coisas foram bem.
+O faturamento pareceu razoavel.
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">O que deu errado</div>
+                <p>Relatorio generico, sem metricas, sem numeros, sem comparacoes. "Alguns pacientes" e "pareceu razoavel" nao sao dados — sao impressoes vagas. Impossivel tomar decisao com esse relatorio.</p>
+            </div>
+
+            <h3>DEPOIS: Com exemplo (few-shot)</h3>
+
+            <p>Agora o mesmo agente, mas com um exemplo no prompt mostrando o formato correto de relatorio:</p>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Gerar relatorio diario da clinica
+
+<span class="function">Agente gerou:</span>
+RELATORIO DIARIO — Clinica Sorriso — 24/05/2026
+
+<span class="string">Consultas:</span> 18 realizadas | 3 canceladas | 2 no-shows
+<span class="string">Taxa de ocupacao:</span> 78% (meta: 85%) — ABAIXO da meta
+<span class="string">Faturamento:</span> R$ 4.230 (media mensal: R$ 3.800) — ACIMA
+<span class="string">No-shows sem contato previo:</span> 1 (paciente Carlos Silva)
+
+<span class="keyword">Acoes recomendadas:</span>
+- Contactar Carlos Silva para remarcacao
+- Abrir 2 horarios extras na quarta para compensar ocupacao
+- Revisar confirmacoes do Dr. Carlos (3 dos 5 cancelamentos)
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">O que mudou</div>
+                <p>Relatorio estruturado com KPIs especificos, comparacoes com metas, identificacao de problemas e acoes recomendadas. O gerente olha esse relatorio e sabe exatamente o que fazer.</p>
+            </div>
+
+            <h2>Exemplo 2 — Cobranca de Inadimplente</h2>
+
+            <h3>ANTES: Sem exemplos</h3>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Cobrar paciente com pagamento atrasado
+
+<span class="function">Agente gerou:</span> Ola! Verificamos que voce tem um pagamento
+pendente conosco. Por favor, regularize sua situacao
+o mais rapido possivel. Obrigado.
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">O que deu errado</div>
+                <p>Mensagem generica sem valor especifico, sem data de vencimento, sem link de pagamento e sem consequencia clara. O paciente nao sabe quanto deve, desde quando, nem como pagar.</p>
+            </div>
+
+            <h3>DEPOIS: Com exemplo</h3>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Cobrar paciente com pagamento atrasado
+
+<span class="function">Agente gerou:</span> Ola, Maria! Identificamos que o pagamento
+referente ao clareamento realizado em 10/05 no valor
+de R$ 350,00 esta com vencimento em atraso (15/05).
+
+Segue o link para pagamento via Pix: [link]
+Opcao de parcelamento: 2x de R$ 175 no cartao.
+
+<span class="string">Prazos de regularizacao:</span>
+- Ate 30/05: sem acrescimo
+- Apos 30/05: multa de 2% + juros de 1% ao mes
+- Apos 60 dias: encaminhamento para departamento juridico
+
+Precisa de ajuda com o pagamento? Posso gerar um boleto
+ou verificar outras opcoes.
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">O que mudou</div>
+                <p>Mensagem personalizada com nome, servico, valor exato, data de vencimento, link de pagamento, opcoes de parcelamento e cronograma de escalacao. O paciente sabe exatamente o que deve e como resolver.</p>
+            </div>
+
+            <h2>Exemplo 3 — Monitoramento de Estoque</h2>
+
+            <h3>ANTES: Sem exemplos</h3>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Monitorar estoque e alertar quando baixo
+
+<span class="function">Agente gerou:</span> Alerta: o estoque de alguns produtos
+esta ficando baixo. Recomendo verificar e fazer
+pedidos em breve.
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">O que deu errado</div>
+                <p>Alerta vago — nao diz QUAL produto, QUANTAS unidades restam, qual o minimo aceitavel, nem gera o pedido. O gerente precisa ir verificar tudo manualmente. O agente nao executou nada.</p>
+            </div>
+
+            <h3>DEPOIS: Com exemplo</h3>
+
+            <div class="code-block">
+<span class="keyword">Processo:</span> Monitorar estoque e alertar quando baixo
+
+<span class="function">Agente gerou:</span>
+ALERTA DE ESTOQUE CRITICO — 24/05/2026
+
+<span class="keyword">Produto:</span> Resina Composta A2 (Ref: RC-A2-50)
+<span class="keyword">Quantidade atual:</span> 7 unidades
+<span class="keyword">Minimo configurado:</span> 10 unidades
+<span class="keyword">Consumo medio:</span> 5 unidades/semana
+<span class="keyword">Previsao de esgotamento:</span> 9 dias
+
+<span class="string">ACAO EXECUTADA:</span>
+- Pedido #2847 gerado para Fornecedor DentalMax
+- 30 unidades | R$ 1.200,00 | Prazo entrega: 3-5 dias uteis
+- Notificacao enviada para gerente via Telegram
+
+<span class="keyword">Status:</span> Aguardando confirmacao do fornecedor
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">O que mudou</div>
+                <p>Alerta especifico com produto, quantidade, threshold, previsao de esgotamento, E o pedido ja gerado automaticamente com fornecedor correto, quantidade e valor. O agente nao so alertou — ele EXECUTOU o processo completo.</p>
+            </div>
+
+            <h2>Como Formatar Exemplos de Processo no Prompt</h2>
+
+            <p>A estrutura ideal para colocar exemplos de execucao dentro do seu prompt operacional:</p>
+
+            <div class="code-block">
+<span class="comment"># EXEMPLOS DE EXECUCAO</span>
+
+<span class="comment">## Exemplo 1 — Relatorio Diario</span>
+<span class="keyword">Trigger:</span> Todo dia as 8h
+<span class="function">Output esperado:</span>
+RELATORIO DIARIO — [data]
+Consultas: [X realizadas] | [Y canceladas] | [Z no-shows]
+Taxa ocupacao: [%] (meta: 85%) — [ACIMA/ABAIXO]
+Acoes recomendadas: [lista]
+
+<span class="comment">## Exemplo 2 — Cobranca</span>
+<span class="keyword">Trigger:</span> Pagamento atrasado detectado
+<span class="function">Output esperado:</span>
+Ola [nome]! Pagamento de R$ [valor] ref. [servico]
+venceu em [data]. Link: [link]. Parcelamento: [opcoes].
+Prazo sem acrescimo: [data].
+
+<span class="comment">## Exemplo 3 — Alerta de Estoque</span>
+<span class="keyword">Trigger:</span> Produto abaixo do minimo
+<span class="function">Output esperado:</span>
+ALERTA: [produto] com [X] unidades (min: [Y]).
+Pedido #[num] gerado: [qtd] unidades para [fornecedor].
+Gerente notificado.
+
+<span class="comment">## Exemplo 4 — Confirmacao de Consulta</span>
+<span class="keyword">Trigger:</span> 24h antes da consulta
+<span class="function">Output esperado:</span>
+Ola [nome]! Lembrete: consulta com [dentista]
+amanha [data] as [hora]. Confirma? Responda SIM
+ou REMARCAR.
+
+<span class="comment">## Exemplo 5 — Escalacao para Humano</span>
+<span class="keyword">Trigger:</span> Processo falhou 2x
+<span class="function">Output esperado:</span>
+ESCALACAO: Processo [nome] falhou 2x consecutivas.
+Tentativa 1: [o que aconteceu]. Tentativa 2: [o que aconteceu].
+Processo pausado. Aguardando intervencao de [responsavel].
+            </div>
+
+            <p>Perceba que cada exemplo cobre um <strong>tipo diferente de processo</strong>. Isso e intencional — voce quer que o agente saiba executar com qualidade em todos os cenarios, nao so num tipo de tarefa.</p>
+
+            <h2>Zero-Shot vs One-Shot vs Few-Shot</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metodo</th>
+                        <th>Exemplos</th>
+                        <th>Precisao</th>
+                        <th>Esforco</th>
+                        <th>Recomendado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Zero-shot</strong></td>
+                        <td>Nenhum</td>
+                        <td><span class="tag-no">Baixa</span></td>
+                        <td>Minimo</td>
+                        <td>Processos triviais e genericos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>One-shot</strong></td>
+                        <td>1 exemplo</td>
+                        <td><span class="tag-partial">Media</span></td>
+                        <td>Baixo</td>
+                        <td>Prototipagem rapida de processos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Few-shot</strong></td>
+                        <td>3-5 exemplos</td>
+                        <td><span class="tag-yes">Alta</span></td>
+                        <td>Moderado</td>
+                        <td><span class="tag-yes">Agentes executores em producao</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Many-shot</strong></td>
+                        <td>10+ exemplos</td>
+                        <td><span class="tag-partial">Variavel</span></td>
+                        <td>Alto</td>
+                        <td>Raramente — pode engessar a execucao</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <div class="box-title">O Sweet Spot</div>
+                <p><strong>3 a 5 exemplos de processos e o ponto ideal.</strong> Menos que isso e o agente nao tem referencia de qualidade suficiente. Mais que isso e voce corre o risco de engessar o modelo — ele pode ficar preso nos formatos exatos e perder flexibilidade para situacoes novas.</p>
+            </div>
+
+            <h2>As 3 Regras de Ouro dos Exemplos de Processo</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">🎯</div>
+                    <h4>Cubra processos diferentes</h4>
+                    <p>Cada exemplo deve representar um TIPO diferente de processo que o agente vai executar.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🪞</div>
+                    <h4>O formato deve ser consistente</h4>
+                    <p>Todos os exemplos devem seguir a mesma estrutura. O agente copia o PADRAO de execucao, nao so o conteudo.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📏</div>
+                    <h4>Nivel de detalhe similar</h4>
+                    <p>Se seus exemplos tem KPIs e metricas, o agente vai gerar KPIs e metricas. Exemplos definem o padrao de qualidade.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Cuidado com o padrao de execucao</div>
+                <p>Os exemplos ensinam mais do que voce imagina. Se seus exemplos incluem metricas, o agente vai incluir metricas. Se seus exemplos sao vagos, a execucao sera vaga. Se um exemplo e detalhado e outro e superficial, o agente vai ficar inconsistente na qualidade. <strong>Exemplos de execucao devem ser consistentes entre si.</strong></p>
+            </div>
+
+            <h2>Erros Comuns ao Escrever Exemplos de Processo</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Erro</th>
+                        <th>Problema</th>
+                        <th>Solucao</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Exemplos todos do mesmo tipo</strong></td>
+                        <td>O agente so sabe executar um tipo de processo</td>
+                        <td>Varie: relatorio, cobranca, monitoramento, escalacao, alerta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos com niveis de detalhe diferentes</strong></td>
+                        <td>O agente alterna entre output detalhado e vago</td>
+                        <td>Mantenha o mesmo nivel de detalhe em TODOS os exemplos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos sem metricas</strong></td>
+                        <td>O agente gera outputs sem numeros nem KPIs</td>
+                        <td>Inclua numeros, porcentagens e comparacoes em cada exemplo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos genericos</strong></td>
+                        <td>O agente nao sabe lidar com os processos reais do negocio</td>
+                        <td>Use processos REAIS que seu negocio executa no dia a dia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos demais (10+)</strong></td>
+                        <td>O agente fica rigido e "engessado" no formato exato</td>
+                        <td>Use 3-5 exemplos bem escolhidos que cubram processos variados</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Exercicio Pratico</h2>
+
+            <p>Pegue os <strong>5 processos mais importantes</strong> que seu agente vai executar e escreva o output ideal para cada um. Esses sao os seus exemplos de few-shot. Para cada um, pergunte:</p>
+
+            <ul>
+                <li>O output tem <strong>dados especificos e mensuraveis</strong>?</li>
+                <li>O formato esta consistente com os outros exemplos?</li>
+                <li>Inclui <strong>acoes executadas ou recomendadas</strong>?</li>
+                <li>Tem o nivel de detalhe adequado (nem vago, nem excessivo)?</li>
+                <li>Cobre um tipo de processo <strong>diferente</strong> dos outros exemplos?</li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">Resultado esperado</div>
+                <p>Ao final desta aula, voce tem 3-5 exemplos de processos executados corretamente, formatados e prontos para incluir no prompt do seu agente. Na proxima aula, voce vai aprender a criar guardrails operacionais — os limites que impedem seu agente de cometer erros graves durante a execucao de processos.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m4a2-anatomia-system-prompt.html" class="nav-btn">
+                    <span class="nav-label">Aula anterior</span>
+                    <span class="nav-title">Anatomia do System Prompt</span>
+                </a>
+                <a href="m4a4-guardrails.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Guardrails</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 4 — Prompt Engineering</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m4a1-prompt-engineering-diferente.html" class="completed"><span class="lesson-num">1</span> Prompt Engineering Diferente</a></li>
+                    <li><a href="m4a2-anatomia-system-prompt.html" class="completed"><span class="lesson-num">2</span> Anatomia do System Prompt</a></li>
+                    <li><a href="m4a3-few-shot-exemplos.html" class="active"><span class="lesson-num">3</span> Few-Shot e Exemplos</a></li>
+                    <li><a href="m4a4-guardrails.html"><span class="lesson-num">4</span> Guardrails</a></li>
+                    <li><a href="m4a5-testando-iterando.html"><span class="lesson-num">5</span> Testando e Iterando</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

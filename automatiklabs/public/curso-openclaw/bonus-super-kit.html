@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Kit AutomatikLabs — Turbine Seu Agente em 5 Minutos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+        .content { min-width: 0; }
+
+        .hero-banner { background: linear-gradient(135deg, rgba(233,69,96,0.15), rgba(15,52,96,0.4)); border: 1px solid rgba(233,69,96,0.3); border-radius: var(--radius); padding: 48px 40px; text-align: center; margin-bottom: 48px; position: relative; overflow: hidden; }
+        .hero-banner::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(233,69,96,0.08), transparent 50%); }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.2); color: var(--cta); font-size: 12px; font-weight: 700; padding: 6px 16px; border-radius: 20px; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; position: relative; }
+        .hero-banner h1 { font-size: 42px; font-weight: 800; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 16px; position: relative; }
+        .hero-banner .subtitle { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 28px; position: relative; }
+        .hero-stats { display: flex; justify-content: center; gap: 40px; position: relative; }
+        .hero-stat { text-align: center; }
+        .hero-stat .stat-value { font-size: 32px; font-weight: 800; color: var(--cta); }
+        .hero-stat .stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 32px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; color: var(--text-muted); }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0 0 8px; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+
+        .chat-demo { background: #0D1117; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 24px; margin: 24px 0; font-family: 'Inter', sans-serif; font-size: 14px; }
+        .chat-msg { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+        .chat-msg:last-child { margin-bottom: 0; }
+        .chat-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .chat-avatar.user { background: rgba(66,153,225,0.2); }
+        .chat-avatar.bot { background: rgba(233,69,96,0.2); }
+        .chat-bubble { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px 16px; max-width: 85%; }
+        .chat-bubble.user { background: rgba(66,153,225,0.1); border: 1px solid rgba(66,153,225,0.15); }
+        .chat-bubble.bot { background: rgba(233,69,96,0.08); border: 1px solid rgba(233,69,96,0.12); }
+        .chat-bubble p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+        .chat-bubble strong { color: var(--white); }
+        .chat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .chat-label.user { color: var(--info); }
+        .chat-label.bot { color: var(--cta); }
+        .chat-file { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; margin-top: 8px; font-size: 13px; color: var(--text-muted); }
+        .chat-file-icon { font-size: 18px; }
+
+        .kit-tree { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px; line-height: 2; color: var(--text-muted); white-space: pre; overflow-x: auto; }
+        .kit-tree .folder { color: var(--info); font-weight: 600; }
+        .kit-tree .file { color: var(--text-muted); }
+        .kit-tree .highlight { color: var(--cta); font-weight: 600; }
+        .kit-tree .desc { color: var(--text-dim); font-style: italic; }
+
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
+        .before-after .panel { background: var(--bg-card); border-radius: var(--radius); padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
+        .before-after .panel-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid; }
+        .before-after .before .panel-title { color: var(--cta); border-color: rgba(233,69,96,0.3); }
+        .before-after .after .panel-title { color: var(--success); border-color: rgba(72,187,120,0.3); }
+        .before-after ul { list-style: none; padding: 0; }
+        .before-after li { padding: 6px 0; font-size: 14px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .before-after .before li::before { content: '✗'; color: var(--cta); font-weight: 700; }
+        .before-after .after li::before { content: '✓'; color: var(--success); font-weight: 700; }
+
+        .cta-section { background: linear-gradient(135deg, rgba(233,69,96,0.12), rgba(15,52,96,0.3)); border: 1px solid rgba(233,69,96,0.25); border-radius: var(--radius); padding: 40px; text-align: center; margin: 48px 0; }
+        .cta-section h3 { font-size: 24px; font-weight: 800; margin-bottom: 12px; }
+        .cta-section p { max-width: 500px; margin: 0 auto 24px; }
+        .cta-button { display: inline-flex; align-items: center; gap: 8px; background: var(--cta); color: white; font-size: 16px; font-weight: 700; padding: 16px 32px; border-radius: var(--radius-sm); text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: none; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.3); }
+
+        .footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 60px; }
+
+        @media (max-width: 768px) {
+            .hero-banner { padding: 32px 24px; }
+            .hero-banner h1 { font-size: 28px; }
+            .hero-stats { flex-direction: column; gap: 16px; }
+            .before-after { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a class="logo" href="#">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <div class="breadcrumb">
+                <span>Agents OpenClaw</span>
+                <span class="sep">/</span>
+                <span class="current">Super Kit</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+
+            <div class="hero-banner">
+                <div class="hero-badge">Bonus Exclusivo</div>
+                <h1>Super Kit AutomatikLabs</h1>
+                <p class="subtitle">Turbine seu agente OpenClaw em 5 minutos. 40 arquivos de configuracao profissional que transformam um agente basico em um operador autonomo de nivel empresarial.</p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Arquivos</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Templates por Setor</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Crons Prontos</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value">5min</div>
+                        <div class="stat-label">Para Instalar</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>O Que e o Super Kit?</h2>
+
+            <p>O Super Kit e um pacote de <strong>configuracao profissional</strong> que voce instala no seu agente OpenClaw conversando com ele pelo Telegram. Em vez de configurar tudo manualmente — standing orders, guardrails, memoria, crons — voce envia o zip e o agente <strong>se auto-configura</strong> seguindo as instrucoes do kit.</p>
+
+            <p>O kit foi curado com base nos <strong>best practices dos 350.000+ usuarios</strong> do ecossistema OpenClaw, consolidando patterns das skills mais baixadas do ClawHub (Self-Improving Agent com 419K+ downloads, Proactive Agent, Elite Long-Term Memory e mais 8 skills).</p>
+
+            <div class="tip-box">
+                <div class="box-title">Por que isso importa</div>
+                <p>Configurar um agente OpenClaw do zero pode levar <strong>dias de tentativa e erro</strong>. Com o Super Kit, voce pula direto para a configuracao de nivel profissional — a mesma que os melhores usuarios do mundo usam.</p>
+            </div>
+
+            <h2>Antes vs Depois do Super Kit</h2>
+
+            <div class="before-after">
+                <div class="panel before">
+                    <div class="panel-title">Sem Super Kit</div>
+                    <ul>
+                        <li>Agente generico sem papel definido</li>
+                        <li>Sem standing orders — nao sabe o que fazer sozinho</li>
+                        <li>Sem guardrails — pode agir fora do escopo</li>
+                        <li>Sem memoria estruturada — esquece tudo</li>
+                        <li>Sem crons — nada roda automaticamente</li>
+                        <li>Sem auto-melhoria — fica igual para sempre</li>
+                        <li>Sem seguranca — vulneravel a erros e ataques</li>
+                        <li>Configuracao manual — horas de trabalho</li>
+                    </ul>
+                </div>
+                <div class="panel after">
+                    <div class="panel-title">Com Super Kit</div>
+                    <ul>
+                        <li>Papel operacional claro pro seu setor</li>
+                        <li>Standing orders com programas definidos</li>
+                        <li>Guardrails com limites financeiros e escalacao</li>
+                        <li>Memoria em 3 camadas (episodica + semantica + procedural)</li>
+                        <li>6 crons prontos (relatorios, cobrancas, backups)</li>
+                        <li>Auto-melhoria semanal automatica</li>
+                        <li>Auditoria de seguranca com 22 checks</li>
+                        <li>Instalacao via chat em 5 minutos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>O Que Vem Dentro do Kit</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128188;</div>
+                    <h4>5 Templates por Setor</h4>
+                    <p>E-commerce, clinica, imobiliaria, consultoria B2B e contabilidade — cada um com standing orders especificos</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#129504;</div>
+                    <h4>Memoria em 3 Camadas</h4>
+                    <p>Sistema episodico + semantico + procedural. Igual aos melhores agentes do mundo</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128737;</div>
+                    <h4>Guardrails de Seguranca</h4>
+                    <p>Regras inviolaveis, limites financeiros, escalacao automatica e auditoria semanal</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#9881;</div>
+                    <h4>6 Crons Prontos</h4>
+                    <p>Relatorio diario, cobranca, backup, limpeza, pesquisa de concorrencia e curadoria de memoria</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128200;</div>
+                    <h4>Auto-Melhoria</h4>
+                    <p>Protocolo de 6 passos que o agente executa toda sexta. Ele fica melhor a cada semana — sozinho</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#9989;</div>
+                    <h4>Checklists Prontos</h4>
+                    <p>Pre-producao (25 checks), manutencao semanal e troubleshooting com 7 diagnosticos</p>
+                </div>
+            </div>
+
+            <h2>Estrutura do Kit</h2>
+
+            <div class="kit-tree"><span class="folder">automatiklabs-super-kit/</span>
+<span class="highlight">INSTALL.md</span>              <span class="desc">Instrucoes que o agente le e segue</span>
+<span class="file">README.md</span>               <span class="desc">Visao geral do kit</span>
+<span class="file">AGENTS.md</span>               <span class="desc">Standing orders + safety rules + EVR</span>
+<span class="file">SOUL.md</span>                 <span class="desc">Papel operacional do agente</span>
+<span class="file">USER.md</span>                 <span class="desc">Template para seus dados</span>
+<span class="file">HEARTBEAT.md</span>            <span class="desc">Schedule operacional completo</span>
+<span class="file">BOOTSTRAP.md</span>            <span class="desc">Setup na primeira inicializacao</span>
+<span class="folder">templates/</span>              <span class="desc">5 setores prontos</span>
+  <span class="folder">ecommerce/</span>            <span class="desc">Estoque, pedidos, vendas</span>
+  <span class="folder">clinica/</span>              <span class="desc">Agenda, consultas, ocupacao</span>
+  <span class="folder">imobiliaria/</span>          <span class="desc">Pipeline, visitas, propostas</span>
+  <span class="folder">consultoria-b2b/</span>      <span class="desc">KPIs, relatorios, projetos</span>
+  <span class="folder">contabilidade/</span>        <span class="desc">Prazos fiscais, documentos</span>
+<span class="folder">memory-system/</span>          <span class="desc">Memoria em 3 camadas</span>
+<span class="folder">guardrails/</span>             <span class="desc">Seguranca e escalacao</span>
+<span class="folder">cron-recipes/</span>           <span class="desc">6 automacoes prontas</span>
+<span class="folder">self-improvement/</span>       <span class="desc">Auto-melhoria semanal</span>
+<span class="folder">checklists/</span>             <span class="desc">Pre-producao + manutencao</span></div>
+
+            <h2>Como Instalar (Passo a Passo)</h2>
+
+            <p>A instalacao e feita <strong>conversando com seu agente no Telegram</strong>. Voce envia o zip, fala uma frase, e ele faz o resto.</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Baixe o Super Kit</h4>
+                <p>Faca o download do arquivo <strong>automatiklabs-super-kit.zip</strong> na area de membros do curso. O arquivo tem ~70KB.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Abra o Chat do Telegram com Seu Agente</h4>
+                <p>Va no grupo ou chat direto do Telegram onde seu agente OpenClaw esta conectado. Certifique-se de que ele esta online (<strong>openclaw status</strong> no terminal se precisar verificar).</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Envie o ZIP no Chat</h4>
+                <p>Arraste o arquivo <strong>automatiklabs-super-kit.zip</strong> para o chat do Telegram e envie como documento (nao como foto). O agente vai receber o arquivo.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Envie o Comando de Instalacao</h4>
+                <p>Logo apos enviar o zip, digite a seguinte mensagem:</p>
+            </div>
+
+            <div class="chat-demo">
+                <div class="chat-msg">
+                    <div class="chat-avatar user">&#128100;</div>
+                    <div>
+                        <div class="chat-label user">Voce</div>
+                        <div class="chat-bubble user">
+                            <div class="chat-file"><span class="chat-file-icon">&#128230;</span> automatiklabs-super-kit.zip</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-msg">
+                    <div class="chat-avatar user">&#128100;</div>
+                    <div>
+                        <div class="chat-label user">Voce</div>
+                        <div class="chat-bubble user">
+                            <p>Extraia o zip que acabei de enviar. Leia o arquivo INSTALL.md e siga todas as instrucoes dele passo a passo para instalar o Super Kit no seu workspace.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-msg">
+                    <div class="chat-avatar bot">&#9881;</div>
+                    <div>
+                        <div class="chat-label bot">Seu Agente</div>
+                        <div class="chat-bubble bot">
+                            <p><strong>Zip recebido e extraido.</strong> Encontrei o INSTALL.md. Iniciando instalacao do AutomatikLabs Super Kit...</p>
+                            <p>Passo 1: Verificando arquivos... 40 arquivos encontrados &#10003;</p>
+                            <p>Passo 2: Para configurar o kit, preciso saber o setor do seu negocio. Qual se encaixa melhor?</p>
+                            <p>1. E-commerce<br>2. Clinica<br>3. Imobiliaria<br>4. Consultoria B2B<br>5. Contabilidade<br>6. Outro</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-msg">
+                    <div class="chat-avatar user">&#128100;</div>
+                    <div>
+                        <div class="chat-label user">Voce</div>
+                        <div class="chat-bubble user">
+                            <p>1</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-msg">
+                    <div class="chat-avatar bot">&#9881;</div>
+                    <div>
+                        <div class="chat-label bot">Seu Agente</div>
+                        <div class="chat-bubble bot">
+                            <p><strong>Template E-commerce aplicado!</strong></p>
+                            <p>&#10003; AGENTS.md: standing orders de estoque, vendas, cobranças<br>
+                            &#10003; SOUL.md: gestor operacional de e-commerce<br>
+                            &#10003; HEARTBEAT.md: monitoramento continuo de estoque e pedidos<br>
+                            &#10003; Memoria em 3 camadas ativada<br>
+                            &#10003; Guardrails de seguranca instalados</p>
+                            <p>Agora preciso de algumas informacoes sobre voce e seu negocio para personalizar...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h4>Responda as Perguntas do Agente</h4>
+                <p>O agente vai te fazer <strong>5-7 perguntas</strong> para personalizar a configuracao: seu nome, empresa, ferramentas que usa, KPIs importantes, processos para automatizar e limite financeiro. Responda cada uma normalmente.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h4>Confirme a Instalacao</h4>
+                <p>Ao final, o agente envia um resumo de tudo que foi configurado e confirma que esta <strong>operacional</strong>. A partir daqui, ele ja esta executando processos do seu negocio autonomamente.</p>
+            </div>
+
+            <div class="success-box">
+                <div class="box-title">Resultado Esperado</div>
+                <p>Apos a instalacao, seu agente tera: standing orders do seu setor, guardrails de seguranca ativos, memoria profissional em 3 camadas, crons de relatorios e backups agendados, e auto-melhoria semanal programada. Ele vai comecar a operar processos do seu negocio <strong>imediatamente</strong>.</p>
+            </div>
+
+            <h2>O Que Muda Depois da Instalacao</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Capacidade</th>
+                        <th>Antes do Kit</th>
+                        <th>Depois do Kit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Standing Orders</strong></td>
+                        <td class="tag-no">Nenhum</td>
+                        <td class="tag-yes">5-8 programas autonomos do setor</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seguranca</strong></td>
+                        <td class="tag-no">Zero guardrails</td>
+                        <td class="tag-yes">Safety rules + escalacao + auditoria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memoria</strong></td>
+                        <td class="tag-no">Esquece entre sessoes</td>
+                        <td class="tag-yes">3 camadas: episodica + semantica + procedural</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Automacoes</strong></td>
+                        <td class="tag-no">Nada automatico</td>
+                        <td class="tag-yes">6 crons (relatorios, cobrancas, backups...)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Evolucao</strong></td>
+                        <td class="tag-no">Estatico para sempre</td>
+                        <td class="tag-yes">Auto-melhoria semanal (6 passos)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Verificacao</strong></td>
+                        <td class="tag-no">Nao verifica resultados</td>
+                        <td class="tag-yes">Protocolo EVR (Execute-Verify-Report)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Troubleshooting</strong></td>
+                        <td class="tag-no">Sem diagnostico</td>
+                        <td class="tag-yes">7 diagnosticos prontos</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Resultado Esperado por Semana</h2>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128197;</div>
+                    <h4>Semana 1</h4>
+                    <p>Agente operando tarefas basicas. Relatorios diarios chegando. Primeiros crons rodando.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128200;</div>
+                    <h4>Semana 2</h4>
+                    <p>Agente aprendendo com erros. Memoria acumulando insights. Guardrails calibrados.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#9889;</div>
+                    <h4>Semana 3</h4>
+                    <p>Agente sugerindo novos standing orders. Padroes do negocio identificados. Proatividade crescente.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#127942;</div>
+                    <h4>Semana 4+</h4>
+                    <p>Agente autonomo e confiavel. Opera processos sem intervencao. Se auto-melhora toda semana.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Importante</div>
+                <p>O Super Kit configura o agente, mas <strong>voce precisa alimentar os dados</strong> — conectar suas planilhas, preencher o USER.md com informacoes reais, e ativar as integracoes do Modulo 7. O kit acelera a configuracao, nao substitui as aulas do curso.</p>
+            </div>
+
+            <div class="cta-section">
+                <h3>Pronto para Turbinar seu Agente?</h3>
+                <p>Baixe o Super Kit, envie no Telegram e deixe seu agente se auto-configurar em 5 minutos.</p>
+                <button class="cta-button">&#128230; Baixar Super Kit (70KB)</button>
+            </div>
+
+        </main>
+    </div>
+
+    <footer class="footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+
+</body>
+</html>

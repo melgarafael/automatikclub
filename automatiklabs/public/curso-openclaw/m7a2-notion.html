@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integração com Notion — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+        }
+        @media (max-width: 480px) { .feature-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo"><div class="logo-icon">A</div> AutomatikLabs</a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Módulo 7</a>
+                <span class="sep">/</span>
+                <span class="current">Notion</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Módulo 7 — Aula 2</div>
+            <h1>Integração com Notion</h1>
+            <div class="lesson-meta">
+                <span>20 min de leitura</span>
+                <span>Nível: Iniciante</span>
+            </div>
+
+            <h2>Por que Notion?</h2>
+            <p>O Notion é a base de <strong>processos e SOPs</strong> ideal para agentes executores. Ele permite organizar workflows, catálogos e tabelas operacionais em <strong>páginas e databases estruturados</strong>, que o agente consulta para saber O QUE fazer e registra O QUE fez.</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">&#128214;</div>
+                    <h4>Central de SOPs</h4>
+                    <p>Agente consulta procedimentos operacionais antes de executar</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128203;</div>
+                    <h4>Controle operacional</h4>
+                    <p>Agente registra execuções e resultados de cada processo</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">&#128221;</div>
+                    <h4>Registro de processos</h4>
+                    <p>Agente documenta cada ação executada automaticamente</p>
+                </div>
+            </div>
+
+            <h2>Passo a passo: conectando ao Notion</h2>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Crie uma Integration no Notion</h4>
+                <p>Acesse <strong>notion.so/my-integrations</strong> e clique em <strong>"New integration"</strong>. Dê um nome descritivo como "Agente OpenClaw — Operacional". Selecione o workspace correto.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Copie o Internal Integration Token</h4>
+                <p>Após criar, você receberá um token que começa com <code>ntn_</code>. Copie e salve no 1Password (vault "Agentes IA").</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Compartilhe páginas com a integração</h4>
+                <p>No Notion, abra cada página ou database que o agente precisa acessar. Clique em <strong>"..."</strong> (menu) &rarr; <strong>"Connections"</strong> &rarr; selecione sua integração. Sem isso, o token não tem acesso a nada.</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">&#9888; Erro comum</div>
+                <p>Criou o token mas esqueceu de compartilhar as páginas? O agente vai retornar "not found" em tudo. Cada página precisa ser compartilhada individualmente com a integração.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Configure no OpenClaw</h4>
+                <p>No painel do OpenClaw, vá em <strong>Integrações &rarr; Notion</strong>. Cole o token. Selecione quais databases o agente pode acessar e defina as permissões (leitura, escrita, ou ambas).</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h4>Teste a conexão</h4>
+                <p>Use o chat de teste do OpenClaw e peça ao agente para listar itens do Notion. Exemplo: <em>"Liste os workflows pendentes de execução"</em>. Se retornar dados, está funcionando.</p>
+            </div>
+
+            <h2>Configurando permissões</h2>
+            <p>Siga o princípio do <strong>menor privilégio</strong>:</p>
+
+            <ul>
+                <li><strong>Agente consultor:</strong> somente leitura de SOPs — ele consulta procedimentos, mas não modifica</li>
+                <li><strong>Agente executor:</strong> leitura de SOPs + escrita de resultados — ele lê o processo e registra a execução</li>
+                <li><strong>Agente de logs:</strong> somente escrita — ele registra execuções, mas não precisa ler histórico</li>
+            </ul>
+
+            <div class="tip-box">
+                <div class="box-title">&#128161; Dica de organização</div>
+                <p>Crie um workspace separado no Notion só para o agente. Isso isola os dados do agente dos seus dados pessoais e facilita o gerenciamento de permissões.</p>
+            </div>
+
+            <h2>Como o agente lê e escreve no Notion</h2>
+
+            <h3>Leitura</h3>
+            <p>O agente pode consultar databases do Notion usando filtros. Por exemplo, buscar todos os workflows com status "Pendente" em um database de processos. Ele recebe os dados estruturados e sabe exatamente o que executar.</p>
+
+            <h3>Escrita</h3>
+            <p>O agente pode criar novas páginas, adicionar linhas em databases, e atualizar propriedades. Por exemplo, após executar um processo de cobrança, ele registra automaticamente: data, cliente, valor, e status da execução.</p>
+
+            <h2>Checklist de integração</h2>
+
+            <ul class="checklist">
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Integration criada</strong> — Token gerado no Notion</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Token salvo</strong> — Armazenado no 1Password, nunca no código</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Páginas compartilhadas</strong> — Todas as páginas relevantes conectadas à integração</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Permissões corretas</strong> — Menor privilégio aplicado</span>
+                </li>
+                <li>
+                    <input type="checkbox">
+                    <span class="check-label"><strong>Teste realizado</strong> — Agente consegue ler e/ou escrever no Notion</span>
+                </li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">&#10003; Resultado</div>
+                <p>Seu agente agora tem uma central de SOPs e processos no Notion. Na próxima aula, vamos conectar o Google Workspace para que ele envie cobranças, agende execuções e acesse planilhas de controle.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="m7a1-visao-geral-integracoes.html" class="nav-btn prev">
+                    <span class="nav-label">Anterior</span>
+                    <span class="nav-title">Visão Geral</span>
+                </a>
+                <a href="m7a3-google-workspace.html" class="nav-btn next">
+                    <span class="nav-label">Próxima</span>
+                    <span class="nav-title">Google Workspace</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Módulo 7 — Integrações</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m7a1-visao-geral-integracoes.html"><span class="lesson-num">1</span> Visão Geral</a></li>
+                    <li><a href="m7a2-notion.html" class="active"><span class="lesson-num">2</span> Notion</a></li>
+                    <li><a href="m7a3-google-workspace.html"><span class="lesson-num">3</span> Google Workspace</a></li>
+                    <li><a href="m7a4-github.html"><span class="lesson-num">4</span> GitHub</a></li>
+                    <li><a href="m7a5-outros-canais.html"><span class="lesson-num">5</span> WhatsApp/Discord/Slack</a></li>
+                    <li><a href="m7a6-brave-browser.html"><span class="lesson-num">6</span> Brave Browser</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">&copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados</footer>
+</body>
+</html>

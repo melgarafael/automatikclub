@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Por Que Prompt Engineering para Agents é Diferente — AutomatikLabs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg-dark: #1A1A2E; --bg-card: #16213E; --accent: #0F3460;
+            --cta: #E94560; --white: #FFFFFF; --text-muted: #A0AEC0;
+            --text-dim: #718096; --success: #48BB78; --warning: #ECC94B;
+            --info: #4299E1; --radius: 12px; --radius-sm: 8px;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-dark); color: var(--white); line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+        .header { position: sticky; top: 0; z-index: 100; background: rgba(26,26,46,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; }
+        .header-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--cta), #ff6b81); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .sep { opacity: 0.4; }
+        .breadcrumb .current { color: var(--cta); font-weight: 600; }
+
+        .layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 280px; gap: 40px; padding: 40px 24px; align-items: start; }
+        .content { min-width: 0; }
+        .lesson-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(233,69,96,0.12); color: var(--cta); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .content h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -1px; margin-bottom: 16px; }
+        .lesson-meta { display: flex; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .content h2 { font-size: 24px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.5px; padding-bottom: 12px; border-bottom: 2px solid rgba(233,69,96,0.3); }
+        .content h3 { font-size: 20px; font-weight: 700; margin: 36px 0 16px; }
+        .content p { color: var(--text-muted); margin-bottom: 16px; font-size: 16px; }
+        .content strong { color: var(--white); }
+        .content ul, .content ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .content li { margin-bottom: 8px; }
+
+        .tip-box { background: rgba(66,153,225,0.08); border-left: 4px solid var(--info); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .tip-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--info); margin-bottom: 8px; }
+        .tip-box p { margin: 0; font-size: 15px; }
+
+        .warning-box { background: rgba(236,201,75,0.08); border-left: 4px solid var(--warning); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .warning-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--warning); margin-bottom: 8px; }
+        .warning-box p { margin: 0; font-size: 15px; }
+
+        .success-box { background: rgba(72,187,120,0.08); border-left: 4px solid var(--success); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 20px 24px; margin: 24px 0; }
+        .success-box .box-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--success); margin-bottom: 8px; }
+        .success-box p { margin: 0; font-size: 15px; }
+
+        .code-block { background: #0D1117; border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 20px 24px; margin: 24px 0; overflow-x: auto; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 14px; line-height: 1.8; color: #E6EDF3; }
+        .code-block .comment { color: #8B949E; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 15px; }
+        .comparison-table thead { background: rgba(15,52,96,0.5); }
+        .comparison-table th { text-align: left; padding: 14px 18px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 2px solid rgba(233,69,96,0.2); }
+        .comparison-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); }
+        .comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+        .comparison-table .tag-no { color: var(--cta); font-weight: 600; }
+        .comparison-table .tag-yes { color: var(--success); font-weight: 600; }
+        .comparison-table .tag-partial { color: var(--warning); font-weight: 600; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .feature-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; text-align: center; transition: transform 0.2s, border-color 0.2s; }
+        .feature-item:hover { transform: translateY(-2px); border-color: rgba(233,69,96,0.3); }
+        .feature-item .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; margin: 0; }
+
+        .step-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 28px; margin: 20px 0; position: relative; }
+        .step-card .step-number { position: absolute; top: -14px; left: 24px; background: var(--cta); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+        .step-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .step-card p { margin: 0; }
+
+        .checklist { list-style: none; margin: 24px 0; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 4px; border-radius: var(--radius-sm); transition: background 0.2s; cursor: pointer; }
+        .checklist li:hover { background: rgba(255,255,255,0.03); }
+        .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 2px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .checklist input[type="checkbox"]:checked { background: var(--success); border-color: var(--success); }
+        .checklist input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 3px; left: 6px; width: 6px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checklist .check-label { color: var(--text-muted); }
+        .checklist .check-label strong { color: var(--white); }
+
+        .footer-nav { display: flex; justify-content: space-between; gap: 20px; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .nav-btn { display: flex; flex-direction: column; gap: 4px; padding: 20px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); text-decoration: none; color: var(--white); flex: 1; max-width: 48%; transition: border-color 0.2s, transform 0.2s; }
+        .nav-btn:hover { border-color: rgba(233,69,96,0.4); transform: translateY(-2px); }
+        .nav-btn.next { align-items: flex-end; text-align: right; }
+        .nav-btn .nav-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cta); }
+        .nav-btn .nav-title { font-size: 15px; font-weight: 600; color: var(--text-muted); }
+
+        .sidebar { position: sticky; top: 88px; }
+        .progress-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 24px; }
+        .progress-card h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 20px; }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--cta), #ff6b81); border-radius: 3px; }
+        .lesson-list { list-style: none; padding: 0; }
+        .lesson-list li { margin-bottom: 2px; }
+        .lesson-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; color: var(--text-muted); text-decoration: none; font-size: 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
+        .lesson-list a:hover { background: rgba(255,255,255,0.04); color: var(--white); }
+        .lesson-list a.active { background: rgba(233,69,96,0.1); color: var(--cta); font-weight: 600; }
+        .lesson-list a.completed { color: var(--success); }
+        .lesson-list .lesson-num { width: 24px; height: 24px; min-width: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .lesson-list a.active .lesson-num { background: var(--cta); color: white; }
+        .lesson-list a.completed .lesson-num { background: var(--success); color: white; }
+
+        .site-footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 60px; }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; gap: 0; padding: 24px 16px; }
+            .sidebar { position: relative; top: 0; order: -1; margin-bottom: 32px; }
+            .content h1 { font-size: 28px; }
+            .breadcrumb { display: none; }
+            .footer-nav { flex-direction: column; }
+            .nav-btn { max-width: 100%; }
+            .nav-btn.next { align-items: flex-start; text-align: left; }
+            .comparison-table { font-size: 13px; }
+            .comparison-table th, .comparison-table td { padding: 10px 12px; }
+        }
+        @media (max-width: 480px) {
+            .feature-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                AutomatikLabs
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Agents OpenClaw</a>
+                <span class="sep">/</span>
+                <a href="#">Modulo 4</a>
+                <span class="sep">/</span>
+                <span class="current">Aula 1</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <main class="content">
+            <div class="lesson-badge">Modulo 4 &middot; Aula 1</div>
+            <h1>Por Que Prompt Engineering para Agents e Diferente</h1>
+            <div class="lesson-meta">
+                <span>18 min de leitura</span>
+                <span>Nivel: Intermediario</span>
+            </div>
+
+            <p>Voce ja usou o ChatGPT. Ja escreveu prompts. Talvez ate se considere bom nisso. Mas aqui vai a verdade que ninguem te conta: <strong>escrever instrucoes para uma conversa e completamente diferente de escrever instrucoes para um agente que EXECUTA processos</strong>. E se voce nao entender essa diferenca, vai construir agentes que conversam bonito mas nao fazem nada.</p>
+
+            <h2>Dois Mundos Completamente Diferentes</h2>
+
+            <p>Quando voce abre o ChatGPT e digita uma pergunta, voce esta dando uma <strong>instrucao de conversa</strong>. E pontual, descartavel, e termina quando a resposta chega. Nao tem continuidade real, nao tem processos definidos, nao tem regras operacionais.</p>
+
+            <p>Um agente executor e diferente. Ele tem <strong>instrucoes de PROCESSO</strong> — um conjunto de regras operacionais permanentes que definem quais processos ele executa, quais decisoes ele toma, e quais acoes ele realiza. Essas instrucoes rodam <strong>24 horas por dia</strong>, monitorando, processando e executando tarefas do seu negocio.</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">💬</div>
+                    <h4>Instrucoes de Conversa</h4>
+                    <p>Uma pergunta pontual. Sem processos. Sem regras operacionais. Sem execucao.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🤖</div>
+                    <h4>Instrucoes de Processo</h4>
+                    <p>Processos persistentes. Regras de decisao. Execucao autonoma de tarefas.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">⚡</div>
+                    <h4>A Diferenca</h4>
+                    <p>Um gera respostas. O outro EXECUTA processos do seu negocio.</p>
+                </div>
+            </div>
+
+            <h2>Instrucoes de Conversa vs Instrucoes de Processo</h2>
+
+            <p>Vamos colocar lado a lado para ficar cristalino:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>Instrucoes de Conversa</th>
+                        <th>Instrucoes de Processo (Agente)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Persistencia</strong></td>
+                        <td>Uma unica interacao</td>
+                        <td>Permanente — roda em toda execucao, 24/7</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escopo</strong></td>
+                        <td>Responder uma pergunta</td>
+                        <td>Executar processos completos do negocio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Exemplos</strong></td>
+                        <td><span class="tag-partial">"Responda de forma educada"</span></td>
+                        <td><span class="tag-yes">"Quando estoque &lt; 10, gere pedido ao fornecedor Y"</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Regras</strong></td>
+                        <td><span class="tag-no">Nao tem</span></td>
+                        <td><span class="tag-yes">Regras de decisao, limites financeiros, escalacao</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resultado</strong></td>
+                        <td>Texto de resposta</td>
+                        <td>Acoes executadas: relatorios, cobrancas, pedidos, alertas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Criterio de sucesso</strong></td>
+                        <td>Resposta parece boa</td>
+                        <td>Processo executou corretamente com resultado mensuravel</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Impacto de erro</strong></td>
+                        <td>Voce corrige e segue</td>
+                        <td>Processo errado se repete em TODAS as execucoes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <div class="box-title">Conceito-chave</div>
+                <p>Um agente com instrucoes vagas nao executa processos — ele improvisa. A IA por tras pode ser a mais avancada do mundo — se as instrucoes operacionais sao vagas, a execucao sera inconsistente. <strong>As instrucoes de processo sao o sistema operacional do seu agente.</strong></p>
+            </div>
+
+            <h2>Os 5 Erros Mais Comuns</h2>
+
+            <p>A maioria das pessoas que tentam criar agentes cometem esses erros porque escrevem instrucoes de conversa quando deveriam escrever instrucoes de PROCESSO:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Erro</th>
+                        <th>O Que Fazem</th>
+                        <th>O Que Deveriam Fazer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Instrucoes vagas</strong></td>
+                        <td>"Voce e um assistente que ajuda clientes"</td>
+                        <td>"Voce e o operador de estoque da Loja X. Monitore niveis diariamente. Quando produto &lt; 10 unidades, gere pedido ao fornecedor Y. Notifique gerente via Telegram."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sem processos definidos</strong></td>
+                        <td>Nenhum processo descrito</td>
+                        <td>Lista detalhada de cada processo: trigger, passos, resultado esperado, excecoes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sem criterios de decisao</strong></td>
+                        <td>Agente decide sozinho o que fazer</td>
+                        <td>Regras claras: "Se valor > R$ 1.000, pedir aprovacao. Se < R$ 1.000, executar sozinho."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sem tratamento de excecoes</strong></td>
+                        <td>"Resolva os problemas"</td>
+                        <td>"Se processo falhar 2x, parar e notificar admin com relatorio do que tentou"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sem metricas de sucesso</strong></td>
+                        <td>Nenhuma forma de medir resultado</td>
+                        <td>"Sucesso = consulta confirmada com 12h de antecedencia. Falha = no-show sem tentativa de contato."</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>A Evolucao: De Conversa para Processo</h2>
+
+            <p>Veja como um prompt evolui quando voce sai do mundo da conversa e entra no mundo da execucao de processos:</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Nivel 1: Instrucao de Conversa</h4>
+                <p>"Me ajude a gerenciar o estoque da minha loja."</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Nivel 2: Instrucao com Contexto</h4>
+                <p>"Voce gerencia o estoque da Loja X. Monitore os niveis e me avise quando algo estiver acabando."</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>Nivel 3: Instrucao com Processos</h4>
+                <p>"Voce e o operador de estoque da Loja X. Processo 1: Verificar niveis diariamente. Processo 2: Quando produto &lt; 10 unidades, gerar pedido automatico. Processo 3: Notificar gerente via Telegram com relatorio."</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Nivel 4: Instrucao Operacional Completa</h4>
+                <p>"Voce e o operador de estoque da Loja X. [PAPEL OPERACIONAL] + [CONTEXTO DO NEGOCIO com fornecedores e thresholds] + [PROCESSOS detalhados com triggers e passos] + [CRITERIOS DE SUCESSO mensuraveis] + [TRATAMENTO DE EXCECOES quando algo falha]"</p>
+            </div>
+
+            <p>A diferenca entre o nivel 1 e o nivel 4 e a diferenca entre um agente que conversa sobre estoque e um agente que <strong>gerencia o estoque de verdade</strong>.</p>
+
+            <h2>Por Que Isso Importa para o Seu Negocio</h2>
+
+            <p>Quando voce coloca um agente para executar processos do seu negocio, ele esta <strong>operando sua empresa</strong>. Cada processo que ele executa impacta diretamente nos resultados.</p>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="icon">🎯</div>
+                    <h4>Consistencia</h4>
+                    <p>O agente executa o mesmo processo as 3 da manha e as 3 da tarde, sem variacao</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🛡️</div>
+                    <h4>Seguranca</h4>
+                    <p>Limites financeiros e escalacao impedem erros operacionais graves</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">💰</div>
+                    <h4>Eficiencia</h4>
+                    <p>Processos que levavam horas agora sao executados em minutos automaticamente</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📈</div>
+                    <h4>Escalabilidade</h4>
+                    <p>Executa 1 ou 1000 processos ao mesmo tempo com a mesma qualidade</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Atencao</div>
+                <p>Um agente com instrucoes operacionais ruins pode causar danos reais: gerar cobrancas erradas, processar pedidos com dados inconsistentes, ou deixar de escalar situacoes criticas. <strong>Prompt engineering para agentes executores nao e opcional — e obrigatorio.</strong></p>
+            </div>
+
+            <h2>O Que Voce Vai Aprender Neste Modulo</h2>
+
+            <p>Nas proximas aulas, voce vai dominar cada peca do quebra-cabeca:</p>
+
+            <ul>
+                <li><strong>Aula 2:</strong> A anatomia completa de um prompt operacional — os 5 blocos essenciais</li>
+                <li><strong>Aula 3:</strong> Few-shot learning — como ensinar seu agente a executar processos pelo exemplo</li>
+                <li><strong>Aula 4:</strong> Guardrails operacionais — como proteger seu agente de erros em cascata</li>
+                <li><strong>Aula 5:</strong> Como testar e iterar processos ate eles executarem com 90%+ de acerto</li>
+            </ul>
+
+            <div class="success-box">
+                <div class="box-title">Resultado Esperado</div>
+                <p>Ao final deste modulo, voce vai saber escrever instrucoes operacionais de nivel profissional — do tipo que transforma uma IA generica em um operador digital que realmente executa processos do seu negocio.</p>
+            </div>
+
+            <div class="footer-nav">
+                <div></div>
+                <a href="m4a2-anatomia-system-prompt.html" class="nav-btn next">
+                    <span class="nav-label">Proxima aula</span>
+                    <span class="nav-title">Anatomia de um Bom System Prompt</span>
+                </a>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="progress-card">
+                <h3>Modulo 4 — Prompt Engineering</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%"></div>
+                </div>
+                <ul class="lesson-list">
+                    <li><a href="m4a1-prompt-engineering-diferente.html" class="active"><span class="lesson-num">1</span> Prompt Engineering Diferente</a></li>
+                    <li><a href="m4a2-anatomia-system-prompt.html"><span class="lesson-num">2</span> Anatomia do System Prompt</a></li>
+                    <li><a href="m4a3-few-shot-exemplos.html"><span class="lesson-num">3</span> Few-Shot e Exemplos</a></li>
+                    <li><a href="m4a4-guardrails.html"><span class="lesson-num">4</span> Guardrails</a></li>
+                    <li><a href="m4a5-testando-iterando.html"><span class="lesson-num">5</span> Testando e Iterando</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <footer class="site-footer">
+        &copy; 2026 AutomatikLabs &mdash; Todos os direitos reservados
+    </footer>
+
+</body>
+</html>
