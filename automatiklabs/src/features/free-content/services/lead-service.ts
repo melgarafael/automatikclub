@@ -4,9 +4,9 @@ import type { Lead, CheckEmailResponse } from '../types';
 export async function checkEmail(email: string): Promise<CheckEmailResponse> {
   const supabase = createAdminClient();
 
-  // Check if email exists in profiles (is a student)
+  // Check if email exists in user_profiles (is a student)
   const { data: profile } = await supabase
-    .from('profiles')
+    .from('user_profiles')
     .select('id, email')
     .eq('email', email)
     .single();
