@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     // Verify isStudent server-side (never trust cookie)
     const supabase = createAdminClient();
     const { data: profile } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('id')
       .eq('email', session.email)
       .single();
